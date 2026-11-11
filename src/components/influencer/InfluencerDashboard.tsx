@@ -69,12 +69,6 @@ export const InfluencerDashboard: React.FC = () => {
           {/* Quick Actions */}
           <div className="flex flex-wrap items-center gap-2.5">
             <button
-              onClick={() => setActiveView('call-pricing')}
-              className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 font-semibold border border-slate-700 transition-colors"
-            >
-              Configure Rates
-            </button>
-            <button
               onClick={() => setActiveView('availability')}
               className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 font-semibold border border-slate-700 transition-colors"
             >

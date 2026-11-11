@@ -4,7 +4,6 @@ import {
   Sparkles, 
   LayoutDashboard, 
   Image, 
-  DollarSign, 
   Clock, 
   Calendar, 
   Wallet, 
@@ -44,7 +43,6 @@ export const InfluencerDashboardLayout: React.FC = () => {
   const navItems = [
     { id: 'dashboard', label: 'Studio Overview', icon: LayoutDashboard },
     { id: 'profile-content', label: 'Profile & Portfolio', icon: Image },
-    { id: 'call-pricing', label: 'Call Rates Matrix', icon: DollarSign },
     { id: 'availability', label: 'Availability & Slots', icon: Clock },
     { id: 'bookings', label: 'Fan Bookings', icon: Calendar },
     { id: 'payouts', label: 'Earnings & Payouts', icon: Wallet },
@@ -242,7 +240,6 @@ export const InfluencerDashboardLayout: React.FC = () => {
         <main className="flex-1 p-4 sm:p-8 max-w-7xl w-full mx-auto">
           {activeView === 'dashboard' && <InfluencerDashboard />}
           {activeView === 'profile-content' && <InfluencerContentProfile />}
-          {activeView === 'call-pricing' && <InfluencerPricingSchedule />}
           {activeView === 'availability' && <InfluencerPricingSchedule />}
           {activeView === 'bookings' && <InfluencerBookings />}
           {activeView === 'payouts' && <InfluencerEarningsPayouts />}
