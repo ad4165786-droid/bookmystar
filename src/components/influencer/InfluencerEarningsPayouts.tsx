@@ -76,10 +76,10 @@ export const InfluencerEarningsPayouts: React.FC = () => {
     <div className="space-y-8 pb-16 max-w-5xl">
       
       {/* Title */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200/80">
         <div>
-          <h1 className="text-2xl font-black text-white">Earnings & Payout Disbursals</h1>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <h1 className="text-2xl font-black text-slate-900">Earnings & Payout Disbursals</h1>
+          <p className="text-xs text-slate-500 mt-0.5">
             Transparent revenue tracking, platform commission breakdown, and direct bank/UPI withdrawals
           </p>
         </div>
@@ -87,107 +87,107 @@ export const InfluencerEarningsPayouts: React.FC = () => {
         <button
           onClick={() => setShowWithdrawModal(true)}
           disabled={currentInfluencer.pendingBalance < settings.minPayoutAmount}
-          className="flex items-center gap-2 py-2.5 px-5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-95 text-white font-bold text-xs shadow-glow transition-all disabled:opacity-40"
+          className="flex items-center gap-2 py-2.5 px-5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs shadow-md shadow-brand-500/25 transition-all disabled:opacity-40"
         >
           <Wallet className="w-4 h-4" />
           <span>Request Payout (₹{currentInfluencer.pendingBalance})</span>
         </button>
       </div>
 
-      {/* Financial Overview Cards */}
+      {/* Financial Overview Cards (Pure White Cards on Clean Neutral Background) */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
         
         {/* Available for Withdrawal */}
-        <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-950/40 via-slate-900 to-slate-900 border border-purple-500/40 space-y-3 shadow-lg">
-          <div className="flex items-center justify-between text-xs text-purple-300 font-semibold">
+        <div className="p-6 rounded-3xl bg-white border border-slate-200/80 space-y-3 shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center justify-between text-xs text-slate-700 font-bold">
             <span>Available for Withdrawal</span>
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
           </div>
-          <div className="text-3xl font-black text-white">
+          <div className="text-3xl font-black text-brand-600">
             ₹{currentInfluencer.pendingBalance.toLocaleString('en-IN')}
           </div>
-          <div className="text-[11px] text-slate-400">
+          <div className="text-[11px] text-slate-500">
             Threshold: ₹{settings.minPayoutAmount} min withdrawal
           </div>
         </div>
 
         {/* Total Paid Out */}
-        <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-3 shadow-lg">
-          <div className="flex items-center justify-between text-xs text-slate-400 font-semibold">
+        <div className="p-6 rounded-3xl bg-white border border-slate-200/80 space-y-3 shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center justify-between text-xs text-slate-500 font-bold">
             <span>Total Paid Out to Bank</span>
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
           </div>
-          <div className="text-3xl font-black text-emerald-400">
+          <div className="text-3xl font-black text-emerald-600">
             ₹{currentInfluencer.paidOutBalance.toLocaleString('en-IN')}
           </div>
-          <div className="text-[11px] text-slate-400">
+          <div className="text-[11px] text-slate-500">
             Settled via IMPS / NEFT / UPI
           </div>
         </div>
 
         {/* Lifetime Net Earnings */}
-        <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-3 shadow-lg">
-          <div className="flex items-center justify-between text-xs text-slate-400 font-semibold">
+        <div className="p-6 rounded-3xl bg-white border border-slate-200/80 space-y-3 shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center justify-between text-xs text-slate-500 font-bold">
             <span>Lifetime Creator Earnings</span>
-            <TrendingUp className="w-4 h-4 text-brand-400" />
+            <TrendingUp className="w-4 h-4 text-brand-500" />
           </div>
-          <div className="text-3xl font-black text-white">
+          <div className="text-3xl font-black text-slate-900">
             ₹{currentInfluencer.totalEarnings.toLocaleString('en-IN')}
           </div>
-          <div className="text-[11px] text-slate-400">
+          <div className="text-[11px] text-slate-500">
             From {creatorBookings.length} completed & confirmed calls
           </div>
         </div>
 
       </div>
 
-      {/* Platform Commission & Revenue Stream Breakdown (PDF Section 8 & 9) */}
+      {/* Platform Commission & Revenue Stream Breakdown */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         {/* Commission Transparency Ledger */}
-        <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider">Revenue & Fee Transparency</h3>
-            <span className="text-xs font-mono text-brand-400">{settings.commissionRate}% Standard Fee</span>
+        <div className="p-6 rounded-3xl bg-white border border-slate-200/80 space-y-4 shadow-sm">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Revenue & Fee Transparency</h3>
+            <span className="text-xs font-mono font-bold text-brand-600">{settings.commissionRate}% Standard Fee</span>
           </div>
 
           <div className="space-y-3 text-xs">
-            <div className="flex justify-between p-3 rounded-xl bg-slate-950/60 border border-slate-800">
-              <span className="text-slate-400">Gross Fan Bookings:</span>
-              <span className="font-extrabold text-white">₹{totalGrossBookingValue.toLocaleString('en-IN')}</span>
+            <div className="flex justify-between p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+              <span className="text-slate-600 font-medium">Gross Fan Bookings:</span>
+              <span className="font-extrabold text-slate-900">₹{totalGrossBookingValue.toLocaleString('en-IN')}</span>
             </div>
 
-            <div className="flex justify-between p-3 rounded-xl bg-slate-950/60 border border-slate-800">
-              <span className="text-slate-400">Platform Infrastructure Fee ({settings.commissionRate}%):</span>
-              <span className="font-extrabold text-rose-400">-₹{totalCommissionPaid.toLocaleString('en-IN')}</span>
+            <div className="flex justify-between p-3 rounded-xl bg-rose-50/60 border border-rose-100">
+              <span className="text-slate-600 font-medium">Platform Fee ({settings.commissionRate}%):</span>
+              <span className="font-extrabold text-rose-600">-₹{totalCommissionPaid.toLocaleString('en-IN')}</span>
             </div>
 
-            <div className="flex justify-between p-3.5 rounded-xl bg-emerald-950/30 border border-emerald-500/30 font-bold text-sm">
-              <span className="text-emerald-300">Creator Net Earnings:</span>
-              <span className="font-black text-emerald-400">₹{(totalGrossBookingValue - totalCommissionPaid).toLocaleString('en-IN')}</span>
+            <div className="flex justify-between p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 font-bold text-sm">
+              <span className="text-emerald-800">Creator Net Earnings:</span>
+              <span className="font-black text-emerald-700">₹{(totalGrossBookingValue - totalCommissionPaid).toLocaleString('en-IN')}</span>
             </div>
           </div>
         </div>
 
         {/* Video vs Voice Revenue Share */}
-        <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider">Channel Revenue Breakdown</h3>
-            <span className="text-xs text-slate-400">Performance</span>
+        <div className="p-6 rounded-3xl bg-white border border-slate-200/80 space-y-4 shadow-sm">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Channel Revenue Breakdown</h3>
+            <span className="text-xs text-slate-500 font-semibold">Performance</span>
           </div>
 
           <div className="space-y-4 text-xs">
             {/* Video Call Revenue Bar */}
             <div className="space-y-1.5">
               <div className="flex justify-between font-semibold">
-                <span className="flex items-center gap-1.5 text-purple-300">
-                  <Video className="w-3.5 h-3.5" /> 1-on-1 Video Calls
+                <span className="flex items-center gap-1.5 text-slate-800">
+                  <Video className="w-3.5 h-3.5 text-brand-500" /> 1-on-1 Video Calls
                 </span>
-                <span className="text-white font-bold">₹{videoRevenue.toLocaleString('en-IN')}</span>
+                <span className="text-slate-900 font-bold">₹{videoRevenue.toLocaleString('en-IN')}</span>
               </div>
-              <div className="w-full h-3 bg-slate-800 rounded-full overflow-hidden">
+              <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full"
+                  className="h-full bg-gradient-to-r from-brand-500 to-amber-500 rounded-full"
                   style={{ width: `${totalGrossBookingValue > 0 ? (videoRevenue / (videoRevenue + voiceRevenue || 1)) * 100 : 70}%` }}
                 />
               </div>
@@ -196,14 +196,14 @@ export const InfluencerEarningsPayouts: React.FC = () => {
             {/* Voice Call Revenue Bar */}
             <div className="space-y-1.5">
               <div className="flex justify-between font-semibold">
-                <span className="flex items-center gap-1.5 text-emerald-300">
-                  <PhoneCall className="w-3.5 h-3.5" /> 1-on-1 Voice Calls
+                <span className="flex items-center gap-1.5 text-slate-800">
+                  <PhoneCall className="w-3.5 h-3.5 text-emerald-600" /> 1-on-1 Voice Calls
                 </span>
-                <span className="text-white font-bold">₹{voiceRevenue.toLocaleString('en-IN')}</span>
+                <span className="text-slate-900 font-bold">₹{voiceRevenue.toLocaleString('en-IN')}</span>
               </div>
-              <div className="w-full h-3 bg-slate-800 rounded-full overflow-hidden">
+              <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full"
+                  className="h-full bg-emerald-500 rounded-full"
                   style={{ width: `${totalGrossBookingValue > 0 ? (voiceRevenue / (videoRevenue + voiceRevenue || 1)) * 100 : 30}%` }}
                 />
               </div>
@@ -213,53 +213,58 @@ export const InfluencerEarningsPayouts: React.FC = () => {
 
       </div>
 
-      {/* Payout Requests History Ledger (PDF Section 10) */}
-      <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+      {/* Payout History Ledger */}
+      <div className="p-6 rounded-3xl bg-white border border-slate-200/80 space-y-4 shadow-sm">
+        <div className="flex items-center justify-between pb-3 border-b border-slate-100">
           <div>
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider">Payout History & Disbursal Status</h3>
-            <p className="text-xs text-slate-400">Auditable withdrawal requests sent to BMS Finance Operations</p>
+            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Disbursal Withdrawal Ledger</h3>
+            <p className="text-xs text-slate-500">History of requested and settled payouts to your accounts</p>
           </div>
-          <span className="text-xs text-slate-400">{creatorPayouts.length} payout records</span>
+
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-slate-500 font-semibold">{creatorPayouts.length} Transactions</span>
+          </div>
         </div>
 
         {creatorPayouts.length === 0 ? (
-          <p className="text-xs text-slate-500 text-center py-6">No payout requests submitted yet.</p>
+          <div className="p-8 text-center text-slate-400 text-xs">
+            No withdrawal requests made yet. When your balance reaches ₹{settings.minPayoutAmount}, click "Request Payout".
+          </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-950/60 text-slate-400 text-[10px] uppercase font-bold">
-                <tr>
-                  <th className="py-2.5 px-3">Date Requested</th>
-                  <th className="py-2.5 px-3">Payout Ref</th>
-                  <th className="py-2.5 px-3">Disbursal Destination</th>
-                  <th className="py-2.5 px-3">Bank UTR Ref</th>
-                  <th className="py-2.5 px-3 text-right">Amount (₹)</th>
-                  <th className="py-2.5 px-3 text-center">Status</th>
+              <thead>
+                <tr className="border-b border-slate-100 text-[11px] uppercase tracking-wider text-slate-400 font-bold">
+                  <th className="py-3 px-3">Reference ID</th>
+                  <th className="py-3 px-3">Date</th>
+                  <th className="py-3 px-3">Amount</th>
+                  <th className="py-3 px-3">Channel / Beneficiary</th>
+                  <th className="py-3 px-3">Status</th>
+                  <th className="py-3 px-3">Settlement Ref</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 text-slate-300">
+              <tbody className="divide-y divide-slate-100">
                 {creatorPayouts.map(p => (
-                  <tr key={p.id}>
-                    <td className="py-3 px-3 text-[11px] text-slate-400">{p.requestedAt}</td>
-                    <td className="py-3 px-3 font-mono font-bold text-purple-300">{p.payoutRef}</td>
-                    <td className="py-3 px-3 font-semibold text-white">{p.destination}</td>
-                    <td className="py-3 px-3 font-mono text-[11px] text-slate-400">
-                      {p.utrRef || 'Pending Bank Processing'}
+                  <tr key={p.id} className="hover:bg-slate-50/50 transition-colors">
+                    <td className="py-3.5 px-3 font-mono font-bold text-brand-600">{p.payoutRef}</td>
+                    <td className="py-3.5 px-3 text-slate-600">{p.requestedAt}</td>
+                    <td className="py-3.5 px-3 font-black text-slate-900 text-sm">₹{p.amount.toLocaleString('en-IN')}</td>
+                    <td className="py-3.5 px-3 text-slate-600 font-medium">
+                      {p.destination}
                     </td>
-                    <td className="py-3 px-3 text-right font-extrabold text-white text-sm">
-                      ₹{p.amount.toLocaleString('en-IN')}
-                    </td>
-                    <td className="py-3 px-3 text-center">
-                      <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full capitalize ${
+                    <td className="py-3.5 px-3">
+                      <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
                         p.status === 'paid'
-                          ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/30'
-                          : p.status === 'processing'
-                          ? 'bg-sky-950 text-sky-300 border border-sky-500/30'
-                          : 'bg-amber-950 text-amber-300 border border-amber-500/30'
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                          : p.status === 'rejected'
+                          ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                          : 'bg-amber-50 text-amber-700 border border-amber-200'
                       }`}>
                         {p.status}
                       </span>
+                    </td>
+                    <td className="py-3.5 px-3 font-mono text-[11px] text-slate-500">
+                      {p.utrRef ? `UTR: ${p.utrRef}` : 'Processing via RazorpayX...'}
                     </td>
                   </tr>
                 ))}
@@ -269,49 +274,52 @@ export const InfluencerEarningsPayouts: React.FC = () => {
         )}
       </div>
 
-      {/* Payout Request Modal */}
+      {/* Withdrawal Modal */}
       {showWithdrawModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
-          <div className="w-full max-w-md rounded-2xl bg-slate-900 border border-slate-800 p-6 space-y-5 shadow-2xl">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fadeIn">
+          <div className="w-full max-w-md rounded-3xl bg-white border border-slate-200 p-6 space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
-                <Wallet className="w-5 h-5 text-purple-400" />
-                <h3 className="text-base font-bold text-white">Withdraw Creator Earnings</h3>
+                <Wallet className="w-5 h-5 text-brand-500" />
+                <h3 className="text-base font-bold text-slate-900">Request Balance Withdrawal</h3>
               </div>
-              <button onClick={() => setShowWithdrawModal(false)} className="text-slate-400 hover:text-white">
-                <X className="w-5 h-5" />
+              <button 
+                onClick={() => setShowWithdrawModal(false)}
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-600"
+              >
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleWithdrawSubmit} className="space-y-4 text-xs">
-              
-              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex justify-between items-center">
-                <span className="text-slate-400">Available Balance:</span>
-                <span className="text-base font-extrabold text-emerald-400">₹{currentInfluencer.pendingBalance}</span>
-              </div>
+            <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs flex justify-between items-center">
+              <span className="text-slate-600">Available Disbursal Balance:</span>
+              <span className="font-extrabold text-base text-brand-600">₹{currentInfluencer.pendingBalance.toLocaleString('en-IN')}</span>
+            </div>
 
+            <form onSubmit={handleWithdrawSubmit} className="space-y-4 text-xs">
               <div>
-                <label className="block text-slate-300 font-semibold mb-1">Withdrawal Amount (₹ INR)</label>
+                <label className="block text-slate-700 font-semibold mb-1">
+                  Withdrawal Amount (₹) - Min ₹{settings.minPayoutAmount}
+                </label>
                 <input
                   type="number"
                   min={settings.minPayoutAmount}
                   max={currentInfluencer.pendingBalance}
                   value={withdrawAmount}
                   onChange={e => setWithdrawAmount(Number(e.target.value))}
-                  className="w-full p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white font-bold text-base focus:outline-none"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-bold text-base focus:outline-none focus:border-brand-500"
                   required
                 />
-                <span className="text-[10px] text-slate-400 block mt-1">Minimum withdrawal: ₹{settings.minPayoutAmount}</span>
               </div>
 
               <div>
-                <label className="block text-slate-300 font-semibold mb-1">Select Transfer Channel</label>
+                <label className="block text-slate-700 font-semibold mb-1">Select Transfer Channel</label>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     type="button"
                     onClick={() => setWithdrawMethod('upi')}
                     className={`py-2 px-3 rounded-xl font-bold border transition-all flex items-center justify-center gap-1.5 ${
-                      withdrawMethod === 'upi' ? 'bg-purple-600 text-white border-purple-400' : 'bg-slate-800 text-slate-300 border-slate-700'
+                      withdrawMethod === 'upi' ? 'bg-brand-500 text-white border-brand-500 shadow-sm' : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
                     }`}
                   >
                     <Smartphone className="w-4 h-4" /> UPI Instant
@@ -321,7 +329,7 @@ export const InfluencerEarningsPayouts: React.FC = () => {
                     type="button"
                     onClick={() => setWithdrawMethod('bank')}
                     className={`py-2 px-3 rounded-xl font-bold border transition-all flex items-center justify-center gap-1.5 ${
-                      withdrawMethod === 'bank' ? 'bg-purple-600 text-white border-purple-400' : 'bg-slate-800 text-slate-300 border-slate-700'
+                      withdrawMethod === 'bank' ? 'bg-brand-500 text-white border-brand-500 shadow-sm' : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
                     }`}
                   >
                     <Building2 className="w-4 h-4" /> Bank Account
@@ -331,45 +339,45 @@ export const InfluencerEarningsPayouts: React.FC = () => {
 
               {withdrawMethod === 'upi' ? (
                 <div>
-                  <label className="block text-slate-300 font-semibold mb-1">Your UPI ID (VPA)</label>
+                  <label className="block text-slate-700 font-semibold mb-1">Your UPI ID (VPA)</label>
                   <input
                     type="text"
                     value={upiVpa}
                     onChange={e => setUpiVpa(e.target.value)}
                     placeholder="creator@okhdfcbank"
-                    className="w-full p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white font-mono"
+                    className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-mono focus:outline-none focus:border-brand-500"
                     required
                   />
                 </div>
               ) : (
                 <div className="space-y-2">
                   <div>
-                    <label className="block text-slate-300 font-semibold mb-0.5">Bank Name</label>
+                    <label className="block text-slate-700 font-semibold mb-0.5">Bank Name</label>
                     <input
                       type="text"
                       value={bankName}
                       onChange={e => setBankName(e.target.value)}
-                      className="w-full p-2 rounded-lg bg-slate-800 border border-slate-700 text-white"
+                      className="w-full p-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-brand-500"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-slate-300 font-semibold mb-0.5">Account Number</label>
+                    <label className="block text-slate-700 font-semibold mb-0.5">Account Number</label>
                     <input
                       type="text"
                       value={bankAccNumber}
                       onChange={e => setBankAccNumber(e.target.value)}
-                      className="w-full p-2 rounded-lg bg-slate-800 border border-slate-700 text-white font-mono"
+                      className="w-full p-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-mono focus:outline-none focus:border-brand-500"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-slate-300 font-semibold mb-0.5">IFSC Code</label>
+                    <label className="block text-slate-700 font-semibold mb-0.5">IFSC Code</label>
                     <input
                       type="text"
                       value={bankIfsc}
                       onChange={e => setBankIfsc(e.target.value)}
-                      className="w-full p-2 rounded-lg bg-slate-800 border border-slate-700 text-white font-mono uppercase"
+                      className="w-full p-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-mono uppercase focus:outline-none focus:border-brand-500"
                       required
                     />
                   </div>
@@ -379,14 +387,14 @@ export const InfluencerEarningsPayouts: React.FC = () => {
               <div className="flex gap-2 pt-2">
                 <button
                   type="submit"
-                  className="flex-1 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-95 text-white font-bold text-xs shadow-glow"
+                  className="flex-1 py-3 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs shadow-md shadow-brand-500/25 transition-all"
                 >
                   Confirm Payout Request
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowWithdrawModal(false)}
-                  className="px-4 py-3 rounded-xl bg-slate-800 text-slate-300 text-xs font-semibold"
+                  className="px-4 py-3 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold hover:bg-slate-200 transition-colors"
                 >
                   Cancel
                 </button>
@@ -400,4 +408,3 @@ export const InfluencerEarningsPayouts: React.FC = () => {
     </div>
   );
 };
-
