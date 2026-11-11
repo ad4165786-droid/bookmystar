@@ -38,6 +38,19 @@ export default {
           800: '#18181b',
           700: '#27272a',
           600: '#3f3f46',
+        },
+        studio: {
+          50: '#F3EEFF', // Soft Lavender (Recommended)
+          100: '#E9DCFC',
+          200: '#D6BEFA',
+          300: '#B892F7',
+          400: '#9466F2',
+          500: '#7047EB', // Primary Purple
+          600: '#5F34E2',
+          700: '#4D24CA',
+          800: '#3C1A9D',
+          900: '#1A0F35', // Deep Studio Midnight
+          950: '#120924',
         }
       },
       fontFamily: {

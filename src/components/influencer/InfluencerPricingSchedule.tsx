@@ -67,26 +67,26 @@ export const InfluencerPricingSchedule: React.FC = () => {
     <div className="space-y-8 pb-16 max-w-5xl">
       
       {/* Title */}
-      <div className="pb-2 border-b border-slate-800">
-        <h1 className="text-2xl font-black text-white">Availability & Schedule Management</h1>
-        <p className="text-xs text-slate-400 mt-0.5">
+      <div className="pb-2 border-b border-purple-100">
+        <h1 className="text-2xl font-black text-slate-900">Availability & Schedule Management</h1>
+        <p className="text-xs text-slate-500 mt-0.5">
           Manage your active bookable days, time slots, and blocked calendar breaks
         </p>
       </div>
 
-      {/* Availability & Schedule Manager */}
-      <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-6">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+      {/* Availability & Schedule Manager (Pure White on Soft Lavender) */}
+      <div className="p-6 rounded-3xl bg-white border border-purple-100 space-y-6 shadow-sm">
+        <div className="flex items-center justify-between pb-3 border-b border-purple-100">
           <div className="flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-sky-400" />
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider">Bookable Days & Time Slots</h3>
+            <Calendar className="w-5 h-5 text-[#7047EB]" />
+            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Bookable Days & Time Slots</h3>
           </div>
-          <span className="text-xs text-sky-400 font-semibold">Indian Standard Time (IST)</span>
+          <span className="text-xs text-purple-700 font-bold">Indian Standard Time (IST)</span>
         </div>
 
         {/* Working Days Pill selector */}
         <div className="space-y-2 text-xs">
-          <label className="block text-slate-300 font-bold">Active Bookable Days</label>
+          <label className="block text-slate-700 font-bold">Active Bookable Days</label>
           <div className="flex flex-wrap gap-2">
             {ALL_DAYS.map(day => (
               <button
@@ -95,8 +95,8 @@ export const InfluencerPricingSchedule: React.FC = () => {
                 onClick={() => toggleDay(day)}
                 className={`py-2 px-4 rounded-xl font-bold border transition-all ${
                   selectedDays.includes(day)
-                    ? 'bg-purple-600 text-white border-purple-400 shadow-glow'
-                    : 'bg-slate-800 text-slate-400 border-slate-700 hover:text-white'
+                    ? 'bg-[#7047EB] text-white border-[#7047EB] shadow-sm'
+                    : 'bg-purple-50 text-slate-600 border-purple-100 hover:bg-purple-100 hover:text-purple-900'
                 }`}
               >
                 {day}
@@ -107,20 +107,20 @@ export const InfluencerPricingSchedule: React.FC = () => {
 
         {/* Daily Time Slots */}
         <div className="space-y-3 text-xs">
-          <label className="block text-slate-300 font-bold">Configured Daily Time Slots</label>
+          <label className="block text-slate-700 font-bold">Configured Daily Time Slots</label>
           
           <div className="flex flex-wrap gap-2">
             {timeSlots.map(slot => (
               <div
                 key={slot}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-white font-semibold"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-purple-50 border border-purple-100 text-slate-900 font-semibold"
               >
-                <Clock className="w-3.5 h-3.5 text-slate-400" />
+                <Clock className="w-3.5 h-3.5 text-[#7047EB]" />
                 <span>{slot}</span>
                 <button
                   type="button"
                   onClick={() => handleRemoveSlot(slot)}
-                  className="text-slate-400 hover:text-rose-400 transition-colors ml-1"
+                  className="text-slate-400 hover:text-rose-600 transition-colors ml-1"
                 >
                   <Trash2 className="w-3 h-3" />
                 </button>
@@ -135,12 +135,12 @@ export const InfluencerPricingSchedule: React.FC = () => {
               value={newSlot}
               onChange={e => setNewSlot(e.target.value)}
               placeholder="e.g. 05:30 PM"
-              className="flex-1 px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white focus:outline-none"
+              className="flex-1 px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-[#7047EB]"
             />
             <button
               type="button"
               onClick={handleAddSlot}
-              className="py-2 px-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold border border-slate-700"
+              className="py-2 px-4 rounded-xl bg-[#7047EB] hover:bg-[#5F34E2] text-white font-bold shadow-sm"
             >
               Add Slot
             </button>
@@ -148,23 +148,23 @@ export const InfluencerPricingSchedule: React.FC = () => {
         </div>
 
         {/* Blocked Dates / Vacation Time */}
-        <div className="space-y-3 text-xs pt-2 border-t border-slate-800">
-          <label className="block text-slate-300 font-bold">Blocked Vacation Dates / Personal Breaks</label>
+        <div className="space-y-3 text-xs pt-4 border-t border-purple-100">
+          <label className="block text-slate-700 font-bold">Blocked Vacation Dates / Personal Breaks</label>
           <div className="flex flex-wrap gap-2">
             {blockedDates.length === 0 ? (
-              <span className="text-slate-500 italic">No dates blocked currently.</span>
+              <span className="text-slate-400 italic">No dates blocked currently.</span>
             ) : (
               blockedDates.map(date => (
                 <div
                   key={date}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-rose-950/40 border border-rose-800/50 text-rose-300 font-semibold"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 font-semibold"
                 >
-                  <Ban className="w-3.5 h-3.5 text-rose-400" />
+                  <Ban className="w-3.5 h-3.5 text-rose-500" />
                   <span>{date}</span>
                   <button
                     type="button"
                     onClick={() => handleRemoveBlockedDate(date)}
-                    className="text-rose-400 hover:text-rose-200 ml-1"
+                    className="text-rose-400 hover:text-rose-600 ml-1"
                   >
                     <Trash2 className="w-3 h-3" />
                   </button>
@@ -178,12 +178,12 @@ export const InfluencerPricingSchedule: React.FC = () => {
               type="date"
               value={newBlockDate}
               onChange={e => setNewBlockDate(e.target.value)}
-              className="flex-1 px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white focus:outline-none"
+              className="flex-1 px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-[#7047EB]"
             />
             <button
               type="button"
               onClick={handleAddBlockedDate}
-              className="py-2 px-3.5 rounded-xl bg-rose-600/20 text-rose-300 hover:bg-rose-600/30 font-bold border border-rose-500/30"
+              className="py-2 px-4 rounded-xl bg-rose-50 text-rose-700 hover:bg-rose-100 font-bold border border-rose-200"
             >
               Block Date
             </button>
@@ -194,7 +194,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
           <button
             type="button"
             onClick={handleSaveAvailability}
-            className="flex items-center gap-2 py-2.5 px-6 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs shadow-md transition-all"
+            className="flex items-center gap-2 py-2.5 px-6 rounded-xl bg-[#7047EB] hover:bg-[#5F34E2] text-white font-bold text-xs shadow-md transition-all"
           >
             <Save className="w-4 h-4" />
             <span>Save Availability Calendar</span>
