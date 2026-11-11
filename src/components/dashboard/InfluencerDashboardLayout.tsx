@@ -4,6 +4,7 @@ import {
   Sparkles, 
   LayoutDashboard, 
   Image, 
+  DollarSign, 
   Clock, 
   Calendar, 
   Wallet, 
@@ -13,7 +14,8 @@ import {
   X, 
   CheckCircle2, 
   AlertCircle,
-  ChevronRight
+  ChevronRight,
+  Star
 } from 'lucide-react';
 
 // Child views
@@ -22,10 +24,13 @@ import { InfluencerContentProfile } from '../influencer/InfluencerContentProfile
 import { InfluencerPricingSchedule } from '../influencer/InfluencerPricingSchedule';
 import { InfluencerBookings } from '../influencer/InfluencerBookings';
 import { InfluencerEarningsPayouts } from '../influencer/InfluencerEarningsPayouts';
+import { InfluencerReviewsGrievances } from '../influencer/InfluencerReviewsGrievances';
 
 export const InfluencerDashboardLayout: React.FC = () => {
   const { 
     currentInfluencer, 
+    currentPath,
+    navigate,
     activeView, 
     setActiveView, 
     logout, 
@@ -41,11 +46,13 @@ export const InfluencerDashboardLayout: React.FC = () => {
   );
 
   const navItems = [
-    { id: 'dashboard', label: 'Studio Overview', icon: LayoutDashboard },
-    { id: 'profile-content', label: 'Profile & Portfolio', icon: Image },
-    { id: 'availability', label: 'Availability & Slots', icon: Clock },
-    { id: 'bookings', label: 'Fan Bookings', icon: Calendar },
-    { id: 'payouts', label: 'Earnings & Payouts', icon: Wallet },
+    { path: '/influencer/dashboard', id: 'dashboard', label: 'Studio Overview', icon: LayoutDashboard },
+    { path: '/influencer/profile', id: 'profile-content', label: 'Profile & Portfolio', icon: Image },
+    { path: '/influencer/rates', id: 'call-pricing', label: 'Call Rates Matrix', icon: DollarSign },
+    { path: '/influencer/availability', id: 'availability', label: 'Availability & Slots', icon: Clock },
+    { path: '/influencer/bookings', id: 'bookings', label: 'Fan Bookings', icon: Calendar },
+    { path: '/influencer/earnings', id: 'payouts', label: 'Earnings & Payouts', icon: Wallet },
+    { path: '/influencer/reviews', id: 'reviews', label: 'Reviews & Grievances', icon: Star },
   ];
 
   return (
@@ -62,7 +69,10 @@ export const InfluencerDashboardLayout: React.FC = () => {
           <div className="h-18 p-5 border-b border-slate-100 flex items-center justify-between">
             <div 
               className="flex items-center gap-3 cursor-pointer"
-              onClick={() => setActiveView('dashboard')}
+              onClick={() => {
+                setActiveView('dashboard');
+                navigate('/influencer/dashboard');
+              }}
             >
               <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-500 via-brand-600 to-amber-500 flex items-center justify-center text-white shadow-md shadow-brand-500/25">
                 <Sparkles className="w-5 h-5 fill-white" />
@@ -117,12 +127,12 @@ export const InfluencerDashboardLayout: React.FC = () => {
             </span>
             {navItems.map(item => {
               const Icon = item.icon;
-              const isActive = activeView === item.id;
+              const isActive = currentPath === item.path;
               return (
                 <button
                   key={item.id}
                   onClick={() => {
-                    setActiveView(item.id);
+                    navigate(item.path);
                     setMobileMenuOpen(false);
                   }}
                   className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-bold transition-all ${
@@ -238,11 +248,15 @@ export const InfluencerDashboardLayout: React.FC = () => {
 
         {/* Dynamic Views */}
         <main className="flex-1 p-4 sm:p-8 max-w-7xl w-full mx-auto">
-          {activeView === 'dashboard' && <InfluencerDashboard />}
-          {activeView === 'profile-content' && <InfluencerContentProfile />}
-          {activeView === 'availability' && <InfluencerPricingSchedule />}
-          {activeView === 'bookings' && <InfluencerBookings />}
-          {activeView === 'payouts' && <InfluencerEarningsPayouts />}
+          {currentPath === '/influencer/profile' && <InfluencerContentProfile />}
+          {currentPath === '/influencer/rates' && <InfluencerPricingSchedule />}
+          {currentPath === '/influencer/availability' && <InfluencerPricingSchedule />}
+          {currentPath === '/influencer/bookings' && <InfluencerBookings />}
+          {currentPath === '/influencer/earnings' && <InfluencerEarningsPayouts />}
+          {currentPath === '/influencer/reviews' && <InfluencerReviewsGrievances />}
+          {(currentPath === '/influencer/dashboard' || (currentPath !== '/influencer/profile' && currentPath !== '/influencer/rates' && currentPath !== '/influencer/availability' && currentPath !== '/influencer/bookings' && currentPath !== '/influencer/earnings' && currentPath !== '/influencer/reviews')) && (
+            <InfluencerDashboard />
+          )}
         </main>
 
       </div>

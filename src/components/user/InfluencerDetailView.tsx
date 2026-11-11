@@ -25,6 +25,7 @@ export const InfluencerDetailView: React.FC = () => {
     influencers, 
     reviews, 
     setActiveView, 
+    navigate,
     openCheckout,
     showToast 
   } = useApp();
@@ -83,7 +84,10 @@ export const InfluencerDetailView: React.FC = () => {
       {/* Back Navigation Bar */}
       <div className="flex items-center justify-between">
         <button
-          onClick={() => setActiveView('explore')}
+          onClick={() => {
+            setActiveView('explore');
+            navigate('/fan/dashboard');
+          }}
           className="flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -93,7 +97,8 @@ export const InfluencerDetailView: React.FC = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={() => {
-              navigator.clipboard?.writeText(window.location.href);
+              const url = window.location.origin + `/fan/creators/${influencer.id}`;
+              navigator.clipboard?.writeText(url);
               showToast('Creator profile link copied to clipboard!');
             }}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-300 hover:text-white hover:bg-slate-800"

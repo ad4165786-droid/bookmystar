@@ -29,7 +29,7 @@ const CATEGORIES: ('All' | Category)[] = [
 ];
 
 export const UserHome: React.FC = () => {
-  const { influencers, setSelectedInfluencerId, setActiveView, settings } = useApp();
+  const { influencers, setSelectedInfluencerId, setActiveView, navigate, settings } = useApp();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<'All' | Category>('All');
@@ -329,6 +329,7 @@ export const UserHome: React.FC = () => {
                         onClick={() => {
                           setSelectedInfluencerId(inf.id);
                           setActiveView('influencer-detail');
+                          navigate(`/fan/creators/${inf.id}`);
                         }}
                         className="flex items-center gap-1.5 py-2 px-4 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white font-bold text-xs shadow-md group-hover:shadow-glow transition-all"
                       >

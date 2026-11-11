@@ -22,6 +22,7 @@ export const InfluencerDashboard: React.FC = () => {
     currentInfluencer, 
     bookings, 
     setActiveView, 
+    navigate,
     startCall,
     settings 
   } = useApp();
@@ -69,13 +70,19 @@ export const InfluencerDashboard: React.FC = () => {
           {/* Quick Actions */}
           <div className="flex flex-wrap items-center gap-2.5">
             <button
-              onClick={() => setActiveView('availability')}
+              onClick={() => {
+                setActiveView('availability');
+                navigate('/influencer/availability');
+              }}
               className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-white font-bold border border-slate-700 transition-all shadow-sm"
             >
               Update Schedule
             </button>
             <button
-              onClick={() => setActiveView('payouts')}
+              onClick={() => {
+                setActiveView('payouts');
+                navigate('/influencer/earnings');
+              }}
               className="px-4 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-black shadow-md shadow-brand-500/30 transition-all"
             >
               Request Payout
@@ -197,7 +204,10 @@ export const InfluencerDashboard: React.FC = () => {
           </div>
 
           <button
-            onClick={() => setActiveView('bookings')}
+            onClick={() => {
+              setActiveView('bookings');
+              navigate('/influencer/bookings');
+            }}
             className="text-xs font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1"
           >
             <span>View All Bookings ({creatorBookings.length})</span>

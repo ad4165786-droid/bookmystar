@@ -152,6 +152,94 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
+// URL / Path Normalization Helper
+export const normalizePath = (rawPath: string): string => {
+  if (!rawPath) return '/';
+  
+  let clean = rawPath.trim();
+  // Support hash routing (e.g. "#/fan/bookings" -> "/fan/bookings")
+  if (clean.includes('#')) {
+    clean = clean.substring(clean.indexOf('#') + 1);
+  }
+  // Strip query string for path normalization
+  const queryIndex = clean.indexOf('?');
+  let pathOnly = queryIndex !== -1 ? clean.substring(0, queryIndex) : clean;
+
+  if (!pathOnly.startsWith('/')) {
+    pathOnly = '/' + pathOnly;
+  }
+  // Remove trailing slashes (except root '/')
+  if (pathOnly.length > 1 && pathOnly.endsWith('/')) {
+    pathOnly = pathOnly.replace(/\/+$/, '');
+  }
+
+  // Aliases & Legacy Route Normalizations
+  if (pathOnly === '/home') return '/';
+  if (pathOnly === '/login' || pathOnly === '/register') return '/auth';
+
+  // Fan Portal Aliases
+  if (pathOnly === '/user' || pathOnly === '/user/dashboard' || pathOnly === '/fan' || pathOnly === '/fan/explore') {
+    return '/fan/dashboard';
+  }
+  if (pathOnly === '/user/bookings') return '/fan/bookings';
+  if (pathOnly === '/user/grievances' || pathOnly === '/user/help') return '/fan/grievances';
+  if (pathOnly === '/user/profile' || pathOnly === '/user/settings' || pathOnly === '/fan/settings') {
+    return '/fan/profile';
+  }
+  if (pathOnly.startsWith('/user/creator/') || pathOnly.startsWith('/user/creators/')) {
+    const id = pathOnly.split('/').pop();
+    return `/fan/creators/${id}`;
+  }
+
+  // Influencer Portal Aliases
+  if (pathOnly === '/influencer') return '/influencer/dashboard';
+  if (pathOnly === '/influencer/profile-content') return '/influencer/profile';
+  if (pathOnly === '/influencer/call-pricing') return '/influencer/rates';
+  if (pathOnly === '/influencer/slots') return '/influencer/availability';
+  if (pathOnly === '/influencer/payouts') return '/influencer/earnings';
+  if (pathOnly === '/influencer/feedback') return '/influencer/reviews';
+
+  // Admin Portal Aliases
+  if (pathOnly === '/admin' || pathOnly === '/admin/overview') return '/admin/dashboard';
+  if (pathOnly === '/admin/influencers') return '/admin/creators';
+
+  return pathOnly;
+};
+
+export const getPathActiveView = (path: string): { view: string; influencerId?: string | null } => {
+  const norm = normalizePath(path);
+  if (norm.startsWith('/fan/creators/')) {
+    const id = norm.replace('/fan/creators/', '');
+    return { view: 'influencer-detail', influencerId: id };
+  }
+  if (norm === '/fan/bookings') return { view: 'bookings', influencerId: null };
+  if (norm === '/fan/grievances') return { view: 'grievances', influencerId: null };
+  if (norm === '/fan/profile') return { view: 'settings', influencerId: null };
+  if (norm.startsWith('/fan')) return { view: 'explore', influencerId: null };
+
+  if (norm === '/influencer/profile') return { view: 'profile-content', influencerId: null };
+  if (norm === '/influencer/rates') return { view: 'call-pricing', influencerId: null };
+  if (norm === '/influencer/availability') return { view: 'availability', influencerId: null };
+  if (norm === '/influencer/bookings') return { view: 'bookings', influencerId: null };
+  if (norm === '/influencer/earnings') return { view: 'payouts', influencerId: null };
+  if (norm === '/influencer/reviews') return { view: 'reviews', influencerId: null };
+  if (norm.startsWith('/influencer')) return { view: 'dashboard', influencerId: null };
+
+  if (norm === '/admin/users') return { view: 'users', influencerId: null };
+  if (norm === '/admin/creators') return { view: 'influencers', influencerId: null };
+  if (norm === '/admin/bookings') return { view: 'bookings', influencerId: null };
+  if (norm === '/admin/payments') return { view: 'payments', influencerId: null };
+  if (norm === '/admin/commission') return { view: 'commission', influencerId: null };
+  if (norm === '/admin/grievances') return { view: 'grievances', influencerId: null };
+  if (norm === '/admin/moderation') return { view: 'moderation', influencerId: null };
+  if (norm === '/admin/announcements') return { view: 'announcements', influencerId: null };
+  if (norm === '/admin/reports') return { view: 'reports', influencerId: null };
+  if (norm === '/admin/audit') return { view: 'audit', influencerId: null };
+  if (norm.startsWith('/admin')) return { view: 'overview', influencerId: null };
+
+  return { view: 'explore', influencerId: null };
+};
+
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Collections State
   const [users, setUsers] = useState<UserProfile[]>(() => {
@@ -199,20 +287,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return saved ? JSON.parse(saved) : INITIAL_SETTINGS;
   });
 
-  // URL / Path Detection: support both hash routing and pathname
-  const getInitialPath = () => {
+  // URL / Path Detection: support direct pathname, refresh, and hash routing
+  const getInitialPath = (): string => {
     if (typeof window !== 'undefined') {
-      const hash = window.location.hash.replace('#', '');
-      if (hash.startsWith('/admin/login') || hash === 'admin/login') return '/admin/login';
-      if (window.location.pathname === '/admin/login') return '/admin/login';
-      if (hash.startsWith('/user/dashboard')) return '/user/dashboard';
-      if (hash.startsWith('/influencer/dashboard')) return '/influencer/dashboard';
-      if (hash.startsWith('/admin/dashboard')) return '/admin/dashboard';
+      const hash = window.location.hash.replace(/^#/, '');
+      if (hash && hash !== '/') return normalizePath(hash);
+      if (window.location.pathname) return normalizePath(window.location.pathname);
     }
     return '/';
   };
 
-  const [currentPath, setCurrentPath] = useState<string>(getInitialPath);
+  const initialPath = getInitialPath();
+  const initialViewData = getPathActiveView(initialPath);
+
+  const [currentPath, setCurrentPath] = useState<string>(initialPath);
 
   // Authentication State
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
@@ -264,9 +352,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return null;
   });
 
-  // View state within active dashboard
-  const [activeView, setActiveView] = useState<string>('explore');
-  const [selectedInfluencerId, setSelectedInfluencerId] = useState<string | null>(null);
+  // View state within active dashboard (derived and synced from path)
+  const [activeView, setActiveView] = useState<string>(initialViewData.view);
+  const [selectedInfluencerId, setSelectedInfluencerId] = useState<string | null>(initialViewData.influencerId || null);
 
   // Modals & Real-time
   const [activeCall, setActiveCall] = useState<ActiveCallData | null>(null);
@@ -316,38 +404,42 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, [isAuthenticated, currentRole, currentUser, currentInfluencer, currentAdmin]);
 
-  // Router listener
+  // Router listener for popstate (browser back/forward) and hashchange
   useEffect(() => {
-    const handlePopState = () => {
-      const hash = window.location.hash.replace('#', '');
-      if (hash.startsWith('/admin/login')) {
-        setCurrentPath('/admin/login');
-      } else if (hash.startsWith('/admin/dashboard')) {
-        if (currentRole === 'admin') setCurrentPath('/admin/dashboard');
-        else setCurrentPath('/admin/login');
-      } else if (hash.startsWith('/user/dashboard')) {
-        if (currentRole === 'user') setCurrentPath('/user/dashboard');
-        else setCurrentPath('/');
-      } else if (hash.startsWith('/influencer/dashboard')) {
-        if (currentRole === 'influencer') setCurrentPath('/influencer/dashboard');
-        else setCurrentPath('/');
-      } else {
-        if (!isAuthenticated) setCurrentPath('/');
+    const handleLocationChange = () => {
+      const path = getInitialPath();
+      setCurrentPath(path);
+      const viewData = getPathActiveView(path);
+      setActiveView(viewData.view);
+      if (viewData.influencerId !== undefined) {
+        setSelectedInfluencerId(viewData.influencerId);
       }
     };
 
-    window.addEventListener('popstate', handlePopState);
-    window.addEventListener('hashchange', handlePopState);
+    window.addEventListener('popstate', handleLocationChange);
+    window.addEventListener('hashchange', handleLocationChange);
     return () => {
-      window.removeEventListener('popstate', handlePopState);
-      window.removeEventListener('hashchange', handlePopState);
+      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener('hashchange', handleLocationChange);
     };
-  }, [isAuthenticated, currentRole]);
+  }, []);
 
   const navigate = (path: string) => {
-    setCurrentPath(path);
+    const target = normalizePath(path);
+    setCurrentPath(target);
+    
+    // Update browser address bar and history
     if (typeof window !== 'undefined') {
-      window.location.hash = path;
+      if (window.location.pathname !== target) {
+        window.history.pushState(null, '', target);
+      }
+    }
+
+    // Synchronize active view & creator selection
+    const viewData = getPathActiveView(target);
+    setActiveView(viewData.view);
+    if (viewData.influencerId !== undefined) {
+      setSelectedInfluencerId(viewData.influencerId);
     }
   };
 
@@ -394,7 +486,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setCurrentInfluencer(null);
     setCurrentAdmin(null);
     setActiveView('explore');
-    navigate('/user/dashboard');
+    navigate('/fan/dashboard');
 
     showToast(`Welcome back, ${foundUser.name}!`);
     return { success: true };
@@ -422,7 +514,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setCurrentInfluencer(null);
     setCurrentAdmin(null);
     setActiveView('explore');
-    navigate('/user/dashboard');
+    navigate('/fan/dashboard');
 
     showToast(`Account created! Welcome to BookMyStar, ${newUser.name}.`);
     return { success: true };

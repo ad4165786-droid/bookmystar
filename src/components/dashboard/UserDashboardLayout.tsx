@@ -25,6 +25,8 @@ import { UserProfileSettings } from '../user/UserProfileSettings';
 export const UserDashboardLayout: React.FC = () => {
   const { 
     currentUser, 
+    currentPath,
+    navigate,
     activeView, 
     setActiveView, 
     selectedInfluencerId, 
@@ -42,10 +44,10 @@ export const UserDashboardLayout: React.FC = () => {
   );
 
   const navItems = [
-    { id: 'explore', label: 'Explore Creators', icon: Compass },
-    { id: 'bookings', label: 'My Call Bookings', icon: Calendar },
-    { id: 'grievances', label: 'Help & Grievances', icon: LifeBuoy },
-    { id: 'settings', label: 'Profile & Settings', icon: User },
+    { path: '/fan/dashboard', id: 'explore', label: 'Explore Creators', icon: Compass },
+    { path: '/fan/bookings', id: 'bookings', label: 'My Call Bookings', icon: Calendar },
+    { path: '/fan/grievances', id: 'grievances', label: 'Help & Grievances', icon: LifeBuoy },
+    { path: '/fan/profile', id: 'settings', label: 'Profile & Settings', icon: User },
   ];
 
   return (
@@ -65,6 +67,7 @@ export const UserDashboardLayout: React.FC = () => {
               onClick={() => {
                 setSelectedInfluencerId(null);
                 setActiveView('explore');
+                navigate('/fan/dashboard');
               }}
             >
               <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-amber-500 flex items-center justify-center text-white shadow-orange-glow">
@@ -115,12 +118,12 @@ export const UserDashboardLayout: React.FC = () => {
             </span>
             {navItems.map(item => {
               const Icon = item.icon;
-              const isActive = (activeView === item.id) || (item.id === 'explore' && activeView === 'influencer-detail');
+              const isActive = (currentPath === item.path) || (item.id === 'explore' && currentPath.startsWith('/fan/creators/'));
               return (
                 <button
                   key={item.id}
                   onClick={() => {
-                    setActiveView(item.id);
+                    navigate(item.path);
                     if (item.id === 'explore') setSelectedInfluencerId(null);
                     setMobileMenuOpen(false);
                   }}
@@ -229,15 +232,15 @@ export const UserDashboardLayout: React.FC = () => {
 
         {/* Dynamic User Views */}
         <main className="flex-1 p-4 sm:p-8 max-w-7xl w-full mx-auto">
-          {(activeView === 'explore' || (!selectedInfluencerId && activeView === 'influencer-detail')) && (
-            <UserHome />
-          )}
-          {activeView === 'influencer-detail' && selectedInfluencerId && (
+          {currentPath.startsWith('/fan/creators/') && selectedInfluencerId && (
             <InfluencerDetailView />
           )}
-          {activeView === 'bookings' && <UserBookings />}
-          {activeView === 'grievances' && <UserGrievances />}
-          {activeView === 'settings' && <UserProfileSettings />}
+          {currentPath === '/fan/bookings' && <UserBookings />}
+          {currentPath === '/fan/grievances' && <UserGrievances />}
+          {currentPath === '/fan/profile' && <UserProfileSettings />}
+          {(currentPath === '/fan/dashboard' || (!currentPath.startsWith('/fan/creators/') && currentPath !== '/fan/bookings' && currentPath !== '/fan/grievances' && currentPath !== '/fan/profile')) && (
+            <UserHome />
+          )}
         </main>
 
       </div>

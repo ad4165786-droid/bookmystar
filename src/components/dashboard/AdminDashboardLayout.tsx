@@ -36,6 +36,8 @@ import { AdminAuditRoles } from '../admin/AdminAuditRoles';
 export const AdminDashboardLayout: React.FC = () => {
   const { 
     currentAdmin, 
+    currentPath,
+    navigate,
     activeView, 
     setActiveView, 
     logout, 
@@ -47,17 +49,17 @@ export const AdminDashboardLayout: React.FC = () => {
   const [showNotifDropdown, setShowNotifDropdown] = useState(false);
 
   const navItems = [
-    { id: 'overview', label: 'Dashboard Overview', icon: LayoutDashboard },
-    { id: 'users', label: 'User Directory', icon: Users },
-    { id: 'influencers', label: 'Creator Verification', icon: ShieldCheck },
-    { id: 'bookings', label: 'Call Bookings & Privacy', icon: Calendar },
-    { id: 'payments', label: 'Payments & Payouts', icon: CreditCard },
-    { id: 'commission', label: 'Commission Rules', icon: Percent },
-    { id: 'grievances', label: 'Grievance Desk', icon: LifeBuoy },
-    { id: 'moderation', label: 'Content Moderation', icon: ShieldAlert },
-    { id: 'announcements', label: 'Broadcast Notices', icon: Bell },
-    { id: 'reports', label: 'Reports & CSV Export', icon: FileSpreadsheet },
-    { id: 'audit', label: 'Security & Audit Log', icon: Lock },
+    { path: '/admin/dashboard', id: 'overview', label: 'Dashboard Overview', icon: LayoutDashboard },
+    { path: '/admin/users', id: 'users', label: 'User Directory', icon: Users },
+    { path: '/admin/creators', id: 'influencers', label: 'Creator Verification', icon: ShieldCheck },
+    { path: '/admin/bookings', id: 'bookings', label: 'Call Bookings & Privacy', icon: Calendar },
+    { path: '/admin/payments', id: 'payments', label: 'Payments & Payouts', icon: CreditCard },
+    { path: '/admin/commission', id: 'commission', label: 'Commission Rules', icon: Percent },
+    { path: '/admin/grievances', id: 'grievances', label: 'Grievance Desk', icon: LifeBuoy },
+    { path: '/admin/moderation', id: 'moderation', label: 'Content Moderation', icon: ShieldAlert },
+    { path: '/admin/announcements', id: 'announcements', label: 'Broadcast Notices', icon: Bell },
+    { path: '/admin/reports', id: 'reports', label: 'Reports & CSV Export', icon: FileSpreadsheet },
+    { path: '/admin/audit', id: 'audit', label: 'Security & Audit Log', icon: Lock },
   ];
 
   return (
@@ -74,7 +76,10 @@ export const AdminDashboardLayout: React.FC = () => {
           <div className="h-18 p-5 border-b border-slate-800 flex items-center justify-between">
             <div 
               className="flex items-center gap-3 cursor-pointer"
-              onClick={() => setActiveView('overview')}
+              onClick={() => {
+                setActiveView('overview');
+                navigate('/admin/dashboard');
+              }}
             >
               <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 via-orange-500 to-brand-600 flex items-center justify-center text-white shadow-orange-glow">
                 <ShieldCheck className="w-5 h-5 fill-white" />
@@ -123,12 +128,12 @@ export const AdminDashboardLayout: React.FC = () => {
             </span>
             {navItems.map(item => {
               const Icon = item.icon;
-              const isActive = activeView === item.id;
+              const isActive = currentPath === item.path;
               return (
                 <button
                   key={item.id}
                   onClick={() => {
-                    setActiveView(item.id);
+                    navigate(item.path);
                     setMobileMenuOpen(false);
                   }}
                   className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
@@ -243,17 +248,19 @@ export const AdminDashboardLayout: React.FC = () => {
 
         {/* Dynamic Views */}
         <main className="flex-1 p-4 sm:p-8 max-w-7xl w-full mx-auto">
-          {activeView === 'overview' && <AdminOverview />}
-          {activeView === 'users' && <AdminUsers />}
-          {activeView === 'influencers' && <AdminInfluencers />}
-          {activeView === 'bookings' && <AdminBookings />}
-          {activeView === 'payments' && <AdminPayments />}
-          {activeView === 'commission' && <AdminCommission />}
-          {activeView === 'grievances' && <AdminGrievances />}
-          {activeView === 'moderation' && <AdminModeration />}
-          {activeView === 'announcements' && <AdminAnnouncements />}
-          {activeView === 'reports' && <AdminReports />}
-          {activeView === 'audit' && <AdminAuditRoles />}
+          {currentPath === '/admin/users' && <AdminUsers />}
+          {currentPath === '/admin/creators' && <AdminInfluencers />}
+          {currentPath === '/admin/bookings' && <AdminBookings />}
+          {currentPath === '/admin/payments' && <AdminPayments />}
+          {currentPath === '/admin/commission' && <AdminCommission />}
+          {currentPath === '/admin/grievances' && <AdminGrievances />}
+          {currentPath === '/admin/moderation' && <AdminModeration />}
+          {currentPath === '/admin/announcements' && <AdminAnnouncements />}
+          {currentPath === '/admin/reports' && <AdminReports />}
+          {currentPath === '/admin/audit' && <AdminAuditRoles />}
+          {(currentPath === '/admin/dashboard' || (currentPath !== '/admin/users' && currentPath !== '/admin/creators' && currentPath !== '/admin/bookings' && currentPath !== '/admin/payments' && currentPath !== '/admin/commission' && currentPath !== '/admin/grievances' && currentPath !== '/admin/moderation' && currentPath !== '/admin/announcements' && currentPath !== '/admin/reports' && currentPath !== '/admin/audit')) && (
+            <AdminOverview />
+          )}
         </main>
 
       </div>

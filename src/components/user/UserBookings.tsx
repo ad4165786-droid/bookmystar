@@ -25,6 +25,7 @@ export const UserBookings: React.FC = () => {
     cancelBooking, 
     refundBooking,
     setActiveView,
+    navigate,
     setSelectedInfluencerId,
     showToast 
   } = useApp();
@@ -103,7 +104,10 @@ export const UserBookings: React.FC = () => {
           <h3 className="text-sm font-bold text-white">No {activeTab} bookings found</h3>
           <p className="text-xs text-slate-400">Explore creators and book your first 1-on-1 live call.</p>
           <button
-            onClick={() => setActiveView('explore')}
+            onClick={() => {
+              setActiveView('explore');
+              navigate('/fan/dashboard');
+            }}
             className="mt-2 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold shadow-md transition-colors"
           >
             Explore Influencers
@@ -218,6 +222,7 @@ export const UserBookings: React.FC = () => {
                     onClick={() => {
                       setSelectedInfluencerId(booking.influencerId);
                       setActiveView('influencer-detail');
+                      navigate(`/fan/creators/${booking.influencerId}`);
                     }}
                     className="flex items-center gap-1.5 py-1.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition-colors"
                   >

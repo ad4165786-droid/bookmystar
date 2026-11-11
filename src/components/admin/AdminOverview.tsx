@@ -26,7 +26,8 @@ export const AdminOverview: React.FC = () => {
     payouts, 
     grievances, 
     settings, 
-    setActiveView 
+    setActiveView,
+    navigate 
   } = useApp();
 
   const [dateRange, setDateRange] = useState<'today' | '7d' | '30d' | 'all'>('30d');
@@ -105,7 +106,10 @@ export const AdminOverview: React.FC = () => {
         
         {/* Verification Queue Pill */}
         <div
-          onClick={() => setActiveView('influencers')}
+          onClick={() => {
+            setActiveView('influencers');
+            navigate('/admin/creators');
+          }}
           className="p-4 rounded-2xl bg-amber-950/30 border border-amber-500/30 hover:border-amber-400 cursor-pointer transition-all flex items-center justify-between shadow-md group"
         >
           <div className="flex items-center gap-3">
@@ -124,7 +128,10 @@ export const AdminOverview: React.FC = () => {
 
         {/* Payout Queue Pill */}
         <div
-          onClick={() => setActiveView('payments')}
+          onClick={() => {
+            setActiveView('payments');
+            navigate('/admin/payments');
+          }}
           className="p-4 rounded-2xl bg-purple-950/30 border border-purple-500/30 hover:border-purple-400 cursor-pointer transition-all flex items-center justify-between shadow-md group"
         >
           <div className="flex items-center gap-3">
@@ -143,7 +150,10 @@ export const AdminOverview: React.FC = () => {
 
         {/* Open Grievances Pill */}
         <div
-          onClick={() => setActiveView('grievances')}
+          onClick={() => {
+            setActiveView('grievances');
+            navigate('/admin/grievances');
+          }}
           className="p-4 rounded-2xl bg-rose-950/30 border border-rose-500/30 hover:border-rose-400 cursor-pointer transition-all flex items-center justify-between shadow-md group"
         >
           <div className="flex items-center gap-3">
@@ -289,7 +299,10 @@ export const AdminOverview: React.FC = () => {
           <div className="flex items-center justify-between pb-3 border-b border-slate-800">
             <h3 className="text-sm font-bold text-white uppercase tracking-wider">Latest Escrow Payments</h3>
             <button
-              onClick={() => setActiveView('payments')}
+              onClick={() => {
+                setActiveView('payments');
+                navigate('/admin/payments');
+              }}
               className="text-xs text-brand-400 hover:text-brand-300 font-semibold"
             >
               All Transactions

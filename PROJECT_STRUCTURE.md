@@ -36,6 +36,9 @@ bookmystar/
 │   │   ├── call/                          # 📞 Active WebRTC Call Room
 │   │   │   └── LiveCallRoom.tsx           # 1-on-1 audio/video call room with live timer
 │   │   │
+│   │   ├── common/                        # 🌐 Shared / Fallback Pages
+│   │   │   └── NotFoundPage.tsx           # 404 Page Not Found with smart navigation
+│   │   │
 │   │   ├── dashboard/                     # 🧭 Layout Shells
 │   │   │   ├── AdminDashboardLayout.tsx   # Admin dashboard sidebar, header & routing
 │   │   │   ├── InfluencerDashboardLayout.tsx # Creator Studio layout with white sidebar
