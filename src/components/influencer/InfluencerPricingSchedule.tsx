@@ -67,21 +67,21 @@ export const InfluencerPricingSchedule: React.FC = () => {
     <div className="space-y-8 pb-16 max-w-5xl">
       
       {/* Title */}
-      <div className="pb-2 border-b border-purple-100">
+      <div className="pb-2 border-b border-slate-200/80">
         <h1 className="text-2xl font-black text-slate-900">Availability & Schedule Management</h1>
         <p className="text-xs text-slate-500 mt-0.5">
           Manage your active bookable days, time slots, and blocked calendar breaks
         </p>
       </div>
 
-      {/* Availability & Schedule Manager (Pure White on Soft Lavender) */}
-      <div className="p-6 rounded-3xl bg-white border border-purple-100 space-y-6 shadow-sm">
-        <div className="flex items-center justify-between pb-3 border-b border-purple-100">
+      {/* Availability & Schedule Manager (Pure White on Clean Neutral Background) */}
+      <div className="p-6 rounded-3xl bg-white border border-slate-200/80 space-y-6 shadow-sm">
+        <div className="flex items-center justify-between pb-3 border-b border-slate-100">
           <div className="flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-[#7047EB]" />
+            <Calendar className="w-5 h-5 text-brand-500" />
             <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Bookable Days & Time Slots</h3>
           </div>
-          <span className="text-xs text-purple-700 font-bold">Indian Standard Time (IST)</span>
+          <span className="text-xs text-slate-500 font-bold">Indian Standard Time (IST)</span>
         </div>
 
         {/* Working Days Pill selector */}
@@ -95,8 +95,8 @@ export const InfluencerPricingSchedule: React.FC = () => {
                 onClick={() => toggleDay(day)}
                 className={`py-2 px-4 rounded-xl font-bold border transition-all ${
                   selectedDays.includes(day)
-                    ? 'bg-[#7047EB] text-white border-[#7047EB] shadow-sm'
-                    : 'bg-purple-50 text-slate-600 border-purple-100 hover:bg-purple-100 hover:text-purple-900'
+                    ? 'bg-brand-500 text-white border-brand-500 shadow-sm shadow-brand-500/25'
+                    : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
                 {day}
@@ -105,99 +105,100 @@ export const InfluencerPricingSchedule: React.FC = () => {
           </div>
         </div>
 
-        {/* Daily Time Slots */}
+        {/* Time Slot Chips */}
         <div className="space-y-3 text-xs">
-          <label className="block text-slate-700 font-bold">Configured Daily Time Slots</label>
-          
+          <label className="block text-slate-700 font-bold">Daily Active Time Windows</label>
           <div className="flex flex-wrap gap-2">
             {timeSlots.map(slot => (
               <div
                 key={slot}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-purple-50 border border-purple-100 text-slate-900 font-semibold"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 text-slate-800 border border-slate-200 text-xs font-semibold"
               >
-                <Clock className="w-3.5 h-3.5 text-[#7047EB]" />
+                <Clock className="w-3.5 h-3.5 text-brand-500" />
                 <span>{slot}</span>
                 <button
                   type="button"
                   onClick={() => handleRemoveSlot(slot)}
-                  className="text-slate-400 hover:text-rose-600 transition-colors ml-1"
+                  className="text-slate-400 hover:text-rose-500 transition-colors ml-1"
                 >
-                  <Trash2 className="w-3 h-3" />
+                  <Trash2 className="w-3.5 h-3.5" />
                 </button>
               </div>
             ))}
           </div>
 
-          {/* Add Time Slot Input */}
-          <div className="flex items-center gap-2 max-w-sm pt-1">
+          {/* Add custom slot */}
+          <div className="flex gap-2 max-w-sm pt-2">
             <input
               type="text"
+              placeholder="e.g. 05:00 PM - 06:00 PM"
               value={newSlot}
               onChange={e => setNewSlot(e.target.value)}
-              placeholder="e.g. 05:30 PM"
-              className="flex-1 px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-[#7047EB]"
+              className="flex-1 px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-brand-500 text-xs font-medium"
             />
             <button
               type="button"
               onClick={handleAddSlot}
-              className="py-2 px-4 rounded-xl bg-[#7047EB] hover:bg-[#5F34E2] text-white font-bold shadow-sm"
+              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs"
             >
               Add Slot
             </button>
           </div>
         </div>
 
-        {/* Blocked Dates / Vacation Time */}
-        <div className="space-y-3 text-xs pt-4 border-t border-purple-100">
-          <label className="block text-slate-700 font-bold">Blocked Vacation Dates / Personal Breaks</label>
+        {/* Blocked Dates */}
+        <div className="space-y-3 text-xs pt-2 border-t border-slate-100">
+          <label className="block text-slate-700 font-bold">Blocked Holiday / Blackout Dates</label>
           <div className="flex flex-wrap gap-2">
             {blockedDates.length === 0 ? (
-              <span className="text-slate-400 italic">No dates blocked currently.</span>
+              <span className="text-slate-400 text-xs">No dates blocked yet. Fans can book any active day.</span>
             ) : (
-              blockedDates.map(date => (
+              blockedDates.map(d => (
                 <div
-                  key={date}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 font-semibold"
+                  key={d}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 text-xs font-semibold"
                 >
-                  <Ban className="w-3.5 h-3.5 text-rose-500" />
-                  <span>{date}</span>
+                  <Ban className="w-3.5 h-3.5" />
+                  <span>{d}</span>
                   <button
                     type="button"
-                    onClick={() => handleRemoveBlockedDate(date)}
-                    className="text-rose-400 hover:text-rose-600 ml-1"
+                    onClick={() => handleRemoveBlockedDate(d)}
+                    className="text-rose-400 hover:text-rose-700 transition-colors ml-1"
                   >
-                    <Trash2 className="w-3 h-3" />
+                    <Trash2 className="w-3.5 h-3.5" />
                   </button>
                 </div>
               ))
             )}
           </div>
 
-          <div className="flex items-center gap-2 max-w-sm pt-1">
+          {/* Add blackout date */}
+          <div className="flex gap-2 max-w-sm pt-2">
             <input
               type="date"
               value={newBlockDate}
               onChange={e => setNewBlockDate(e.target.value)}
-              className="flex-1 px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-[#7047EB]"
+              className="flex-1 px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-brand-500 text-xs"
             />
             <button
               type="button"
               onClick={handleAddBlockedDate}
-              className="py-2 px-4 rounded-xl bg-rose-50 text-rose-700 hover:bg-rose-100 font-bold border border-rose-200"
+              className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs"
             >
               Block Date
             </button>
           </div>
         </div>
 
-        <div className="pt-3">
+        {/* Save button */}
+        <div className="pt-4 border-t border-slate-100">
           <button
             type="button"
             onClick={handleSaveAvailability}
-            className="flex items-center gap-2 py-2.5 px-6 rounded-xl bg-[#7047EB] hover:bg-[#5F34E2] text-white font-bold text-xs shadow-md transition-all"
+            className="flex items-center gap-2 py-2.5 px-6 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs shadow-md shadow-brand-500/25 transition-all"
           >
             <Save className="w-4 h-4" />
-            <span>Save Availability Calendar</span>
+            <span>Save Schedule & Availability</span>
           </button>
         </div>
 
@@ -206,4 +207,3 @@ export const InfluencerPricingSchedule: React.FC = () => {
     </div>
   );
 };
-

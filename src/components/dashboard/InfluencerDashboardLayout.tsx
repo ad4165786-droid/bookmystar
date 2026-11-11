@@ -49,29 +49,29 @@ export const InfluencerDashboardLayout: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F3EEFF] text-slate-900 flex flex-col lg:flex-row font-sans selection:bg-[#7047EB] selection:text-white">
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-900 flex flex-col lg:flex-row font-sans selection:bg-brand-500 selection:text-white">
       
       {/* 1. Left Sidebar for Influencer Portal */}
-      <aside className={`fixed inset-y-0 left-0 z-40 w-72 bg-[#1A0F35] text-white border-r border-[#2C1959] flex flex-col justify-between transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${
+      <aside className={`fixed inset-y-0 left-0 z-40 w-72 bg-[#0F172A] text-white border-r border-slate-800 flex flex-col justify-between transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${
         mobileMenuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
       }`}>
         
         {/* Top: Logo & Creator Identity */}
         <div>
           {/* Logo Bar */}
-          <div className="h-18 p-5 border-b border-[#2C1959] flex items-center justify-between">
+          <div className="h-18 p-5 border-b border-slate-800 flex items-center justify-between">
             <div 
               className="flex items-center gap-3 cursor-pointer"
               onClick={() => setActiveView('dashboard')}
             >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#7047EB] via-[#9466F2] to-amber-400 flex items-center justify-center text-white shadow-[0_4px_20px_rgba(112,71,235,0.4)]">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-500 via-brand-600 to-amber-500 flex items-center justify-center text-white shadow-lg shadow-brand-500/25">
                 <Sparkles className="w-5 h-5 fill-white" />
               </div>
               <div>
                 <span className="font-extrabold text-lg text-white">
-                  BookMy<span className="text-[#B892F7]">Star</span>
+                  BookMy<span className="text-brand-400">Star</span>
                 </span>
-                <span className="text-[10px] font-bold uppercase tracking-wider block text-[#B892F7]">
+                <span className="text-[10px] font-bold uppercase tracking-wider block text-amber-400">
                   Creator Studio
                 </span>
               </div>
@@ -79,19 +79,19 @@ export const InfluencerDashboardLayout: React.FC = () => {
 
             <button 
               onClick={() => setMobileMenuOpen(false)}
-              className="lg:hidden p-1.5 rounded-lg text-purple-300 hover:text-white"
+              className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* Creator Profile Mini Badge */}
-          <div className="p-4 mx-4 my-4 rounded-2xl bg-[#241548] border border-[#3A2272]">
+          <div className="p-4 mx-4 my-4 rounded-2xl bg-slate-800/80 border border-slate-700/80">
             <div className="flex items-center gap-3">
               <img
                 src={currentInfluencer?.avatar || 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=300&auto=format&fit=crop&q=80'}
                 alt={currentInfluencer?.name || 'Creator'}
-                className="w-11 h-11 rounded-xl object-cover ring-2 ring-[#7047EB]"
+                className="w-11 h-11 rounded-xl object-cover ring-2 ring-brand-500"
               />
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1.5">
@@ -100,8 +100,8 @@ export const InfluencerDashboardLayout: React.FC = () => {
                     <CheckCircle2 className="w-3.5 h-3.5 text-sky-400 shrink-0" />
                   )}
                 </div>
-                <p className="text-[11px] text-[#B892F7] font-medium truncate">{currentInfluencer?.handle}</p>
-                <div className="mt-1 flex items-center gap-1.5 text-[10px] text-purple-300/80">
+                <p className="text-[11px] text-brand-400 font-medium truncate">{currentInfluencer?.handle}</p>
+                <div className="mt-1 flex items-center gap-1.5 text-[10px] text-slate-400">
                   <span>Bal: ₹{currentInfluencer?.pendingBalance.toLocaleString('en-IN')}</span>
                   <span>•</span>
                   <span>{currentInfluencer?.completedCallsCount} Calls</span>
@@ -112,7 +112,7 @@ export const InfluencerDashboardLayout: React.FC = () => {
 
           {/* Navigation Links */}
           <nav className="px-3 space-y-1">
-            <span className="px-3 text-[10px] uppercase font-bold text-purple-400/70 tracking-wider">
+            <span className="px-3 text-[10px] uppercase font-bold text-slate-400 tracking-wider">
               Creator Navigation
             </span>
             {navItems.map(item => {
@@ -127,12 +127,12 @@ export const InfluencerDashboardLayout: React.FC = () => {
                   }}
                   className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-bold transition-all ${
                     isActive
-                      ? 'bg-gradient-to-r from-[#7047EB] to-[#865BF5] text-white shadow-[0_4px_16px_rgba(112,71,235,0.4)]'
-                      : 'text-purple-200/80 hover:text-white hover:bg-[#281850]'
+                      ? 'bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-md shadow-brand-500/25'
+                      : 'text-slate-300 hover:text-white hover:bg-slate-800/70'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-purple-400'}`} />
+                    <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
                     <span>{item.label}</span>
                   </div>
                   {isActive && <ChevronRight className="w-3.5 h-3.5" />}
@@ -143,7 +143,7 @@ export const InfluencerDashboardLayout: React.FC = () => {
         </div>
 
         {/* Bottom: Logout */}
-        <div className="p-4 border-t border-[#2C1959]">
+        <div className="p-4 border-t border-slate-800">
           <button
             onClick={logout}
             className="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-bold text-rose-400 hover:bg-rose-950/40 transition-colors"
@@ -159,7 +159,7 @@ export const InfluencerDashboardLayout: React.FC = () => {
       {mobileMenuOpen && (
         <div 
           onClick={() => setMobileMenuOpen(false)}
-          className="fixed inset-0 bg-[#120924]/60 z-30 lg:hidden"
+          className="fixed inset-0 bg-slate-950/60 z-30 lg:hidden"
         />
       )}
 
@@ -167,11 +167,11 @@ export const InfluencerDashboardLayout: React.FC = () => {
       <div className="flex-1 lg:pl-72 flex flex-col min-h-screen">
         
         {/* Top Header */}
-        <header className="sticky top-0 z-20 h-16 bg-white/95 backdrop-blur-md border-b border-purple-100 px-4 sm:px-8 flex items-center justify-between shadow-xs">
+        <header className="sticky top-0 z-20 h-16 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-8 flex items-center justify-between shadow-xs">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="lg:hidden p-2 rounded-xl text-purple-900 hover:bg-purple-50"
+              className="lg:hidden p-2 rounded-xl text-slate-700 hover:bg-slate-100"
             >
               <Menu className="w-5 h-5" />
             </button>
@@ -180,7 +180,7 @@ export const InfluencerDashboardLayout: React.FC = () => {
               <h2 className="text-sm sm:text-base font-extrabold text-slate-900">
                 Creator Studio • {currentInfluencer?.name}
               </h2>
-              <p className="text-[11px] text-purple-700/70 hidden sm:block">
+              <p className="text-[11px] text-slate-500 hidden sm:block">
                 Manage rates, upcoming fan calls, live rooms, and payout balance.
               </p>
             </div>
@@ -206,25 +206,25 @@ export const InfluencerDashboardLayout: React.FC = () => {
             <div className="relative">
               <button
                 onClick={() => setShowNotifDropdown(!showNotifDropdown)}
-                className="relative p-2 rounded-xl bg-purple-50 hover:bg-purple-100/80 text-[#7047EB] border border-purple-200 transition-colors"
+                className="relative p-2 rounded-xl bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200 transition-colors"
               >
                 <Bell className="w-4 h-4" />
                 {unreadNotifs.length > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#7047EB] text-white text-[9px] font-bold flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-brand-500 text-white text-[9px] font-bold flex items-center justify-center">
                     {unreadNotifs.length}
                   </span>
                 )}
               </button>
 
               {showNotifDropdown && (
-                <div className="absolute right-0 mt-2 w-80 rounded-2xl bg-white border border-purple-100 shadow-xl p-4 z-50 animate-fadeIn">
-                  <div className="flex items-center justify-between pb-2 border-b border-purple-100">
+                <div className="absolute right-0 mt-2 w-80 rounded-2xl bg-white border border-slate-200 shadow-xl p-4 z-50 animate-fadeIn">
+                  <div className="flex items-center justify-between pb-2 border-b border-slate-100">
                     <span className="text-xs font-bold text-slate-900">Studio Alerts</span>
-                    <span className="text-[10px] text-purple-600 font-semibold">{unreadNotifs.length} new</span>
+                    <span className="text-[10px] text-brand-600 font-semibold">{unreadNotifs.length} new</span>
                   </div>
                   <div className="mt-2 space-y-2 max-h-64 overflow-y-auto">
                     {notifications.slice(0, 4).map(n => (
-                      <div key={n.id} className="p-2.5 rounded-xl bg-purple-50/60 border border-purple-100 text-xs">
+                      <div key={n.id} className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-xs">
                         <div className="font-semibold text-slate-900">{n.title}</div>
                         <p className="text-[11px] text-slate-600 mt-0.5">{n.message}</p>
                       </div>
@@ -250,4 +250,3 @@ export const InfluencerDashboardLayout: React.FC = () => {
     </div>
   );
 };
-

@@ -35,22 +35,22 @@ export const InfluencerDashboard: React.FC = () => {
     <div className="space-y-8 pb-16">
       
       {/* Welcome Banner */}
-      <div className="relative rounded-3xl bg-gradient-to-r from-[#7047EB] via-[#6338e5] to-[#8c52f6] text-white p-6 sm:p-8 overflow-hidden shadow-lg border border-purple-300/30">
-        <div className="absolute right-0 top-0 -mr-10 -mt-10 w-72 h-72 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+      <div className="relative rounded-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white p-6 sm:p-8 overflow-hidden shadow-xl border border-slate-700/80">
+        <div className="absolute right-0 top-0 -mr-10 -mt-10 w-72 h-72 bg-brand-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10">
           <div className="flex items-center gap-4">
             <img
               src={currentInfluencer.avatar}
               alt={currentInfluencer.name}
-              className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover ring-3 ring-white/60 shadow-md"
+              className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover ring-3 ring-brand-500/70 shadow-md"
             />
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-xl sm:text-2xl font-black text-white">{currentInfluencer.name}</h1>
                 {currentInfluencer.isVerified ? (
-                  <span className="flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-white/20 text-white backdrop-blur-md border border-white/30">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-300" />
+                  <span className="flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 backdrop-blur-md border border-emerald-500/40">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
                     Verified Creator
                   </span>
                 ) : (
@@ -60,8 +60,8 @@ export const InfluencerDashboard: React.FC = () => {
                   </span>
                 )}
               </div>
-              <p className="text-xs text-purple-100 mt-1">
-                {currentInfluencer.handle} • {currentInfluencer.category} Specialist • 1-on-1 Creator Studio
+              <p className="text-xs text-slate-300 mt-1">
+                <span className="text-brand-400 font-semibold">{currentInfluencer.handle}</span> • {currentInfluencer.category} Specialist • 1-on-1 Creator Studio
               </p>
             </div>
           </div>
@@ -70,13 +70,13 @@ export const InfluencerDashboard: React.FC = () => {
           <div className="flex flex-wrap items-center gap-2.5">
             <button
               onClick={() => setActiveView('availability')}
-              className="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-xs text-white font-bold border border-white/30 transition-all backdrop-blur-sm"
+              className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-white font-bold border border-slate-700 transition-all shadow-sm"
             >
               Update Schedule
             </button>
             <button
               onClick={() => setActiveView('payouts')}
-              className="px-4 py-2.5 rounded-xl bg-white text-[#7047EB] hover:bg-purple-50 text-xs font-black shadow-md transition-all"
+              className="px-4 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-black shadow-md shadow-brand-500/30 transition-all"
             >
               Request Payout
             </button>
@@ -84,11 +84,11 @@ export const InfluencerDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Summary KPI Cards Grid (Pure White Cards on Soft Lavender) */}
+      {/* Summary KPI Cards Grid (Pure White Cards on Light Neutral Background) */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         
         {/* Total Net Earnings */}
-        <div className="p-5 rounded-3xl bg-white border border-purple-100 shadow-sm hover:shadow-md transition-all space-y-2">
+        <div className="p-5 rounded-3xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-all space-y-2">
           <div className="flex items-center justify-between text-slate-500 text-xs font-semibold">
             <span>Total Net Earnings</span>
             <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
@@ -105,14 +105,14 @@ export const InfluencerDashboard: React.FC = () => {
         </div>
 
         {/* Available for Payout */}
-        <div className="p-5 rounded-3xl bg-white border border-purple-100 shadow-sm hover:shadow-md transition-all space-y-2">
+        <div className="p-5 rounded-3xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-all space-y-2">
           <div className="flex items-center justify-between text-slate-500 text-xs font-semibold">
             <span>Available Balance</span>
-            <div className="w-8 h-8 rounded-xl bg-purple-50 text-[#7047EB] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center">
               <Wallet className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-[#7047EB]">
+          <div className="text-2xl font-black text-brand-600">
             ₹{currentInfluencer.pendingBalance.toLocaleString('en-IN')}
           </div>
           <div className="text-[11px] text-slate-500">
@@ -121,7 +121,7 @@ export const InfluencerDashboard: React.FC = () => {
         </div>
 
         {/* Upcoming Live Calls */}
-        <div className="p-5 rounded-3xl bg-white border border-purple-100 shadow-sm hover:shadow-md transition-all space-y-2">
+        <div className="p-5 rounded-3xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-all space-y-2">
           <div className="flex items-center justify-between text-slate-500 text-xs font-semibold">
             <span>Upcoming Sessions</span>
             <div className="w-8 h-8 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center">
@@ -137,7 +137,7 @@ export const InfluencerDashboard: React.FC = () => {
         </div>
 
         {/* Rating & Completed */}
-        <div className="p-5 rounded-3xl bg-white border border-purple-100 shadow-sm hover:shadow-md transition-all space-y-2">
+        <div className="p-5 rounded-3xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-all space-y-2">
           <div className="flex items-center justify-between text-slate-500 text-xs font-semibold">
             <span>Fan Satisfaction</span>
             <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center">
@@ -157,7 +157,7 @@ export const InfluencerDashboard: React.FC = () => {
 
       {/* Next Upcoming Call Highlight */}
       {upcomingBookings.length > 0 && (
-        <div className="p-6 rounded-3xl bg-white border border-purple-200/90 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
+        <div className="p-6 rounded-3xl bg-white border border-slate-200/80 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
               <Radio className="w-6 h-6 animate-pulse" />
@@ -189,8 +189,8 @@ export const InfluencerDashboard: React.FC = () => {
       )}
 
       {/* Recent Booking Activity Feed */}
-      <div className="p-6 rounded-3xl bg-white border border-purple-100 shadow-sm space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-purple-100">
+      <div className="p-6 rounded-3xl bg-white border border-slate-200/80 shadow-sm space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b border-slate-100">
           <div>
             <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Recent Booking Inquiries</h3>
             <p className="text-xs text-slate-500">Fans who booked voice or video calls with you</p>
@@ -198,48 +198,50 @@ export const InfluencerDashboard: React.FC = () => {
 
           <button
             onClick={() => setActiveView('bookings')}
-            className="text-xs font-bold text-[#7047EB] hover:text-[#5F34E2] flex items-center gap-1"
+            className="text-xs font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1"
           >
-            <span>View All Bookings</span>
+            <span>View All Bookings ({creatorBookings.length})</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </button>
         </div>
 
         {creatorBookings.length === 0 ? (
-          <p className="text-xs text-slate-400 text-center py-6">No bookings registered yet.</p>
+          <div className="p-8 text-center text-slate-400 text-xs">
+            No booking requests yet. Once fans book calls with you, they will appear here.
+          </div>
         ) : (
-          <div className="divide-y divide-purple-50">
-            {creatorBookings.slice(0, 4).map(b => (
-              <div key={b.id} className="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <div className="divide-y divide-slate-100 text-xs">
+            {creatorBookings.slice(0, 5).map(b => (
+              <div key={b.id} className="py-3.5 flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <img src={b.userAvatar} alt={b.userName} className="w-10 h-10 rounded-xl object-cover ring-1 ring-purple-100" />
+                  <img
+                    src={b.userAvatar}
+                    alt={b.userName}
+                    className="w-10 h-10 rounded-xl object-cover ring-2 ring-slate-100"
+                  />
                   <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-slate-900">{b.userName}</span>
-                      <span className="text-[10px] text-slate-400 font-mono">({b.bookingRef})</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-slate-500 text-[11px] mt-0.5">
-                      <span className="capitalize">{b.callType === 'video' ? '📹 Video Call' : '🎙️ Voice Call'} ({b.durationMinutes}m)</span>
+                    <div className="font-bold text-slate-900">{b.userName}</div>
+                    <div className="text-[11px] text-slate-500 flex items-center gap-2">
+                      <span className="capitalize">{b.callType} Call</span>
+                      <span>•</span>
+                      <span>{b.durationMinutes} mins</span>
                       <span>•</span>
                       <span>{b.scheduledDate} {b.scheduledTime}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between sm:justify-end gap-4">
-                  <div className="text-right">
-                    <div className="font-bold text-emerald-600">₹{b.influencerEarnings} net</div>
-                    <div className="text-[10px] text-slate-400 uppercase font-semibold">{b.bookingStatus}</div>
-                  </div>
-
-                  {b.bookingStatus === 'upcoming' && (
-                    <button
-                      onClick={() => startCall(b, true)}
-                      className="px-3.5 py-1.5 rounded-xl bg-[#7047EB] hover:bg-[#5F34E2] text-white font-bold text-[11px] shadow-sm transition-all"
-                    >
-                      Join Call
-                    </button>
-                  )}
+                <div className="text-right">
+                  <div className="font-bold text-emerald-600">+₹{b.influencerEarnings}</div>
+                  <span className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${
+                    b.bookingStatus === 'upcoming' 
+                      ? 'bg-sky-50 text-sky-700' 
+                      : b.bookingStatus === 'completed' 
+                      ? 'bg-emerald-50 text-emerald-700' 
+                      : 'bg-slate-100 text-slate-600'
+                  }`}>
+                    {b.bookingStatus}
+                  </span>
                 </div>
               </div>
             ))}
@@ -250,4 +252,3 @@ export const InfluencerDashboard: React.FC = () => {
     </div>
   );
 };
-
