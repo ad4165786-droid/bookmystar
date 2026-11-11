@@ -224,15 +224,6 @@ export const UserDashboardLayout: React.FC = () => {
                 </div>
               )}
             </div>
-
-            {/* Quick Logout Button */}
-            <button
-              onClick={logout}
-              className="p-2 rounded-xl bg-slate-50 hover:bg-rose-50 text-slate-600 hover:text-rose-600 border border-slate-200 transition-colors"
-              title="Sign Out"
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
           </div>
         </header>
 
