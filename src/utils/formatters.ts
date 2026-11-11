@@ -28,3 +28,4 @@ export const formatDuration = (minutes: number): string => {
   const remaining = minutes % 60;
   return remaining > 0 ? `${hrs}h ${remaining}m` : `${hrs} hrs`;
 };
+

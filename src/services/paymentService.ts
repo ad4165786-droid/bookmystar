@@ -20,3 +20,4 @@ export const initializePayment = async (order: PaymentOrderPayload): Promise<{ s
     }, 600);
   });
 };
+

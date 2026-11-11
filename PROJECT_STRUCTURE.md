@@ -106,3 +106,4 @@ bookmystar/
 | **Fan Dashboard** | `src/components/user/` | Active call bookings, invoice receipts, and creator detail pages |
 | **Admin Panel** | `src/components/admin/` | KYC verification, commission engine, escrow monitoring & disputes |
 | **WebRTC Call Room** | `src/components/call/` | 1-on-1 audio and video calling interface with live status & timer |
+
