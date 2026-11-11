@@ -51,27 +51,27 @@ export const InfluencerDashboardLayout: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-900 flex flex-col lg:flex-row font-sans selection:bg-brand-500 selection:text-white">
       
-      {/* 1. Left Sidebar for Influencer Portal */}
-      <aside className={`fixed inset-y-0 left-0 z-40 w-72 bg-[#0F172A] text-white border-r border-slate-800 flex flex-col justify-between transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${
+      {/* 1. Left Sidebar for Influencer Portal (Pure White Sidebar) */}
+      <aside className={`fixed inset-y-0 left-0 z-40 w-72 bg-white text-slate-900 border-r border-slate-200/90 flex flex-col justify-between transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${
         mobileMenuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
       }`}>
         
         {/* Top: Logo & Creator Identity */}
         <div>
           {/* Logo Bar */}
-          <div className="h-18 p-5 border-b border-slate-800 flex items-center justify-between">
+          <div className="h-18 p-5 border-b border-slate-100 flex items-center justify-between">
             <div 
               className="flex items-center gap-3 cursor-pointer"
               onClick={() => setActiveView('dashboard')}
             >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-500 via-brand-600 to-amber-500 flex items-center justify-center text-white shadow-lg shadow-brand-500/25">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-500 via-brand-600 to-amber-500 flex items-center justify-center text-white shadow-md shadow-brand-500/25">
                 <Sparkles className="w-5 h-5 fill-white" />
               </div>
               <div>
-                <span className="font-extrabold text-lg text-white">
-                  BookMy<span className="text-brand-400">Star</span>
+                <span className="font-extrabold text-lg text-slate-900">
+                  BookMy<span className="text-brand-600">Star</span>
                 </span>
-                <span className="text-[10px] font-bold uppercase tracking-wider block text-amber-400">
+                <span className="text-[10px] font-bold uppercase tracking-wider block text-brand-600">
                   Creator Studio
                 </span>
               </div>
@@ -79,14 +79,14 @@ export const InfluencerDashboardLayout: React.FC = () => {
 
             <button 
               onClick={() => setMobileMenuOpen(false)}
-              className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white"
+              className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-slate-700"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* Creator Profile Mini Badge */}
-          <div className="p-4 mx-4 my-4 rounded-2xl bg-slate-800/80 border border-slate-700/80">
+          <div className="p-4 mx-4 my-4 rounded-2xl bg-slate-50 border border-slate-200/80">
             <div className="flex items-center gap-3">
               <img
                 src={currentInfluencer?.avatar || 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=300&auto=format&fit=crop&q=80'}
@@ -95,13 +95,13 @@ export const InfluencerDashboardLayout: React.FC = () => {
               />
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1.5">
-                  <h4 className="text-sm font-bold text-white truncate">{currentInfluencer?.name}</h4>
+                  <h4 className="text-sm font-bold text-slate-900 truncate">{currentInfluencer?.name}</h4>
                   {currentInfluencer?.isVerified && (
-                    <CheckCircle2 className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+                    <CheckCircle2 className="w-3.5 h-3.5 text-sky-500 shrink-0" />
                   )}
                 </div>
-                <p className="text-[11px] text-brand-400 font-medium truncate">{currentInfluencer?.handle}</p>
-                <div className="mt-1 flex items-center gap-1.5 text-[10px] text-slate-400">
+                <p className="text-[11px] text-brand-600 font-medium truncate">{currentInfluencer?.handle}</p>
+                <div className="mt-1 flex items-center gap-1.5 text-[10px] text-slate-500">
                   <span>Bal: ₹{currentInfluencer?.pendingBalance.toLocaleString('en-IN')}</span>
                   <span>•</span>
                   <span>{currentInfluencer?.completedCallsCount} Calls</span>
@@ -128,7 +128,7 @@ export const InfluencerDashboardLayout: React.FC = () => {
                   className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-bold transition-all ${
                     isActive
                       ? 'bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-md shadow-brand-500/25'
-                      : 'text-slate-300 hover:text-white hover:bg-slate-800/70'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -143,10 +143,10 @@ export const InfluencerDashboardLayout: React.FC = () => {
         </div>
 
         {/* Bottom: Logout */}
-        <div className="p-4 border-t border-slate-800">
+        <div className="p-4 border-t border-slate-100">
           <button
             onClick={logout}
-            className="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-bold text-rose-400 hover:bg-rose-950/40 transition-colors"
+            className="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors"
           >
             <LogOut className="w-4 h-4" />
             <span>Sign Out of Studio</span>
@@ -159,7 +159,7 @@ export const InfluencerDashboardLayout: React.FC = () => {
       {mobileMenuOpen && (
         <div 
           onClick={() => setMobileMenuOpen(false)}
-          className="fixed inset-0 bg-slate-950/60 z-30 lg:hidden"
+          className="fixed inset-0 bg-slate-950/40 z-30 lg:hidden"
         />
       )}
 
