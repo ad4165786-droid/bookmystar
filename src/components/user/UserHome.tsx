@@ -75,44 +75,7 @@ export const UserHome: React.FC = () => {
   }, [influencers, selectedCategory, callTypeFilter, searchQuery, maxPrice, onlyVerified, settings]);
 
   return (
-    <div className="space-y-10 pb-16">
-      
-      {/* Hero Commercial Showcase Banner */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-[#18112e] to-[#0f172a] border border-brand-500/20 p-8 sm:p-12 shadow-2xl">
-        <div className="absolute top-0 right-0 -mr-16 -mt-16 w-96 h-96 bg-brand-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="relative z-10 max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/15 border border-brand-500/30 text-brand-300 text-xs font-bold tracking-wide uppercase mb-4">
-            <Sparkles className="w-3.5 h-3.5 text-brand-400" />
-            <span>India's Premier 1-on-1 Celebrity & Creator Booking Platform</span>
-          </div>
-
-          <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
-            Talk Directly with Your <span className="bg-gradient-to-r from-brand-400 via-pink-400 to-amber-300 bg-clip-text text-transparent">Favorite Stars</span>
-          </h1>
-
-          <p className="mt-4 text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl">
-            Book private voice and video calls with verified esports athletes, chart-topping musicians, industry staff engineers, and lifestyle creators. Powered by real-time slot locking and secured escrow payments in Indian Rupees (₹).
-          </p>
-
-          {/* Quick Metrics Bar */}
-          <div className="mt-8 grid grid-cols-3 gap-4 border-t border-slate-800/80 pt-6 max-w-lg">
-            <div>
-              <div className="text-xl sm:text-2xl font-black text-white">100%</div>
-              <div className="text-[11px] text-slate-400 font-medium">Govt ID Verified Stars</div>
-            </div>
-            <div>
-              <div className="text-xl sm:text-2xl font-black text-emerald-400">₹199</div>
-              <div className="text-[11px] text-slate-400 font-medium">Starting Call Rate</div>
-            </div>
-            <div>
-              <div className="text-xl sm:text-2xl font-black text-brand-400">256-Bit</div>
-              <div className="text-[11px] text-slate-400 font-medium">Encrypted Private Calls</div>
-            </div>
-          </div>
-        </div>
-      </section>
+    <div className="space-y-8 pb-16">
 
       {/* Discovery Filters & Search */}
       <section className="space-y-4">
