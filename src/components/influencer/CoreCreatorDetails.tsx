@@ -162,6 +162,12 @@ export const CoreCreatorDetails: React.FC = () => {
   const [facebook, setFacebook] = useState(currentInfluencer.socialLinks.facebook || '');
   const [twitter, setTwitter] = useState(currentInfluencer.socialLinks.twitter || '');
   const [otherSocial, setOtherSocial] = useState(currentInfluencer.socialLinks.other || '');
+  const [showSocialDropdown, setShowSocialDropdown] = useState(false);
+
+  // Connected channels count
+  const connectedSocialCount = useMemo(() => {
+    return [instagram, youtube, facebook, twitter, otherSocial].filter(s => s && s.trim().length > 0).length;
+  }, [instagram, youtube, facebook, twitter, otherSocial]);
 
   // Avatar states
   const [avatar, setAvatar] = useState(currentInfluencer.avatar);
@@ -365,6 +371,10 @@ export const CoreCreatorDetails: React.FC = () => {
 
     if (otherSocial.trim() && !urlPattern.test(otherSocial.trim())) {
       newErrors.otherSocial = 'Please enter a valid URL (e.g. https://yourportfolio.com)';
+    }
+
+    if (newErrors.instagram || newErrors.youtube || newErrors.facebook || newErrors.twitter || newErrors.otherSocial) {
+      setShowSocialDropdown(true);
     }
 
     setErrors(newErrors);
@@ -1543,224 +1553,267 @@ export const CoreCreatorDetails: React.FC = () => {
 
             </div>
 
-            {/* CARD 3: Social Media Channels */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-soft space-y-6">
+            {/* CARD 3: Social Media Channels (with Dropdown Effect) */}
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-soft space-y-4">
               
-              <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center border border-purple-200/60">
-                    <Share2 className="w-4 h-4" />
+              <button
+                type="button"
+                onClick={() => setShowSocialDropdown(!showSocialDropdown)}
+                className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-left group cursor-pointer"
+                aria-expanded={showSocialDropdown}
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-10 h-10 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center border border-purple-200/60 shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+                    <Share2 className="w-5 h-5" />
                   </div>
-                  <div>
-                    <h2 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider">
-                      3. Connected Social Media Details
-                    </h2>
-                    <p className="text-[11px] text-slate-500">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h2 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider group-hover:text-purple-600 transition-colors">
+                        3. Connected Social Media Details
+                      </h2>
+                      <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200/80">
+                        {connectedSocialCount} connected
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 mt-0.5">
                       Link your public channels to verify your creator reach and display on your star card.
                     </p>
                   </div>
                 </div>
-                <span className="text-[11px] font-semibold text-slate-400">Public Links</span>
-              </div>
 
-              <div className="space-y-4">
-                
-                {/* Instagram */}
-                <div className="space-y-1">
-                  <label className="block text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <span className="w-5 h-5 rounded-md bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 text-white flex items-center justify-center text-[10px] font-black">
-                      IG
-                    </span>
-                    <span>Instagram Profile URL</span>
-                  </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={instagram}
-                      onChange={e => {
-                        setInstagram(e.target.value);
-                        if (errors.instagram) setErrors(prev => ({ ...prev, instagram: undefined }));
-                      }}
-                      placeholder="https://instagram.com/your_handle"
-                      className={`flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 transition-all focus:outline-none focus:bg-white ${
-                        errors.instagram ? 'border-rose-400' : 'border-slate-200 focus:border-brand-500'
-                      }`}
-                    />
-                    {instagram && (
-                      <a
-                        href={instagram.startsWith('http') ? instagram : `https://${instagram}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold inline-flex items-center gap-1"
-                        title="Test link"
-                      >
-                        <ExternalLink className="w-3.5 h-3.5" />
-                        <span className="hidden sm:inline">Test</span>
-                      </a>
+                <div className="flex items-center gap-3 shrink-0 self-end sm:self-auto">
+                  {/* Mini channel icons preview when collapsed */}
+                  {!showSocialDropdown && (
+                    <div className="flex items-center gap-1.5 text-[10px] font-bold">
+                      {instagram && <span className="w-6 h-6 rounded-md bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 text-white flex items-center justify-center text-[9px]">IG</span>}
+                      {youtube && <span className="w-6 h-6 rounded-md bg-red-600 text-white flex items-center justify-center text-[9px]">YT</span>}
+                      {facebook && <span className="w-6 h-6 rounded-md bg-blue-600 text-white flex items-center justify-center text-[9px]">FB</span>}
+                      {twitter && <span className="w-6 h-6 rounded-md bg-slate-900 text-white flex items-center justify-center text-[9px]">X</span>}
+                      {otherSocial && <span className="w-6 h-6 rounded-md bg-indigo-600 text-white flex items-center justify-center text-[9px]"><Globe className="w-3 h-3" /></span>}
+                      {connectedSocialCount === 0 && (
+                        <span className="text-[11px] text-slate-400 italic">No links added</span>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 group-hover:bg-purple-50 text-slate-600 group-hover:text-purple-700 text-xs font-bold transition-colors">
+                    <span>{showSocialDropdown ? 'Hide' : 'Manage Links'}</span>
+                    <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${showSocialDropdown ? 'rotate-180 text-purple-600' : ''}`} />
+                  </div>
+                </div>
+              </button>
+
+              {/* Collapsible Dropdown Content */}
+              {showSocialDropdown && (
+                <div className="space-y-4 pt-4 border-t border-slate-100 animate-fadeIn">
+                  
+                  {/* Instagram */}
+                  <div className="space-y-1">
+                    <label className="block text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                      <span className="w-5 h-5 rounded-md bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 text-white flex items-center justify-center text-[10px] font-black">
+                        IG
+                      </span>
+                      <span>Instagram Profile URL</span>
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={instagram}
+                        onChange={e => {
+                          setInstagram(e.target.value);
+                          if (errors.instagram) setErrors(prev => ({ ...prev, instagram: undefined }));
+                        }}
+                        placeholder="https://instagram.com/your_handle"
+                        className={`flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 transition-all focus:outline-none focus:bg-white ${
+                          errors.instagram ? 'border-rose-400' : 'border-slate-200 focus:border-brand-500'
+                        }`}
+                      />
+                      {instagram && (
+                        <a
+                          href={instagram.startsWith('http') ? instagram : `https://${instagram}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold inline-flex items-center gap-1"
+                          title="Test link"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                          <span className="hidden sm:inline">Test</span>
+                        </a>
+                      )}
+                    </div>
+                    {errors.instagram && (
+                      <p className="text-[10px] font-semibold text-rose-500">{errors.instagram}</p>
                     )}
                   </div>
-                  {errors.instagram && (
-                    <p className="text-[10px] font-semibold text-rose-500">{errors.instagram}</p>
-                  )}
-                </div>
 
-                {/* YouTube */}
-                <div className="space-y-1">
-                  <label className="block text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <span className="w-5 h-5 rounded-md bg-red-600 text-white flex items-center justify-center text-[10px] font-black">
-                      YT
-                    </span>
-                    <span>YouTube Channel URL</span>
-                  </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={youtube}
-                      onChange={e => {
-                        setYoutube(e.target.value);
-                        if (errors.youtube) setErrors(prev => ({ ...prev, youtube: undefined }));
-                      }}
-                      placeholder="https://youtube.com/@channel"
-                      className={`flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 transition-all focus:outline-none focus:bg-white ${
-                        errors.youtube ? 'border-rose-400' : 'border-slate-200 focus:border-brand-500'
-                      }`}
-                    />
-                    {youtube && (
-                      <a
-                        href={youtube.startsWith('http') ? youtube : `https://${youtube}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold inline-flex items-center gap-1"
-                        title="Test link"
-                      >
-                        <ExternalLink className="w-3.5 h-3.5" />
-                        <span className="hidden sm:inline">Test</span>
-                      </a>
+                  {/* YouTube */}
+                  <div className="space-y-1">
+                    <label className="block text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                      <span className="w-5 h-5 rounded-md bg-red-600 text-white flex items-center justify-center text-[10px] font-black">
+                        YT
+                      </span>
+                      <span>YouTube Channel URL</span>
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={youtube}
+                        onChange={e => {
+                          setYoutube(e.target.value);
+                          if (errors.youtube) setErrors(prev => ({ ...prev, youtube: undefined }));
+                        }}
+                        placeholder="https://youtube.com/@channel"
+                        className={`flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 transition-all focus:outline-none focus:bg-white ${
+                          errors.youtube ? 'border-rose-400' : 'border-slate-200 focus:border-brand-500'
+                        }`}
+                      />
+                      {youtube && (
+                        <a
+                          href={youtube.startsWith('http') ? youtube : `https://${youtube}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold inline-flex items-center gap-1"
+                          title="Test link"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                          <span className="hidden sm:inline">Test</span>
+                        </a>
+                      )}
+                    </div>
+                    {errors.youtube && (
+                      <p className="text-[10px] font-semibold text-rose-500">{errors.youtube}</p>
                     )}
                   </div>
-                  {errors.youtube && (
-                    <p className="text-[10px] font-semibold text-rose-500">{errors.youtube}</p>
-                  )}
-                </div>
 
-                {/* Facebook */}
-                <div className="space-y-1">
-                  <label className="block text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <span className="w-5 h-5 rounded-md bg-blue-600 text-white flex items-center justify-center text-[10px] font-black">
-                      FB
-                    </span>
-                    <span>Facebook Profile or Page URL</span>
-                  </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={facebook}
-                      onChange={e => {
-                        setFacebook(e.target.value);
-                        if (errors.facebook) setErrors(prev => ({ ...prev, facebook: undefined }));
-                      }}
-                      placeholder="https://facebook.com/your_page"
-                      className={`flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 transition-all focus:outline-none focus:bg-white ${
-                        errors.facebook ? 'border-rose-400' : 'border-slate-200 focus:border-brand-500'
-                      }`}
-                    />
-                    {facebook && (
-                      <a
-                        href={facebook.startsWith('http') ? facebook : `https://${facebook}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold inline-flex items-center gap-1"
-                        title="Test link"
-                      >
-                        <ExternalLink className="w-3.5 h-3.5" />
-                        <span className="hidden sm:inline">Test</span>
-                      </a>
+                  {/* Facebook */}
+                  <div className="space-y-1">
+                    <label className="block text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                      <span className="w-5 h-5 rounded-md bg-blue-600 text-white flex items-center justify-center text-[10px] font-black">
+                        FB
+                      </span>
+                      <span>Facebook Profile or Page URL</span>
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={facebook}
+                        onChange={e => {
+                          setFacebook(e.target.value);
+                          if (errors.facebook) setErrors(prev => ({ ...prev, facebook: undefined }));
+                        }}
+                        placeholder="https://facebook.com/your_page"
+                        className={`flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 transition-all focus:outline-none focus:bg-white ${
+                          errors.facebook ? 'border-rose-400' : 'border-slate-200 focus:border-brand-500'
+                        }`}
+                      />
+                      {facebook && (
+                        <a
+                          href={facebook.startsWith('http') ? facebook : `https://${facebook}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold inline-flex items-center gap-1"
+                          title="Test link"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                          <span className="hidden sm:inline">Test</span>
+                        </a>
+                      )}
+                    </div>
+                    {errors.facebook && (
+                      <p className="text-[10px] font-semibold text-rose-500">{errors.facebook}</p>
                     )}
                   </div>
-                  {errors.facebook && (
-                    <p className="text-[10px] font-semibold text-rose-500">{errors.facebook}</p>
-                  )}
-                </div>
 
-                {/* X (Twitter) */}
-                <div className="space-y-1">
-                  <label className="block text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <span className="w-5 h-5 rounded-md bg-slate-900 text-white flex items-center justify-center text-[10px] font-black">
-                      X
-                    </span>
-                    <span>X (Twitter) URL</span>
-                  </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={twitter}
-                      onChange={e => {
-                        setTwitter(e.target.value);
-                        if (errors.twitter) setErrors(prev => ({ ...prev, twitter: undefined }));
-                      }}
-                      placeholder="https://x.com/your_handle"
-                      className={`flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 transition-all focus:outline-none focus:bg-white ${
-                        errors.twitter ? 'border-rose-400' : 'border-slate-200 focus:border-brand-500'
-                      }`}
-                    />
-                    {twitter && (
-                      <a
-                        href={twitter.startsWith('http') ? twitter : `https://${twitter}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold inline-flex items-center gap-1"
-                        title="Test link"
-                      >
-                        <ExternalLink className="w-3.5 h-3.5" />
-                        <span className="hidden sm:inline">Test</span>
-                      </a>
+                  {/* X (Twitter) */}
+                  <div className="space-y-1">
+                    <label className="block text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                      <span className="w-5 h-5 rounded-md bg-slate-900 text-white flex items-center justify-center text-[10px] font-black">
+                        X
+                      </span>
+                      <span>X (Twitter) URL</span>
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={twitter}
+                        onChange={e => {
+                          setTwitter(e.target.value);
+                          if (errors.twitter) setErrors(prev => ({ ...prev, twitter: undefined }));
+                        }}
+                        placeholder="https://x.com/your_handle"
+                        className={`flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 transition-all focus:outline-none focus:bg-white ${
+                          errors.twitter ? 'border-rose-400' : 'border-slate-200 focus:border-brand-500'
+                        }`}
+                      />
+                      {twitter && (
+                        <a
+                          href={twitter.startsWith('http') ? twitter : `https://${twitter}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold inline-flex items-center gap-1"
+                          title="Test link"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                          <span className="hidden sm:inline">Test</span>
+                        </a>
+                      )}
+                    </div>
+                    {errors.twitter && (
+                      <p className="text-[10px] font-semibold text-rose-500">{errors.twitter}</p>
                     )}
                   </div>
-                  {errors.twitter && (
-                    <p className="text-[10px] font-semibold text-rose-500">{errors.twitter}</p>
-                  )}
-                </div>
 
-                {/* Other Social Profile / Website */}
-                <div className="space-y-1">
-                  <label className="block text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <span className="w-5 h-5 rounded-md bg-indigo-600 text-white flex items-center justify-center text-[10px] font-black">
-                      <Globe className="w-3 h-3" />
-                    </span>
-                    <span>Other Portfolio / Linktree / Twitch Profile <span className="text-slate-400 font-normal">(Optional)</span></span>
-                  </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={otherSocial}
-                      onChange={e => {
-                        setOtherSocial(e.target.value);
-                        if (errors.otherSocial) setErrors(prev => ({ ...prev, otherSocial: undefined }));
-                      }}
-                      placeholder="https://linktr.ee/yourname or https://twitch.tv/..."
-                      className={`flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 transition-all focus:outline-none focus:bg-white ${
-                        errors.otherSocial ? 'border-rose-400' : 'border-slate-200 focus:border-brand-500'
-                      }`}
-                    />
-                    {otherSocial && (
-                      <a
-                        href={otherSocial.startsWith('http') ? otherSocial : `https://${otherSocial}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold inline-flex items-center gap-1"
-                        title="Test link"
-                      >
-                        <ExternalLink className="w-3.5 h-3.5" />
-                        <span className="hidden sm:inline">Test</span>
-                      </a>
+                  {/* Other Social Profile / Website */}
+                  <div className="space-y-1">
+                    <label className="block text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                      <span className="w-5 h-5 rounded-md bg-indigo-600 text-white flex items-center justify-center text-[10px] font-black">
+                        <Globe className="w-3 h-3" />
+                      </span>
+                      <span>Other Portfolio / Linktree / Twitch Profile <span className="text-slate-400 font-normal">(Optional)</span></span>
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={otherSocial}
+                        onChange={e => {
+                          setOtherSocial(e.target.value);
+                          if (errors.otherSocial) setErrors(prev => ({ ...prev, otherSocial: undefined }));
+                        }}
+                        placeholder="https://linktr.ee/yourname or https://twitch.tv/..."
+                        className={`flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 transition-all focus:outline-none focus:bg-white ${
+                          errors.otherSocial ? 'border-rose-400' : 'border-slate-200 focus:border-brand-500'
+                        }`}
+                      />
+                      {otherSocial && (
+                        <a
+                          href={otherSocial.startsWith('http') ? otherSocial : `https://${otherSocial}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold inline-flex items-center gap-1"
+                          title="Test link"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                          <span className="hidden sm:inline">Test</span>
+                        </a>
+                      )}
+                    </div>
+                    {errors.otherSocial && (
+                      <p className="text-[10px] font-semibold text-rose-500">{errors.otherSocial}</p>
                     )}
                   </div>
-                  {errors.otherSocial && (
-                    <p className="text-[10px] font-semibold text-rose-500">{errors.otherSocial}</p>
-                  )}
-                </div>
 
-              </div>
+                  <div className="pt-2 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => setShowSocialDropdown(false)}
+                      className="text-[11px] font-bold text-slate-500 hover:text-slate-800 cursor-pointer"
+                    >
+                      Hide Social Media Links
+                    </button>
+                  </div>
+
+                </div>
+              )}
 
             </div>
 
