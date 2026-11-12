@@ -35,11 +35,20 @@ export interface InfluencerGalleryItem {
 
 export interface InfluencerProfile {
   id: string;
-  name: string;
-  handle: string;
+  name: string; // Display Name / Creator Name
+  fullName?: string; // Full Legal Name
+  handle: string; // Unique username (e.g. @vortex_esports)
+  email?: string; // Contact / Professional Email
+  phone?: string; // Mobile phone number
+  phoneCountryCode?: string; // e.g. '+91'
   avatar: string;
   coverImage: string;
   category: Category;
+  secondaryCategory?: Category | '';
+  gender?: 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to-say' | '';
+  locationCity?: string;
+  locationState?: string;
+  experienceYears?: string; // e.g. '3-5 years'
   bio: string;
   isVerified: boolean;
   verificationStatus: 'pending' | 'approved' | 'rejected';
@@ -52,7 +61,9 @@ export interface InfluencerProfile {
     instagram?: string;
     youtube?: string;
     twitter?: string;
+    facebook?: string;
     tiktok?: string;
+    other?: string;
   };
   gallery: InfluencerGalleryItem[];
   voiceCallEnabled: boolean;

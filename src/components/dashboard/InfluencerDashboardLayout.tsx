@@ -4,7 +4,6 @@ import {
   Sparkles, 
   LayoutDashboard, 
   Image, 
-  DollarSign, 
   Clock, 
   Calendar, 
   Wallet, 
@@ -15,7 +14,8 @@ import {
   CheckCircle2, 
   AlertCircle,
   ChevronRight,
-  Star
+  Star,
+  User
 } from 'lucide-react';
 
 // Child views
@@ -47,8 +47,7 @@ export const InfluencerDashboardLayout: React.FC = () => {
 
   const navItems = [
     { path: '/influencer/dashboard', id: 'dashboard', label: 'Studio Overview', icon: LayoutDashboard },
-    { path: '/influencer/profile', id: 'profile-content', label: 'Profile & Portfolio', icon: Image },
-    { path: '/influencer/rates', id: 'call-pricing', label: 'Call Rates Matrix', icon: DollarSign },
+    { path: '/influencer/profile', id: 'profile-content', label: 'Core Creator Details', icon: User },
     { path: '/influencer/availability', id: 'availability', label: 'Availability & Slots', icon: Clock },
     { path: '/influencer/bookings', id: 'bookings', label: 'Fan Bookings', icon: Calendar },
     { path: '/influencer/earnings', id: 'payouts', label: 'Earnings & Payouts', icon: Wallet },
@@ -249,12 +248,11 @@ export const InfluencerDashboardLayout: React.FC = () => {
         {/* Dynamic Views */}
         <main className="flex-1 p-4 sm:p-8 max-w-7xl w-full mx-auto">
           {currentPath === '/influencer/profile' && <InfluencerContentProfile />}
-          {currentPath === '/influencer/rates' && <InfluencerPricingSchedule />}
           {currentPath === '/influencer/availability' && <InfluencerPricingSchedule />}
           {currentPath === '/influencer/bookings' && <InfluencerBookings />}
           {currentPath === '/influencer/earnings' && <InfluencerEarningsPayouts />}
           {currentPath === '/influencer/reviews' && <InfluencerReviewsGrievances />}
-          {(currentPath === '/influencer/dashboard' || (currentPath !== '/influencer/profile' && currentPath !== '/influencer/rates' && currentPath !== '/influencer/availability' && currentPath !== '/influencer/bookings' && currentPath !== '/influencer/earnings' && currentPath !== '/influencer/reviews')) && (
+          {(currentPath === '/influencer/dashboard' || (currentPath !== '/influencer/profile' && currentPath !== '/influencer/availability' && currentPath !== '/influencer/bookings' && currentPath !== '/influencer/earnings' && currentPath !== '/influencer/reviews')) && (
             <InfluencerDashboard />
           )}
         </main>

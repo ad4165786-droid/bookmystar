@@ -194,7 +194,7 @@ export const normalizePath = (rawPath: string): string => {
   // Influencer Portal Aliases
   if (pathOnly === '/influencer') return '/influencer/dashboard';
   if (pathOnly === '/influencer/profile-content') return '/influencer/profile';
-  if (pathOnly === '/influencer/call-pricing') return '/influencer/rates';
+  if (pathOnly === '/influencer/call-pricing' || pathOnly === '/influencer/rates') return '/influencer/availability';
   if (pathOnly === '/influencer/slots') return '/influencer/availability';
   if (pathOnly === '/influencer/payouts') return '/influencer/earnings';
   if (pathOnly === '/influencer/feedback') return '/influencer/reviews';
@@ -218,7 +218,6 @@ export const getPathActiveView = (path: string): { view: string; influencerId?: 
   if (norm.startsWith('/fan')) return { view: 'explore', influencerId: null };
 
   if (norm === '/influencer/profile') return { view: 'profile-content', influencerId: null };
-  if (norm === '/influencer/rates') return { view: 'call-pricing', influencerId: null };
   if (norm === '/influencer/availability') return { view: 'availability', influencerId: null };
   if (norm === '/influencer/bookings') return { view: 'bookings', influencerId: null };
   if (norm === '/influencer/earnings') return { view: 'payouts', influencerId: null };
@@ -546,10 +545,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const newInf: InfluencerProfile = {
       id: `inf-${Date.now()}`,
       name: details.name.trim(),
+      fullName: details.name.trim(),
       handle: formattedHandle.trim(),
+      email: details.email.trim(),
+      phone: details.phone.trim(),
+      phoneCountryCode: '+91',
       avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80',
       coverImage: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1200&auto=format&fit=crop&q=80',
       category: details.category,
+      gender: '',
+      locationCity: 'Mumbai',
+      locationState: 'Maharashtra',
+      experienceYears: '1-2 years',
       bio: details.bio?.trim() || `Creator and specialist in ${details.category}. Book 1-on-1 calls with me!`,
       isVerified: false,
       verificationStatus: 'pending',
@@ -559,6 +566,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       idDocName: 'Govt_ID_Submitted.pdf',
       socialLinks: {},
       gallery: [],
+      languages: ['English', 'Hindi'],
       voiceCallEnabled: true,
       videoCallEnabled: true,
       rates: {
@@ -787,6 +795,25 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const updateInfluencerProfile = (id: string, updates: Partial<InfluencerProfile>) => {
+    // Authenticated creator access check: creator can only update their own profile unless admin
+    if (currentInfluencer && currentInfluencer.id !== id && currentRole !== 'admin') {
+      showToast('Unauthorized: You can only edit your own creator profile.');
+      return;
+    }
+
+    // Backend duplicate handle validation
+    if (updates.handle) {
+      const formattedHandle = updates.handle.startsWith('@') ? updates.handle.trim() : `@${updates.handle.trim()}`;
+      const duplicate = influencers.some(
+        inf => inf.id !== id && inf.handle.toLowerCase() === formattedHandle.toLowerCase()
+      );
+      if (duplicate) {
+        showToast(`Error: Handle ${formattedHandle} is already registered by another creator.`);
+        return;
+      }
+      updates.handle = formattedHandle;
+    }
+
     setInfluencers(prev => prev.map(inf => {
       if (inf.id === id) {
         const updated = { ...inf, ...updates };
@@ -795,7 +822,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
       return inf;
     }));
-    showToast('Profile updated.');
+    showToast('Creator profile updated successfully.');
   };
 
   const updateInfluencerRates = (id: string, rates: InfluencerProfile['rates'], voiceEnabled: boolean, videoEnabled: boolean) => {

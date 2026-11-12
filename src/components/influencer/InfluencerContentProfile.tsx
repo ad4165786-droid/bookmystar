@@ -1,55 +1,31 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { Category } from '../../types';
+import { CoreCreatorDetails } from './CoreCreatorDetails';
 import { 
   User, 
-  Camera, 
+  Image, 
+  ShieldCheck, 
   Plus, 
   Trash2, 
-  Eye, 
-  EyeOff, 
   CheckCircle2, 
-  AlertCircle, 
-  ShieldCheck, 
   FileText, 
-  Save,
-  UploadCloud,
-  Link,
-  Play
+  Eye, 
+  Play, 
+  UploadCloud, 
+  Sparkles,
+  ExternalLink
 } from 'lucide-react';
-
-const CATEGORIES: Category[] = [
-  'Gaming',
-  'Music',
-  'Tech & Coding',
-  'Fashion & Beauty',
-  'Fitness & Health',
-  'Comedy & Entertainment',
-  'Education & Career',
-  'Lifestyle & Travel'
-];
 
 export const InfluencerContentProfile: React.FC = () => {
   const { 
     currentInfluencer, 
-    updateInfluencerProfile, 
     addGalleryItem, 
     deleteGalleryItem, 
     setSelectedInfluencerId,
-    setActiveView,
-    showToast 
+    setActiveView 
   } = useApp();
 
-  // Basic profile states
-  const [name, setName] = useState(currentInfluencer.name);
-  const [handle, setHandle] = useState(currentInfluencer.handle);
-  const [category, setCategory] = useState<Category>(currentInfluencer.category);
-  const [bio, setBio] = useState(currentInfluencer.bio);
-  const [avatar, setAvatar] = useState(currentInfluencer.avatar);
-  const [coverImage, setCoverImage] = useState(currentInfluencer.coverImage);
-  const [instagram, setInstagram] = useState(currentInfluencer.socialLinks.instagram || '');
-  const [youtube, setYoutube] = useState(currentInfluencer.socialLinks.youtube || '');
-  const [twitter, setTwitter] = useState(currentInfluencer.socialLinks.twitter || '');
+  const [activeTab, setActiveTab] = useState<'core' | 'gallery' | 'kyc'>('core');
 
   // Media upload modal/form
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -57,23 +33,6 @@ export const InfluencerContentProfile: React.FC = () => {
   const [mediaDesc, setMediaDesc] = useState('');
   const [mediaUrl, setMediaUrl] = useState('');
   const [mediaType, setMediaType] = useState<'image' | 'video'>('image');
-
-  const handleSaveProfile = (e: React.FormEvent) => {
-    e.preventDefault();
-    updateInfluencerProfile(currentInfluencer.id, {
-      name,
-      handle,
-      category,
-      bio,
-      avatar,
-      coverImage,
-      socialLinks: {
-        instagram,
-        youtube,
-        twitter
-      }
-    });
-  };
 
   const handleUploadMedia = (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,267 +56,252 @@ export const InfluencerContentProfile: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 pb-16 max-w-5xl">
+    <div className="space-y-6 pb-16 max-w-7xl mx-auto">
       
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/80">
-        <div>
-          <h1 className="text-2xl font-black text-slate-900">Creator Profile & Media Portfolio</h1>
-          <p className="text-xs text-slate-500 mt-1">Manage your public bio, creator category, social links, and showcase gallery</p>
+      {/* Studio Profile Top Navigation Tabs */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200/80">
+        <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-slate-100 border border-slate-200/80 self-start sm:self-auto shadow-xs">
+          <button
+            type="button"
+            onClick={() => setActiveTab('core')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              activeTab === 'core'
+                ? 'bg-white text-brand-600 shadow-sm'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <User className="w-4 h-4 text-brand-500" />
+            <span>Core Creator Details</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('gallery')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              activeTab === 'gallery'
+                ? 'bg-white text-navy-600 shadow-sm'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <Image className="w-4 h-4 text-navy-500" />
+            <span>Showcase Portfolio</span>
+            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-200/80 text-slate-700">
+              {currentInfluencer.gallery?.length || 0}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('kyc')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              activeTab === 'kyc'
+                ? 'bg-white text-emerald-700 shadow-sm'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+            <span>KYC & Verification</span>
+            {currentInfluencer.isVerified && (
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+            )}
+          </button>
         </div>
 
+        {/* Fan Marketplace Preview Action */}
         <button
+          type="button"
           onClick={() => {
             setSelectedInfluencerId(currentInfluencer.id);
             setActiveView('influencer-detail');
           }}
-          className="inline-flex items-center gap-2 py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold border border-slate-200 transition-colors shadow-sm"
+          className="inline-flex items-center gap-1.5 py-2 px-4 rounded-xl bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold border border-slate-200 transition-colors shadow-xs self-start sm:self-auto"
         >
-          <Eye className="w-4 h-4 text-brand-500" />
-          <span>Preview Public Profile as User</span>
+          <Eye className="w-3.5 h-3.5 text-brand-500" />
+          <span>Preview Public Profile as Fan</span>
         </button>
       </div>
 
-      {/* Identity Verification & Age Onboarding Card */}
-      <div className="p-6 rounded-3xl bg-white border border-slate-200/80 shadow-sm space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="w-5 h-5 text-brand-500" />
-            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Government Identity & Age Verification</h3>
-          </div>
-
-          <span className={`text-xs font-bold px-3 py-1 rounded-full uppercase ${
-            currentInfluencer.verificationStatus === 'approved'
-              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-              : 'bg-amber-50 text-amber-700 border border-amber-200'
-          }`}>
-            Status: {currentInfluencer.verificationStatus}
-          </span>
+      {/* TAB 1: Core Creator Details (Primary Featured Section) */}
+      {activeTab === 'core' && (
+        <div className="animate-fadeIn">
+          <CoreCreatorDetails />
         </div>
+      )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
-            <span className="text-slate-500 block text-[10px] uppercase font-bold">Age Confirmation (18+ Requirement)</span>
-            <div className="font-bold text-slate-900 mt-1 text-sm">{currentInfluencer.age} Years Old</div>
-            <div className="text-[10px] text-emerald-600 font-medium mt-0.5">Date of Birth: {currentInfluencer.dob} (Eligible)</div>
-          </div>
+      {/* TAB 2: Showcase Portfolio & Media Clips */}
+      {activeTab === 'gallery' && (
+        <div className="space-y-6 animate-fadeIn">
+          <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/80 shadow-soft space-y-6">
+            
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+              <div>
+                <h3 className="text-base font-extrabold text-slate-900">
+                  Media Showcase & Video Clips
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Display your best highlights, stage events, esports trophies, or sample videos to potential fans.
+                </p>
+              </div>
 
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
-            <span className="text-slate-500 block text-[10px] uppercase font-bold">Submitted ID Document</span>
-            <div className="font-bold text-slate-900 mt-1 text-sm flex items-center gap-1.5 truncate">
-              <FileText className="w-4 h-4 text-brand-500 shrink-0" />
-              <span className="truncate">{currentInfluencer.idDocName}</span>
-            </div>
-            <div className="text-[10px] text-slate-500 mt-0.5">Verified by BMS Admin Desk</div>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
-            <span className="text-slate-500 block text-[10px] uppercase font-bold">Paid Booking Privilege</span>
-            <div className="font-bold text-emerald-600 mt-1 text-sm flex items-center gap-1">
-              <CheckCircle2 className="w-4 h-4" />
-              <span>Paid Bookings Active</span>
-            </div>
-            <div className="text-[10px] text-slate-500 mt-0.5">Escrow payout routing authorized</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Profile Form */}
-      <div className="p-6 rounded-3xl bg-white border border-slate-200/80 shadow-sm space-y-6">
-        <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider pb-3 border-b border-slate-100">
-          Core Creator Details
-        </h3>
-
-        <form onSubmit={handleSaveProfile} className="space-y-5 text-xs">
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-slate-700 font-semibold mb-1">Display / Stage Name</label>
-              <input
-                type="text"
-                value={name}
-                onChange={e => setName(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white transition-all font-medium"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-slate-700 font-semibold mb-1">Creator Handle</label>
-              <input
-                type="text"
-                value={handle}
-                onChange={e => setHandle(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-brand-50/50 border border-brand-200 text-brand-600 focus:outline-none focus:border-brand-500 focus:bg-white font-bold transition-all"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-slate-700 font-semibold mb-1">Primary Creator Category</label>
-              <select
-                value={category}
-                onChange={e => setCategory(e.target.value as Category)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white transition-all font-medium"
+              <button
+                type="button"
+                onClick={() => setShowUploadModal(true)}
+                className="flex items-center gap-1.5 py-2.5 px-4 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold shadow-md shadow-brand-500/25 transition-all self-start sm:self-auto cursor-pointer"
               >
-                {CATEGORIES.map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
+                <Plus className="w-4 h-4" />
+                <span>Add Showcase Item</span>
+              </button>
+            </div>
+
+            {(!currentInfluencer.gallery || currentInfluencer.gallery.length === 0) ? (
+              <div className="text-center py-12 bg-slate-50 rounded-2xl border border-dashed border-slate-200 space-y-3">
+                <div className="w-12 h-12 rounded-2xl bg-white text-slate-400 mx-auto flex items-center justify-center border border-slate-200">
+                  <Image className="w-6 h-6" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-slate-800">No media uploaded yet</h4>
+                  <p className="text-[11px] text-slate-500 max-w-sm mx-auto mt-0.5">
+                    Upload photos and clips of your previous talks, games, concerts, or consultations.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowUploadModal(true)}
+                  className="px-4 py-2 rounded-xl bg-brand-500 text-white text-xs font-bold shadow-sm"
+                >
+                  Upload First Media
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                {currentInfluencer.gallery.map(item => (
+                  <div 
+                    key={item.id} 
+                    className="rounded-2xl overflow-hidden bg-white border border-slate-200/80 shadow-xs flex flex-col justify-between hover:shadow-soft transition-all"
+                  >
+                    <div className="relative h-48 bg-slate-100">
+                      <img src={item.url} alt={item.title} className="w-full h-full object-cover" />
+                      <span className="absolute top-2.5 left-2.5 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-slate-900/80 backdrop-blur-sm text-white uppercase tracking-wider">
+                        {item.type}
+                      </span>
+                    </div>
+
+                    <div className="p-4 space-y-2 flex-1 flex flex-col justify-between">
+                      <div>
+                        <h4 className="text-xs font-bold text-slate-900 truncate">{item.title}</h4>
+                        <p className="text-[11px] text-slate-500 line-clamp-2 mt-1 leading-relaxed">{item.description}</p>
+                      </div>
+
+                      <div className="pt-3 flex items-center justify-between border-t border-slate-100 text-[10px] text-slate-400">
+                        <span>Uploaded: {item.uploadedAt}</span>
+                        <button
+                          type="button"
+                          onClick={() => deleteGalleryItem(currentInfluencer.id, item.id)}
+                          className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50 transition-colors"
+                          title="Delete Item"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-slate-700 font-semibold mb-1">Avatar Image URL</label>
-              <input
-                type="text"
-                value={avatar}
-                onChange={e => setAvatar(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white transition-all font-medium"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-slate-700 font-semibold mb-1">Cover Banner Image URL</label>
-            <input
-              type="text"
-              value={coverImage}
-              onChange={e => setCoverImage(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white transition-all font-medium"
-            />
-          </div>
-
-          <div>
-            <label className="block text-slate-700 font-semibold mb-1">Bio / Profile Introduction</label>
-            <textarea
-              value={bio}
-              onChange={e => setBio(e.target.value)}
-              rows={4}
-              className="w-full p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white leading-relaxed transition-all font-medium"
-              required
-            />
-          </div>
-
-          {/* Social Links */}
-          <div className="pt-2">
-            <label className="block text-slate-800 font-bold mb-2">Connected Social Media Channels</label>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div>
-                <label className="text-[10px] text-slate-500 font-semibold block mb-1">YouTube URL</label>
-                <input
-                  type="text"
-                  value={youtube}
-                  onChange={e => setYoutube(e.target.value)}
-                  placeholder="https://youtube.com/@channel"
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white font-medium text-xs"
-                />
               </div>
+            )}
 
-              <div>
-                <label className="text-[10px] text-slate-500 font-semibold block mb-1">Instagram URL</label>
-                <input
-                  type="text"
-                  value={instagram}
-                  onChange={e => setInstagram(e.target.value)}
-                  placeholder="https://instagram.com/handle"
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white font-medium text-xs"
-                />
-              </div>
-
-              <div>
-                <label className="text-[10px] text-slate-500 font-semibold block mb-1">Twitter / X URL</label>
-                <input
-                  type="text"
-                  value={twitter}
-                  onChange={e => setTwitter(e.target.value)}
-                  placeholder="https://twitter.com/handle"
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white font-medium text-xs"
-                />
-              </div>
-            </div>
           </div>
-
-          <div className="pt-3">
-            <button
-              type="submit"
-              className="flex items-center gap-2 py-2.5 px-6 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs shadow-md shadow-brand-500/25 transition-all cursor-pointer"
-            >
-              <Save className="w-4 h-4" />
-              <span>Save Profile Updates</span>
-            </button>
-          </div>
-
-        </form>
-      </div>
-
-      {/* Content Portfolio Showcase Manager */}
-      <div className="p-6 rounded-3xl bg-white border border-slate-200/80 shadow-sm space-y-5">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-          <div>
-            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Showcase Gallery & Clips</h3>
-            <p className="text-xs text-slate-500">Add highlight photos and video clips to show fans what you do</p>
-          </div>
-
-          <button
-            onClick={() => setShowUploadModal(true)}
-            className="flex items-center gap-1.5 py-2 px-4 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold shadow-md shadow-brand-500/25 transition-all"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Upload New Media</span>
-          </button>
         </div>
+      )}
 
-        {currentInfluencer.gallery.length === 0 ? (
-          <p className="text-xs text-slate-400 text-center py-6">No gallery items uploaded yet.</p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {currentInfluencer.gallery.map(item => (
-              <div key={item.id} className="rounded-2xl overflow-hidden bg-white border border-slate-200/80 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
-                <div className="relative h-44">
-                  <img src={item.url} alt={item.title} className="w-full h-full object-cover" />
-                  <span className="absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-900/80 backdrop-blur-sm text-white uppercase">
-                    {item.type}
-                  </span>
+      {/* TAB 3: KYC & Identity Verification */}
+      {activeTab === 'kyc' && (
+        <div className="space-y-6 animate-fadeIn">
+          <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/80 shadow-soft space-y-6">
+            
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center border border-emerald-200">
+                  <ShieldCheck className="w-5 h-5" />
                 </div>
-
-                <div className="p-4 space-y-2 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h4 className="text-xs font-bold text-slate-900 truncate">{item.title}</h4>
-                    <p className="text-[11px] text-slate-500 line-clamp-2 mt-1">{item.description}</p>
-                  </div>
-
-                  <div className="pt-3 flex items-center justify-between border-t border-slate-100 text-[10px] text-slate-400">
-                    <span>Uploaded: {item.uploadedAt}</span>
-                    <button
-                      onClick={() => deleteGalleryItem(currentInfluencer.id, item.id)}
-                      className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50 transition-colors"
-                      title="Delete Item"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
+                <div>
+                  <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider">
+                    Government Identity & Legal KYC Onboarding
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    Mandatory Indian compliance verification for hosting paid 1-on-1 audio/video sessions.
+                  </p>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
 
-      {/* Upload Modal */}
+              <span className={`text-xs font-bold px-3 py-1 rounded-full uppercase ${
+                currentInfluencer.verificationStatus === 'approved'
+                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                  : 'bg-amber-50 text-amber-700 border border-amber-200'
+              }`}>
+                Status: {currentInfluencer.verificationStatus}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 text-xs">
+              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
+                <span className="text-slate-500 block text-[10px] uppercase font-bold tracking-wider">
+                  Age Confirmation (18+ Mandatory)
+                </span>
+                <div className="font-extrabold text-slate-900 text-base">{currentInfluencer.age} Years Old</div>
+                <div className="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>DOB: {currentInfluencer.dob} (Age Requirement Met)</span>
+                </div>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
+                <span className="text-slate-500 block text-[10px] uppercase font-bold tracking-wider">
+                  Verified Government Document
+                </span>
+                <div className="font-bold text-slate-900 text-sm flex items-center gap-1.5 truncate">
+                  <FileText className="w-4 h-4 text-brand-500 shrink-0" />
+                  <span className="truncate">{currentInfluencer.idDocName || 'PAN_Card_Submitted.pdf'}</span>
+                </div>
+                <div className="text-[11px] text-slate-500">
+                  Audited & approved by BookMyStar Trust Desk
+                </div>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
+                <span className="text-slate-500 block text-[10px] uppercase font-bold tracking-wider">
+                  Commercial Booking Privilege
+                </span>
+                <div className="font-bold text-emerald-600 text-sm flex items-center gap-1">
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>Paid Calls Authorized</span>
+                </div>
+                <div className="text-[11px] text-slate-500">
+                  Escrow fund settlement enabled (UPI / Bank NEFT)
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* Media Upload Modal */}
       {showUploadModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fadeIn">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-xs animate-fadeIn">
           <div className="w-full max-w-md rounded-3xl bg-white border border-slate-200 p-6 space-y-4 shadow-2xl">
-            <h3 className="text-base font-bold text-slate-900">Add Showcase Item to Portfolio</h3>
+            <h3 className="text-base font-extrabold text-slate-900">Add Showcase Item to Portfolio</h3>
 
             <form onSubmit={handleUploadMedia} className="space-y-4 text-xs">
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Media Type</label>
+                <label className="block text-slate-700 font-bold mb-1">Media Type</label>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     type="button"
                     onClick={() => setMediaType('image')}
                     className={`py-2 rounded-xl font-bold border transition-all ${
-                      mediaType === 'image' ? 'bg-brand-500 text-white border-brand-500 shadow-sm' : 'bg-slate-50 text-slate-700 border-slate-200'
+                      mediaType === 'image' 
+                        ? 'bg-brand-500 text-white border-brand-500 shadow-sm' 
+                        : 'bg-slate-50 text-slate-700 border-slate-200'
                     }`}
                   >
                     Image / Photo
@@ -366,7 +310,9 @@ export const InfluencerContentProfile: React.FC = () => {
                     type="button"
                     onClick={() => setMediaType('video')}
                     className={`py-2 rounded-xl font-bold border transition-all ${
-                      mediaType === 'video' ? 'bg-brand-500 text-white border-brand-500 shadow-sm' : 'bg-slate-50 text-slate-700 border-slate-200'
+                      mediaType === 'video' 
+                        ? 'bg-brand-500 text-white border-brand-500 shadow-sm' 
+                        : 'bg-slate-50 text-slate-700 border-slate-200'
                     }`}
                   >
                     Video Clip
@@ -375,36 +321,36 @@ export const InfluencerContentProfile: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Item Title</label>
+                <label className="block text-slate-700 font-bold mb-1">Item Title *</label>
                 <input
                   type="text"
                   value={mediaTitle}
                   onChange={e => setMediaTitle(e.target.value)}
                   placeholder="e.g. Stage performance at Bengaluru Arena"
-                  className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white text-xs font-medium"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Description</label>
+                <label className="block text-slate-700 font-bold mb-1">Description</label>
                 <textarea
                   value={mediaDesc}
                   onChange={e => setMediaDesc(e.target.value)}
                   placeholder="Short context about this showcase clip..."
                   rows={2}
-                  className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white text-xs font-medium"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Media URL (CDN / Image Link)</label>
+                <label className="block text-slate-700 font-bold mb-1">Media URL (CDN / Image Link)</label>
                 <input
                   type="text"
                   value={mediaUrl}
                   onChange={e => setMediaUrl(e.target.value)}
                   placeholder="https://images.unsplash.com/..."
-                  className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white text-xs font-medium"
                 />
               </div>
 

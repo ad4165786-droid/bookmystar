@@ -74,10 +74,19 @@ export const INITIAL_INFLUENCERS: InfluencerProfile[] = [
   {
     id: 'inf-1',
     name: 'Vikram "Vortex" Rajput',
+    fullName: 'Vikram Singh Rajput',
     handle: '@vortex_esports',
+    email: 'vikram.vortex@esportsmail.com',
+    phone: '+91 98201 44820',
+    phoneCountryCode: '+91',
     avatar: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=300&auto=format&fit=crop&q=80',
     coverImage: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200&auto=format&fit=crop&q=80',
     category: 'Gaming',
+    secondaryCategory: 'Tech & Coding',
+    gender: 'male',
+    locationCity: 'Mumbai',
+    locationState: 'Maharashtra',
+    experienceYears: '5-8 years',
     bio: 'Pro Esports athlete & battle royale tournament MVP. Book a call for 1-on-1 gameplay analysis, squad tactics, and streaming career guidance.',
     isVerified: true,
     verificationStatus: 'approved',
@@ -88,8 +97,11 @@ export const INITIAL_INFLUENCERS: InfluencerProfile[] = [
     socialLinks: {
       youtube: 'https://youtube.com/@vortex_esports',
       instagram: 'https://instagram.com/vortex_gaming',
-      twitter: 'https://twitter.com/vortex_live'
+      twitter: 'https://twitter.com/vortex_live',
+      facebook: 'https://facebook.com/vortex.gaming.india',
+      other: 'https://twitch.tv/vortex_live'
     },
+    languages: ['English', 'Hindi', 'Punjabi'],
     gallery: [
       {
         id: 'gal-1',
@@ -143,10 +155,19 @@ export const INITIAL_INFLUENCERS: InfluencerProfile[] = [
   {
     id: 'inf-2',
     name: 'Ananya Roy',
+    fullName: 'Ananya Roy Chowdhury',
     handle: '@ananya_acoustics',
+    email: 'ananya.roy@acoustics.in',
+    phone: '+91 97112 30912',
+    phoneCountryCode: '+91',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80',
     coverImage: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1200&auto=format&fit=crop&q=80',
     category: 'Music',
+    secondaryCategory: 'Lifestyle & Travel',
+    gender: 'female',
+    locationCity: 'Kolkata',
+    locationState: 'West Bengal',
+    experienceYears: '3-5 years',
     bio: 'Singer-songwriter & vocal coach with 1.2M listeners. Let’s collaborate on songwriting, vocal warmup techniques, or industry release strategies.',
     isVerified: true,
     verificationStatus: 'approved',
@@ -157,8 +178,11 @@ export const INITIAL_INFLUENCERS: InfluencerProfile[] = [
     socialLinks: {
       instagram: 'https://instagram.com/ananya_roy_music',
       youtube: 'https://youtube.com/@ananyaroymusic',
-      twitter: 'https://twitter.com/ananya_tunes'
+      twitter: 'https://twitter.com/ananya_tunes',
+      facebook: 'https://facebook.com/ananyaroymusic',
+      other: 'https://open.spotify.com/artist/ananya'
     },
+    languages: ['English', 'Hindi', 'Bengali'],
     gallery: [
       {
         id: 'gal-3',
@@ -200,10 +224,19 @@ export const INITIAL_INFLUENCERS: InfluencerProfile[] = [
   {
     id: 'inf-3',
     name: 'Kabir Dev',
+    fullName: 'Kabir Dev Sharma',
     handle: '@kabir_techpulse',
+    email: 'kabir.dev@techpulse.org',
+    phone: '+91 99887 76655',
+    phoneCountryCode: '+91',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80',
     coverImage: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&auto=format&fit=crop&q=80',
     category: 'Tech & Coding',
+    secondaryCategory: 'Education & Career',
+    gender: 'male',
+    locationCity: 'Bengaluru',
+    locationState: 'Karnataka',
+    experienceYears: '8+ years',
     bio: 'Staff Engineer & Tech Content Creator. 1-on-1 mock interviews, system design teardowns, and tech career roadmapping for top product companies.',
     isVerified: true,
     verificationStatus: 'approved',
@@ -214,8 +247,11 @@ export const INITIAL_INFLUENCERS: InfluencerProfile[] = [
     socialLinks: {
       youtube: 'https://youtube.com/@techpulse_kabir',
       twitter: 'https://twitter.com/kabir_dev',
-      instagram: 'https://instagram.com/kabir_codes'
+      instagram: 'https://instagram.com/kabir_codes',
+      facebook: 'https://facebook.com/techpulse.kabir',
+      other: 'https://github.com/kabirdev'
     },
+    languages: ['English', 'Hindi', 'Kannada'],
     gallery: [
       {
         id: 'gal-4',

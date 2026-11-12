@@ -130,10 +130,20 @@ export const InfluencerDetailView: React.FC = () => {
               className="w-28 h-28 sm:w-36 sm:h-36 rounded-3xl object-cover ring-4 ring-[#0b0f19] shadow-2xl bg-slate-800"
             />
             <div className="space-y-1">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-xs font-bold px-2.5 py-0.5 rounded-md bg-brand-900/60 text-brand-300 border border-brand-500/30">
                   {influencer.category}
                 </span>
+                {influencer.secondaryCategory && (
+                  <span className="text-xs font-bold px-2.5 py-0.5 rounded-md bg-navy-900/60 text-navy-300 border border-navy-500/30">
+                    {influencer.secondaryCategory}
+                  </span>
+                )}
+                {influencer.locationCity && (
+                  <span className="text-xs text-slate-300">
+                    • {influencer.locationCity}, {influencer.locationState}
+                  </span>
+                )}
                 {influencer.isVerified && (
                   <span className="flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-md bg-sky-950/70 text-sky-300 border border-sky-500/30">
                     <CheckCircle2 className="w-3 h-3 text-sky-400" />
@@ -169,10 +179,10 @@ export const InfluencerDetailView: React.FC = () => {
                   href={influencer.socialLinks.youtube}
                   target="_blank"
                   rel="noreferrer"
-                  className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-rose-400 hover:border-rose-500/30 transition-colors"
+                  className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-rose-400 hover:border-rose-500/30 transition-colors text-xs font-bold"
                   title="YouTube"
                 >
-                  <ExternalLink className="w-4 h-4" />
+                  YT
                 </a>
               )}
               {influencer.socialLinks.instagram && (
@@ -180,8 +190,41 @@ export const InfluencerDetailView: React.FC = () => {
                   href={influencer.socialLinks.instagram}
                   target="_blank"
                   rel="noreferrer"
-                  className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-pink-400 hover:border-pink-500/30 transition-colors"
+                  className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-pink-400 hover:border-pink-500/30 transition-colors text-xs font-bold"
                   title="Instagram"
+                >
+                  IG
+                </a>
+              )}
+              {influencer.socialLinks.twitter && (
+                <a
+                  href={influencer.socialLinks.twitter}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-sky-400 hover:border-sky-500/30 transition-colors text-xs font-bold"
+                  title="X (Twitter)"
+                >
+                  X
+                </a>
+              )}
+              {influencer.socialLinks.facebook && (
+                <a
+                  href={influencer.socialLinks.facebook}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-blue-400 hover:border-blue-500/30 transition-colors text-xs font-bold"
+                  title="Facebook"
+                >
+                  FB
+                </a>
+              )}
+              {influencer.socialLinks.other && (
+                <a
+                  href={influencer.socialLinks.other}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-indigo-400 hover:border-indigo-500/30 transition-colors"
+                  title="Website / Portfolio"
                 >
                   <ExternalLink className="w-4 h-4" />
                 </a>
@@ -204,6 +247,16 @@ export const InfluencerDetailView: React.FC = () => {
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
               {influencer.bio}
             </p>
+            {influencer.languages && influencer.languages.length > 0 && (
+              <div className="pt-2 flex items-center gap-2 flex-wrap border-t border-slate-800/80">
+                <span className="text-xs text-slate-400 font-medium">Spoken Languages:</span>
+                {influencer.languages.map(l => (
+                  <span key={l} className="text-xs font-semibold px-2.5 py-0.5 rounded-md bg-slate-800 text-slate-300 border border-slate-700">
+                    {l}
+                  </span>
+                ))}
+              </div>
+            )}
           </section>
 
           {/* Media Showcase / Content Portfolio */}

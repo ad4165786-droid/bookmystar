@@ -21,7 +21,6 @@ const VALID_FAN_ROUTES = [
 const VALID_INFLUENCER_ROUTES = [
   '/influencer/dashboard',
   '/influencer/profile',
-  '/influencer/rates',
   '/influencer/availability',
   '/influencer/bookings',
   '/influencer/earnings',
