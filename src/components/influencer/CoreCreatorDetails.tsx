@@ -30,7 +30,8 @@ import {
   Link as LinkIcon,
   HelpCircle,
   Award,
-  ChevronRight
+  ChevronRight,
+  ChevronDown
 } from 'lucide-react';
 
 const CATEGORIES: Category[] = [
@@ -151,6 +152,8 @@ export const CoreCreatorDetails: React.FC = () => {
   const [secondaryCategory, setSecondaryCategory] = useState<Category | ''>(currentInfluencer.secondaryCategory || '');
   const [languages, setLanguages] = useState<string[]>(currentInfluencer.languages || ['English', 'Hindi']);
   const [customLanguage, setCustomLanguage] = useState('');
+  const [showLanguagesDropdown, setShowLanguagesDropdown] = useState(false);
+  const [showExperienceDropdown, setShowExperienceDropdown] = useState(false);
   const [experienceYears, setExperienceYears] = useState(currentInfluencer.experienceYears || '3-5 years');
 
   // Social Links
@@ -1370,85 +1373,172 @@ export const CoreCreatorDetails: React.FC = () => {
                   </p>
                 </div>
 
-                {/* Professional Experience */}
-                <div className="space-y-1.5 sm:col-span-2">
-                  <label className="block text-xs font-bold text-slate-800">
-                    Professional Experience <span className="text-slate-400 font-normal">(Optional)</span>
-                  </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
-                    {EXPERIENCE_OPTIONS.map(exp => (
-                      <button
-                        key={exp}
-                        type="button"
-                        onClick={() => setExperienceYears(exp)}
-                        className={`py-2 px-3 rounded-xl text-xs font-bold transition-all border ${
-                          experienceYears === exp
-                            ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
-                            : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
-                        }`}
-                      >
-                        {exp}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
               </div>
 
-              {/* Languages Spoken (Interactive Multi-Select Pills) */}
-              <div className="space-y-2 pt-2 border-t border-slate-100">
-                <div className="flex items-center justify-between">
-                  <label className="block text-xs font-bold text-slate-800">
-                    Languages Spoken for Calls
-                  </label>
-                  <span className="text-[10px] font-bold text-slate-400">
-                    {languages.length} selected
-                  </span>
-                </div>
-                <p className="text-[11px] text-slate-500">
-                  Select the languages you can fluently converse in during fan calls:
-                </p>
+              {/* Professional Experience (Collapsible Dropdown Effect) */}
+              <div className="pt-2 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setShowExperienceDropdown(!showExperienceDropdown)}
+                  className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 hover:bg-slate-100/90 border border-slate-200/90 transition-all text-left group shadow-xs cursor-pointer"
+                  aria-expanded={showExperienceDropdown}
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 text-navy-600 flex items-center justify-center shrink-0 shadow-xs">
+                      <Briefcase className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-xs font-bold text-slate-900 group-hover:text-navy-600 transition-colors">
+                          Professional Experience Tier
+                        </span>
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-navy-50 text-navy-700 border border-navy-200/80">
+                          {experienceYears || 'Not specified'}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-500 mt-0.5 truncate">
+                        {experienceYears ? `${experienceYears} in creator & industry consulting` : 'Click to select your experience level'}
+                      </p>
+                    </div>
+                  </div>
 
-                {/* Language Pills */}
-                <div className="flex flex-wrap gap-2 pt-1">
-                  {POPULAR_LANGUAGES.map(lang => {
-                    const isSelected = languages.includes(lang);
-                    return (
+                  <div className="flex items-center gap-2 text-slate-400 group-hover:text-slate-600 shrink-0 ml-2">
+                    <span className="text-[11px] font-semibold hidden sm:inline">
+                      {showExperienceDropdown ? 'Hide' : 'Select'}
+                    </span>
+                    <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${showExperienceDropdown ? 'rotate-180 text-navy-600' : ''}`} />
+                  </div>
+                </button>
+
+                {/* Dropdown Menu Content (Smoothly dropped down when active) */}
+                {showExperienceDropdown && (
+                  <div className="mt-3 p-4 rounded-2xl bg-slate-50/80 border border-slate-200 space-y-3 animate-fadeIn">
+                    <div className="flex items-center justify-between">
+                      <p className="text-[11px] text-slate-600 font-medium">
+                        Select how many years of professional experience you have in this discipline:
+                      </p>
                       <button
-                        key={lang}
                         type="button"
-                        onClick={() => handleToggleLanguage(lang)}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border cursor-pointer ${
-                          isSelected
-                            ? 'bg-brand-500 text-white border-brand-500 shadow-xs shadow-brand-500/25'
-                            : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
-                        }`}
+                        onClick={() => setShowExperienceDropdown(false)}
+                        className="text-[10px] font-bold text-slate-500 hover:text-slate-800 cursor-pointer"
                       >
-                        {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
-                        <span>{lang}</span>
+                        Hide Dropdown
                       </button>
-                    );
-                  })}
-                </div>
+                    </div>
 
-                {/* Custom Language Input */}
-                <div className="pt-2 flex gap-2 max-w-sm">
-                  <input
-                    type="text"
-                    value={customLanguage}
-                    onChange={e => setCustomLanguage(e.target.value)}
-                    placeholder="Add other language (e.g. Telugu)..."
-                    className="flex-1 px-3.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleAddCustomLanguage}
-                    disabled={!customLanguage.trim()}
-                    className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-900 disabled:opacity-40 text-white text-xs font-bold transition-colors"
-                  >
-                    Add
-                  </button>
-                </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                      {EXPERIENCE_OPTIONS.map(exp => (
+                        <button
+                          key={exp}
+                          type="button"
+                          onClick={() => setExperienceYears(exp)}
+                          className={`py-2 px-3 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
+                            experienceYears === exp
+                              ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
+                              : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+                          }`}
+                        >
+                          {exp}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Languages Spoken (Collapsible Dropdown Effect) */}
+              <div className="pt-2 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setShowLanguagesDropdown(!showLanguagesDropdown)}
+                  className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 hover:bg-slate-100/90 border border-slate-200/90 transition-all text-left group shadow-xs cursor-pointer"
+                  aria-expanded={showLanguagesDropdown}
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 text-brand-600 flex items-center justify-center shrink-0 shadow-xs">
+                      <Globe className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-xs font-bold text-slate-900 group-hover:text-brand-600 transition-colors">
+                          Languages Spoken for Calls
+                        </span>
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-50 text-brand-700 border border-brand-200/80">
+                          {languages.length} selected
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-500 mt-0.5 truncate">
+                        {languages.length > 0 ? languages.join(', ') : 'Click to select conversational languages'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 text-slate-400 group-hover:text-slate-600 shrink-0 ml-2">
+                    <span className="text-[11px] font-semibold hidden sm:inline">
+                      {showLanguagesDropdown ? 'Hide' : 'Select'}
+                    </span>
+                    <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${showLanguagesDropdown ? 'rotate-180 text-brand-600' : ''}`} />
+                  </div>
+                </button>
+
+                {/* Dropdown Menu Content (Smoothly dropped down when active) */}
+                {showLanguagesDropdown && (
+                  <div className="mt-3 p-4 rounded-2xl bg-slate-50/80 border border-slate-200 space-y-3 animate-fadeIn">
+                    <div className="flex items-center justify-between">
+                      <p className="text-[11px] text-slate-600 font-medium">
+                        Select the languages you can fluently converse in during fan calls:
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setShowLanguagesDropdown(false)}
+                        className="text-[10px] font-bold text-slate-500 hover:text-slate-800 cursor-pointer"
+                      >
+                        Hide Dropdown
+                      </button>
+                    </div>
+
+                    {/* Language Pills */}
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      {POPULAR_LANGUAGES.map(lang => {
+                        const isSelected = languages.includes(lang);
+                        return (
+                          <button
+                            key={lang}
+                            type="button"
+                            onClick={() => handleToggleLanguage(lang)}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border cursor-pointer ${
+                              isSelected
+                                ? 'bg-brand-500 text-white border-brand-500 shadow-xs shadow-brand-500/25'
+                                : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-200'
+                            }`}
+                          >
+                            {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                            <span>{lang}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Custom Language Input */}
+                    <div className="pt-2 flex gap-2 max-w-sm">
+                      <input
+                        type="text"
+                        value={customLanguage}
+                        onChange={e => setCustomLanguage(e.target.value)}
+                        placeholder="Add other language (e.g. Telugu)..."
+                        className="flex-1 px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-medium text-slate-900 focus:outline-none focus:border-brand-500"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleAddCustomLanguage}
+                        disabled={!customLanguage.trim()}
+                        className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-900 disabled:opacity-40 text-white text-xs font-bold transition-colors cursor-pointer"
+                      >
+                        Add
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
             </div>
