@@ -47,7 +47,7 @@ export const InfluencerDashboardLayout: React.FC = () => {
 
   const navItems = [
     { path: '/influencer/dashboard', id: 'dashboard', label: 'Studio Overview', icon: LayoutDashboard },
-    { path: '/influencer/profile', id: 'profile-content', label: 'Core Creator Details', icon: User },
+    { path: '/influencer/profile', id: 'profile-content', label: 'Edit Creator Profile', icon: User },
     { path: '/influencer/availability', id: 'availability', label: 'Availability & Slots', icon: Clock },
     { path: '/influencer/bookings', id: 'bookings', label: 'Fan Bookings', icon: Calendar },
     { path: '/influencer/earnings', id: 'payouts', label: 'Earnings & Payouts', icon: Wallet },

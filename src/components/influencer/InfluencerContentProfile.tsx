@@ -71,7 +71,7 @@ export const InfluencerContentProfile: React.FC = () => {
             }`}
           >
             <User className="w-4 h-4 text-brand-500" />
-            <span>Core Creator Details</span>
+            <span>Edit Creator Profile</span>
           </button>
 
           <button

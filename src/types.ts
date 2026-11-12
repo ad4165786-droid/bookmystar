@@ -55,6 +55,7 @@ export interface InfluencerProfile {
   name: string; // Display Name / Creator Name
   fullName?: string; // Full Legal Name
   handle: string; // Unique username (e.g. @vortex_esports)
+  professionalTitle?: string; // Professional Title (e.g. Pro Esports Player & Streamer)
   email?: string; // Contact / Professional Email
   phone?: string; // Mobile phone number
   phoneCountryCode?: string; // e.g. '+91'
