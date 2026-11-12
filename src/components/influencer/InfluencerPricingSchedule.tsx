@@ -33,7 +33,9 @@ import {
   Ban,
   PhoneCall,
   Video,
-  Info
+  Info,
+  HelpCircle,
+  AlertTriangle
 } from 'lucide-react';
 
 const ALL_DAYS: { day: DayScheduleItem['day']; short: DayScheduleItem['short'] }[] = [
@@ -87,6 +89,50 @@ function minutesToTime(minutes: number): string {
   return `${hPadded}:${mPadded} ${isPm ? 'PM' : 'AM'}`;
 }
 
+// Generate calendar cells for a month (Mon to Sun)
+function generateMonthDays(year: number, month: number) {
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+
+  let startDayOfWeek = firstDay.getDay() - 1;
+  if (startDayOfWeek === -1) startDayOfWeek = 6;
+
+  const daysInMonth = lastDay.getDate();
+  const days: { dateStr: string; dayNum: number; isCurrentMonth: boolean }[] = [];
+
+  const prevMonthLastDay = new Date(year, month, 0).getDate();
+  for (let i = startDayOfWeek - 1; i >= 0; i--) {
+    const d = prevMonthLastDay - i;
+    const prevDate = new Date(year, month - 1, d);
+    days.push({
+      dateStr: prevDate.toISOString().split('T')[0],
+      dayNum: d,
+      isCurrentMonth: false
+    });
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const curr = new Date(year, month, d);
+    days.push({
+      dateStr: curr.toISOString().split('T')[0],
+      dayNum: d,
+      isCurrentMonth: true
+    });
+  }
+
+  const remaining = (7 - (days.length % 7)) % 7;
+  for (let d = 1; d <= remaining; d++) {
+    const nextDate = new Date(year, month + 1, d);
+    days.push({
+      dateStr: nextDate.toISOString().split('T')[0],
+      dayNum: d,
+      isCurrentMonth: false
+    });
+  }
+
+  return days;
+}
+
 export const InfluencerPricingSchedule: React.FC = () => {
   const { 
     currentInfluencer, 
@@ -98,15 +144,14 @@ export const InfluencerPricingSchedule: React.FC = () => {
     setSelectedInfluencerId
   } = useApp();
 
-  // --- Initial Schedule Generator ---
+  // --- Initial Weekly Schedule Generator (Mon-Sat 9-1 & 3-7, Sun disabled) ---
   const initialWeeklySchedule: DayScheduleItem[] = useMemo(() => {
     if (currentInfluencer.availability?.weeklySchedule && currentInfluencer.availability.weeklySchedule.length === 7) {
       return currentInfluencer.availability.weeklySchedule;
     }
 
-    const activeDays = currentInfluencer.availability?.days || ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     return ALL_DAYS.map(d => {
-      const isEnabled = activeDays.includes(d.short);
+      const isEnabled = d.short !== 'Sun';
       return {
         day: d.day,
         short: d.short,
@@ -145,25 +190,47 @@ export const InfluencerPricingSchedule: React.FC = () => {
     currentInfluencer.availability?.customDateOverrides || {}
   );
 
-  // Calendar State
-  const [currentMonthDate, setCurrentMonthDate] = useState(() => new Date());
-  const [selectedDate, setSelectedDate] = useState(() => {
-    // Default to tomorrow's date YYYY-MM-DD
+  // ================= SECTION 1 CALENDAR STATE (Calendar & Blackout Dates) =================
+  const [section1MonthDate, setSection1MonthDate] = useState(() => new Date());
+  const [section1SelectedDate, setSection1SelectedDate] = useState(() => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     return tomorrow.toISOString().split('T')[0];
   });
 
-  // Preview Selected Slot
+  // ================= SECTION 2 CALENDAR STATE (Weekly Working Hours Calendar) =================
+  const [section2MonthDate, setSection2MonthDate] = useState(() => new Date());
+  const [section2SelectedDate, setSection2SelectedDate] = useState(() => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return tomorrow.toISOString().split('T')[0];
+  });
+
+  // Preview Selected Slot for ClockTimeSelector
   const [previewSelectedSlot, setPreviewSelectedSlot] = useState<SlotItem | null>(null);
 
   // UI state feedback
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccessBanner, setSaveSuccessBanner] = useState(false);
-  const [scheduleErrors, setScheduleErrors] = useState<Record<string, string>>({});
+
+  // --- Modals State ---
+  // 1. Block date confirmation modal (when bookings exist)
+  const [showBlockConfirmModal, setShowBlockConfirmModal] = useState(false);
+  const [dateToBlock, setDateToBlock] = useState<string | null>(null);
+
+  // 2. Custom hours modal (supports multiple intervals)
   const [showCustomHoursModal, setShowCustomHoursModal] = useState(false);
-  const [customStart, setCustomStart] = useState('10:00 AM');
-  const [customEnd, setCustomEnd] = useState('02:00 PM');
+  const [targetDateForCustom, setTargetDateForCustom] = useState<string>(section1SelectedDate);
+  const [customIntervals, setCustomIntervals] = useState<TimeIntervalItem[]>([
+    { id: 'custom-1', start: '10:00 AM', end: '02:00 PM' }
+  ]);
+  const [customModalError, setCustomModalError] = useState<string | null>(null);
+
+  // 3. Weekly Routine Configuration Modal (for Section 2)
+  const [showRoutineConfigModal, setShowRoutineConfigModal] = useState(false);
+  const [routineActiveDayIdx, setRoutineActiveDayIdx] = useState<number>(0);
+  const [routineTempSchedule, setRoutineTempSchedule] = useState<DayScheduleItem[]>(weeklySchedule);
+  const [routineModalError, setRoutineModalError] = useState<string | null>(null);
 
   // Filter bookings for this creator
   const creatorBookings = useMemo(() => {
@@ -183,253 +250,39 @@ export const InfluencerPricingSchedule: React.FC = () => {
     const origStatus = currentInfluencer.availability?.isTakingBookings !== false;
     const origPref = JSON.stringify(currentInfluencer.availability?.preferences || {});
     const currPref = JSON.stringify(preferences);
+    const origOverrides = JSON.stringify(currentInfluencer.availability?.customDateOverrides || {});
+    const currOverrides = JSON.stringify(customOverrides);
 
-    return origSchedule !== currSchedule || origBlocked !== currBlocked || origStatus !== isTakingBookings || origPref !== currPref;
-  }, [weeklySchedule, blockedDates, isTakingBookings, preferences, initialWeeklySchedule, currentInfluencer.availability]);
+    return origSchedule !== currSchedule || 
+           origBlocked !== currBlocked || 
+           origStatus !== isTakingBookings || 
+           origPref !== currPref ||
+           origOverrides !== currOverrides;
+  }, [weeklySchedule, blockedDates, isTakingBookings, preferences, customOverrides, initialWeeklySchedule, currentInfluencer.availability]);
 
-  // --- Interval Validation ---
-  const validateIntervals = (schedule: DayScheduleItem[]): boolean => {
-    const errors: Record<string, string> = {};
-
-    schedule.forEach(dayItem => {
-      if (!dayItem.enabled) return;
-
-      dayItem.intervals.forEach((interval, idx) => {
-        const startMin = timeToMinutes(interval.start);
-        const endMin = timeToMinutes(interval.end);
-
-        if (startMin >= endMin) {
-          errors[`${dayItem.short}-${interval.id}`] = 'End time must be after start time.';
-        }
-
-        // Check overlap with other intervals on same day
-        for (let j = idx + 1; j < dayItem.intervals.length; j++) {
-          const other = dayItem.intervals[j];
-          const oStart = timeToMinutes(other.start);
-          const oEnd = timeToMinutes(other.end);
-
-          if (Math.max(startMin, oStart) < Math.min(endMin, oEnd)) {
-            errors[`${dayItem.short}-${interval.id}`] = 'Intervals cannot overlap.';
-            errors[`${dayItem.short}-${other.id}`] = 'Intervals cannot overlap.';
-          }
-        }
-      });
-    });
-
-    setScheduleErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
-  // --- Day Toggle & Interval Handlers ---
-  const handleToggleDay = (dayIndex: number) => {
-    setWeeklySchedule(prev => {
-      const updated = [...prev];
-      const target = updated[dayIndex];
-      const nextEnabled = !target.enabled;
-      updated[dayIndex] = {
-        ...target,
-        enabled: nextEnabled,
-        intervals: target.intervals.length === 0 ? [{ id: `int-${target.short}-1`, start: '09:00 AM', end: '05:00 PM' }] : target.intervals
-      };
-      validateIntervals(updated);
-      return updated;
-    });
-  };
-
-  const handleUpdateInterval = (dayIndex: number, intervalId: string, field: 'start' | 'end', value: string) => {
-    setWeeklySchedule(prev => {
-      const updated = [...prev];
-      const day = updated[dayIndex];
-      const intervals = day.intervals.map(inv => inv.id === intervalId ? { ...inv, [field]: value } : inv);
-      updated[dayIndex] = { ...day, intervals };
-      validateIntervals(updated);
-      return updated;
-    });
-  };
-
-  const handleAddInterval = (dayIndex: number) => {
-    setWeeklySchedule(prev => {
-      const updated = [...prev];
-      const day = updated[dayIndex];
-      const lastInterval = day.intervals[day.intervals.length - 1];
-      
-      let nextStart = '02:00 PM';
-      let nextEnd = '06:00 PM';
-      if (lastInterval) {
-        const lastEndMin = timeToMinutes(lastInterval.end);
-        const newStartMin = Math.min(lastEndMin + 60, 22 * 60);
-        const newEndMin = Math.min(newStartMin + 180, 23 * 60);
-        nextStart = minutesToTime(newStartMin);
-        nextEnd = minutesToTime(newEndMin);
-      }
-
-      const newInv: TimeIntervalItem = {
-        id: `int-${day.short}-${Date.now().toString(36)}`,
-        start: nextStart,
-        end: nextEnd
-      };
-
-      updated[dayIndex] = {
-        ...day,
-        intervals: [...day.intervals, newInv]
-      };
-      validateIntervals(updated);
-      return updated;
-    });
-  };
-
-  const handleRemoveInterval = (dayIndex: number, intervalId: string) => {
-    setWeeklySchedule(prev => {
-      const updated = [...prev];
-      const day = updated[dayIndex];
-      if (day.intervals.length <= 1) return prev; // Keep at least one interval
-      const intervals = day.intervals.filter(inv => inv.id !== intervalId);
-      updated[dayIndex] = { ...day, intervals };
-      validateIntervals(updated);
-      return updated;
-    });
-  };
-
-  // Quick Action: Copy Monday to all other weekdays
-  const handleCopyMondayToWeekdays = () => {
-    const monday = weeklySchedule[0];
-    if (!monday) return;
-
-    setWeeklySchedule(prev => {
-      const updated = prev.map((item, idx) => {
-        // Only weekdays Mon-Fri (idx 0 to 4)
-        if (idx > 0 && idx < 5) {
-          return {
-            ...item,
-            enabled: monday.enabled,
-            intervals: monday.intervals.map(inv => ({
-              ...inv,
-              id: `int-${item.short}-${Math.random().toString(36).substring(2, 6)}`
-            }))
-          };
-        }
-        return item;
-      });
-      validateIntervals(updated);
-      return updated;
-    });
-
-    showToast('Monday working intervals applied to all weekdays (Mon-Fri).');
-  };
-
-  // --- Blocked Dates & Overrides Handlers ---
+  // Check if a date is blocked
   const isDateBlocked = (dateStr: string) => blockedDates.includes(dateStr);
 
-  const toggleBlockSelectedDate = (dateStr: string) => {
-    if (isDateBlocked(dateStr)) {
-      setBlockedDates(prev => prev.filter(d => d !== dateStr));
-      showToast(`${dateStr} unblocked. Bookings allowed.`);
-    } else {
-      setBlockedDates(prev => [...prev, dateStr]);
-      showToast(`${dateStr} marked as blocked/holiday.`);
-    }
+  const getBookingsForDate = (dateStr: string) => {
+    return creatorBookings.filter(b => b.scheduledDate === dateStr && b.bookingStatus !== 'cancelled' && b.bookingStatus !== 'rejected');
   };
 
-  const handleApplyCustomHours = () => {
-    if (timeToMinutes(customStart) >= timeToMinutes(customEnd)) {
-      showToast('End time must be after start time.');
-      return;
-    }
-
-    setCustomOverrides(prev => ({
-      ...prev,
-      [selectedDate]: {
-        date: selectedDate,
-        isUnavailable: false,
-        intervals: [{ id: `custom-${Date.now()}`, start: customStart, end: customEnd }],
-        note: 'Custom date override hours.'
-      }
-    }));
-
-    // If it was blocked, unblock it
-    if (blockedDates.includes(selectedDate)) {
-      setBlockedDates(prev => prev.filter(d => d !== selectedDate));
-    }
-
-    setShowCustomHoursModal(false);
-    showToast(`Custom schedule applied for ${selectedDate}: ${customStart} - ${customEnd}`);
-  };
-
-  const handleRemoveCustomOverride = (dateStr: string) => {
-    setCustomOverrides(prev => {
-      const copy = { ...prev };
-      delete copy[dateStr];
-      return copy;
-    });
-    showToast(`Custom hours removed for ${dateStr}. Reverted to standard schedule.`);
-  };
-
-  // --- Calendar Calculation Helpers ---
-  const calendarYear = currentMonthDate.getFullYear();
-  const calendarMonth = currentMonthDate.getMonth();
-
-  const calendarDays = useMemo(() => {
-    const firstDay = new Date(calendarYear, calendarMonth, 1);
-    const lastDay = new Date(calendarYear, calendarMonth + 1, 0);
-
-    // Monday as first day of week (0: Mon, 6: Sun)
-    let startDayOfWeek = firstDay.getDay() - 1;
-    if (startDayOfWeek === -1) startDayOfWeek = 6;
-
-    const daysInMonth = lastDay.getDate();
-    const days: { dateStr: string; dayNum: number; isCurrentMonth: boolean }[] = [];
-
-    // Leading padding from prev month
-    const prevMonthLastDay = new Date(calendarYear, calendarMonth, 0).getDate();
-    for (let i = startDayOfWeek - 1; i >= 0; i--) {
-      const d = prevMonthLastDay - i;
-      const prevDate = new Date(calendarYear, calendarMonth - 1, d);
-      days.push({
-        dateStr: prevDate.toISOString().split('T')[0],
-        dayNum: d,
-        isCurrentMonth: false
-      });
-    }
-
-    // Current month days
-    for (let d = 1; d <= daysInMonth; d++) {
-      const curr = new Date(calendarYear, calendarMonth, d);
-      days.push({
-        dateStr: curr.toISOString().split('T')[0],
-        dayNum: d,
-        isCurrentMonth: true
-      });
-    }
-
-    // Trailing padding to fill full 35 or 42 grid cells
-    const remaining = (7 - (days.length % 7)) % 7;
-    for (let d = 1; d <= remaining; d++) {
-      const nextDate = new Date(calendarYear, calendarMonth + 1, d);
-      days.push({
-        dateStr: nextDate.toISOString().split('T')[0],
-        dayNum: d,
-        isCurrentMonth: false
-      });
-    }
-
-    return days;
-  }, [calendarYear, calendarMonth]);
-
-  // Check if a given date is available based on weekly schedule, blocked dates, and overrides
+  // Determine availability status for any date
   const getDateAvailabilityStatus = (dateStr: string) => {
-    if (!isTakingBookings) return { available: false, reason: 'All bookings paused' };
-    if (blockedDates.includes(dateStr)) return { available: false, reason: 'Holiday / Blocked' };
+    if (!isTakingBookings) return { available: false, isCustom: false, isBlocked: false, reason: 'All bookings paused' };
+    if (blockedDates.includes(dateStr)) return { available: false, isCustom: false, isBlocked: true, reason: 'Blocked Date (Off)' };
 
     // Check custom date override
     if (customOverrides[dateStr]) {
       return { 
         available: !customOverrides[dateStr].isUnavailable, 
         isCustom: true,
+        isBlocked: false,
         reason: customOverrides[dateStr].isUnavailable ? 'Custom off-day' : 'Custom Hours' 
       };
     }
 
-    // Check weekday
+    // Check routine weekday
     const dateObj = new Date(dateStr + 'T00:00:00');
     let dayIdx = dateObj.getDay() - 1;
     if (dayIdx === -1) dayIdx = 6;
@@ -437,35 +290,185 @@ export const InfluencerPricingSchedule: React.FC = () => {
 
     return {
       available: !!(dayItem && dayItem.enabled && dayItem.intervals.length > 0),
-      reason: dayItem?.enabled ? 'Standard Working Day' : 'Day off (Weekly Schedule)'
+      isCustom: false,
+      isBlocked: false,
+      reason: dayItem?.enabled ? 'Standard Working Day' : 'Day off (Weekly Routine)'
     };
   };
 
-  // Get bookings for a date
-  const getBookingsForDate = (dateStr: string) => {
-    return creatorBookings.filter(b => b.scheduledDate === dateStr && b.bookingStatus !== 'cancelled' && b.bookingStatus !== 'rejected');
+  // --- Block/Unblock Handlers ---
+  const handleBlockDateClick = (dateStr: string) => {
+    if (isDateBlocked(dateStr)) {
+      setBlockedDates(prev => prev.filter(d => d !== dateStr));
+      showToast(`${dateStr} unblocked. Bookings allowed.`);
+      return;
+    }
+
+    const dateBookings = getBookingsForDate(dateStr);
+    if (dateBookings.length > 0) {
+      setDateToBlock(dateStr);
+      setShowBlockConfirmModal(true);
+    } else {
+      setBlockedDates(prev => [...prev, dateStr]);
+      showToast(`${dateStr} marked as unavailable.`);
+    }
   };
 
-  // --- Generated Preview Available Slots for Selected Date ---
+  const handleConfirmBlockDate = () => {
+    if (dateToBlock) {
+      setBlockedDates(prev => [...prev, dateToBlock]);
+      showToast(`${dateToBlock} marked as unavailable.`);
+      setDateToBlock(null);
+      setShowBlockConfirmModal(false);
+    }
+  };
+
+  // --- Restore Routine Schedule for a Date ---
+  const handleRestoreRoutineSchedule = (dateStr: string) => {
+    let hadChanges = false;
+    if (blockedDates.includes(dateStr)) {
+      setBlockedDates(prev => prev.filter(d => d !== dateStr));
+      hadChanges = true;
+    }
+    if (customOverrides[dateStr]) {
+      setCustomOverrides(prev => {
+        const copy = { ...prev };
+        delete copy[dateStr];
+        return copy;
+      });
+      hadChanges = true;
+    }
+
+    const dateObj = new Date(dateStr + 'T00:00:00');
+    const weekdayName = dateObj.toLocaleDateString('default', { weekday: 'long' });
+
+    if (hadChanges) {
+      showToast(`Restored ${dateStr} to recurring ${weekdayName} routine.`);
+    } else {
+      showToast(`${dateStr} is already using the recurring ${weekdayName} routine.`);
+    }
+  };
+
+  // --- Custom Hours Modal Open ---
+  const handleOpenCustomHoursModal = (dateStr: string) => {
+    setTargetDateForCustom(dateStr);
+    if (customOverrides[dateStr]?.intervals && customOverrides[dateStr].intervals!.length > 0) {
+      setCustomIntervals(customOverrides[dateStr].intervals!);
+    } else {
+      // Prefill with routine hours if available
+      const dateObj = new Date(dateStr + 'T00:00:00');
+      let dayIdx = dateObj.getDay() - 1;
+      if (dayIdx === -1) dayIdx = 6;
+      const routineDay = weeklySchedule[dayIdx];
+      if (routineDay?.enabled && routineDay.intervals.length > 0) {
+        setCustomIntervals(routineDay.intervals.map(inv => ({ ...inv, id: `custom-${Date.now()}-${inv.id}` })));
+      } else {
+        setCustomIntervals([
+          { id: `custom-${Date.now()}-1`, start: '10:00 AM', end: '02:00 PM' }
+        ]);
+      }
+    }
+    setCustomModalError(null);
+    setShowCustomHoursModal(true);
+  };
+
+  const handleSaveCustomHours = () => {
+    for (let i = 0; i < customIntervals.length; i++) {
+      const inv = customIntervals[i];
+      const startMin = timeToMinutes(inv.start);
+      const endMin = timeToMinutes(inv.end);
+      if (startMin >= endMin) {
+        setCustomModalError('End time must be after start time.');
+        return;
+      }
+      for (let j = i + 1; j < customIntervals.length; j++) {
+        const other = customIntervals[j];
+        const oStart = timeToMinutes(other.start);
+        const oEnd = timeToMinutes(other.end);
+        if (Math.max(startMin, oStart) < Math.min(endMin, oEnd)) {
+          setCustomModalError('Custom intervals cannot overlap.');
+          return;
+        }
+      }
+    }
+
+    setCustomOverrides(prev => ({
+      ...prev,
+      [targetDateForCustom]: {
+        date: targetDateForCustom,
+        isUnavailable: false,
+        intervals: customIntervals,
+        note: 'Custom date override hours.'
+      }
+    }));
+
+    if (blockedDates.includes(targetDateForCustom)) {
+      setBlockedDates(prev => prev.filter(d => d !== targetDateForCustom));
+    }
+
+    setShowCustomHoursModal(false);
+    showToast(`Custom hours applied for ${targetDateForCustom}.`);
+  };
+
+  // --- Routine Modal Open & Save ---
+  const handleOpenRoutineModal = (initialWeekdayIdx?: number) => {
+    setRoutineTempSchedule(JSON.parse(JSON.stringify(weeklySchedule)));
+    if (typeof initialWeekdayIdx === 'number') {
+      setRoutineActiveDayIdx(initialWeekdayIdx);
+    }
+    setRoutineModalError(null);
+    setShowRoutineConfigModal(true);
+  };
+
+  const handleSaveRoutineConfig = () => {
+    // Validate intervals across all days in routineTempSchedule
+    for (const d of routineTempSchedule) {
+      if (!d.enabled) continue;
+      for (let i = 0; i < d.intervals.length; i++) {
+        const inv = d.intervals[i];
+        const startMin = timeToMinutes(inv.start);
+        const endMin = timeToMinutes(inv.end);
+        if (startMin >= endMin) {
+          setRoutineModalError(`Invalid interval on ${d.day}: end time must be after start time.`);
+          return;
+        }
+        for (let j = i + 1; j < d.intervals.length; j++) {
+          const other = d.intervals[j];
+          const oStart = timeToMinutes(other.start);
+          const oEnd = timeToMinutes(other.end);
+          if (Math.max(startMin, oStart) < Math.min(endMin, oEnd)) {
+            setRoutineModalError(`Overlapping intervals detected on ${d.day}.`);
+            return;
+          }
+        }
+      }
+    }
+
+    setWeeklySchedule(routineTempSchedule);
+    setShowRoutineConfigModal(false);
+    showToast('Weekly routine working hours updated and applied across all calendar weeks!');
+  };
+
+  // --- Generated Preview Available Slots for Selected Date (ClockTimeSelector) ---
+  const previewDate = section2SelectedDate;
   const generatedSlotsForDate: SlotItem[] = useMemo(() => {
-    const status = getDateAvailabilityStatus(selectedDate);
+    const status = getDateAvailabilityStatus(previewDate);
     if (!status.available) return [];
 
-    // Determine intervals: custom override or standard day
     let intervals: TimeIntervalItem[] = [];
-    if (customOverrides[selectedDate]?.intervals) {
-      intervals = customOverrides[selectedDate].intervals!;
+    if (customOverrides[previewDate]?.intervals) {
+      intervals = customOverrides[previewDate].intervals!;
     } else {
-      const dateObj = new Date(selectedDate + 'T00:00:00');
+      const dateObj = new Date(previewDate + 'T00:00:00');
       let dayIdx = dateObj.getDay() - 1;
       if (dayIdx === -1) dayIdx = 6;
       intervals = weeklySchedule[dayIdx]?.intervals || [];
     }
 
-    const slotDuration = 30; // 30-min fan booking slot interval
+    const slotDuration = 30; // 30-min slot interval
     const buffer = preferences.bufferMinutes || 10;
     const step = slotDuration + buffer;
-    const dateBookings = getBookingsForDate(selectedDate);
+    const dateBookings = getBookingsForDate(previewDate);
     const bookedTimes = new Set(dateBookings.map(b => b.scheduledTime));
 
     const slots: SlotItem[] = [];
@@ -476,12 +479,11 @@ export const InfluencerPricingSchedule: React.FC = () => {
 
       for (let m = startMin; m + slotDuration <= endMin; m += step) {
         const timeLabel = minutesToTime(m);
-        // Exclude if already booked
         if (!bookedTimes.has(timeLabel)) {
           slots.push({
             coachId: currentInfluencer.id,
             coachName: currentInfluencer.name,
-            date: selectedDate,
+            date: previewDate,
             slot: timeLabel,
             timezone: 'Asia/Kolkata'
           });
@@ -490,7 +492,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
     });
 
     return slots;
-  }, [selectedDate, weeklySchedule, blockedDates, customOverrides, isTakingBookings, preferences, creatorBookings, currentInfluencer]);
+  }, [previewDate, weeklySchedule, blockedDates, customOverrides, isTakingBookings, preferences, creatorBookings, currentInfluencer]);
 
   // --- Reset All Changes ---
   const handleReset = () => {
@@ -505,23 +507,15 @@ export const InfluencerPricingSchedule: React.FC = () => {
       allowedDurations: [10, 15, 30]
     });
     setCustomOverrides(currentInfluencer.availability?.customDateOverrides || {});
-    setScheduleErrors({});
     showToast('Changes discarded.');
   };
 
   // --- Save Availability to Backend ---
   const handleSave = async () => {
-    if (!validateIntervals(weeklySchedule)) {
-      showToast('Please resolve interval conflicts and overlapping times before saving.');
-      return;
-    }
-
     setIsSaving(true);
 
-    // Synchronize legacy `days` and `timeSlots` arrays so fan checkout and landing pages work 100%
     const activeShortDays = weeklySchedule.filter(d => d.enabled).map(d => d.short);
     
-    // Flatten standard time slots preview
     const sampleSlots: string[] = [];
     weeklySchedule.forEach(d => {
       if (!d.enabled) return;
@@ -532,7 +526,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
 
     const updatedAvailability = {
       days: activeShortDays,
-      timeSlots: sampleSlots.length > 0 ? sampleSlots : ['10:00 AM', '11:00 AM', '04:00 PM', '05:00 PM'],
+      timeSlots: sampleSlots.length > 0 ? sampleSlots : ['09:00 AM', '10:00 AM', '03:00 PM', '04:00 PM'],
       blockedDates,
       isTakingBookings,
       weeklySchedule,
@@ -553,25 +547,36 @@ export const InfluencerPricingSchedule: React.FC = () => {
     setTimeout(() => setSaveSuccessBanner(false), 5000);
   };
 
+  const todayStr = new Date().toISOString().split('T')[0];
+
+  // Calendar cells for Section 1 and Section 2
+  const section1Days = useMemo(() => {
+    return generateMonthDays(section1MonthDate.getFullYear(), section1MonthDate.getMonth());
+  }, [section1MonthDate]);
+
+  const section2Days = useMemo(() => {
+    return generateMonthDays(section2MonthDate.getFullYear(), section2MonthDate.getMonth());
+  }, [section2MonthDate]);
+
   return (
     <div className="space-y-8 pb-24 max-w-7xl mx-auto font-sans">
       
-      {/* ================= 1. PAGE HEADER ================= */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm">
+      {/* ================= PAGE HEADER ================= */}
+      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#E2E8F0] shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           
           <div className="flex items-start sm:items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-[#EFF6FF] text-[#1D4ED8] border border-[#DBEAFE] flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-[#F2F7FF] text-[#102B5C] border border-[#DBEAFE] flex items-center justify-center shrink-0">
               <CalendarDays className="w-6 h-6 stroke-[2]" />
             </div>
             <div className="space-y-1">
               <div className="flex items-center gap-3 flex-wrap">
-                <h1 className="text-xl sm:text-2xl font-extrabold text-[#172554] tracking-tight">
+                <h1 className="text-xl sm:text-2xl font-extrabold text-[#102B5C] tracking-tight">
                   Availability & Schedule
                 </h1>
                 <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
                   isTakingBookings 
-                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
+                    ? 'bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]' 
                     : 'bg-amber-50 text-amber-700 border border-amber-200'
                 }`}>
                   <span className={`w-2 h-2 rounded-full ${isTakingBookings ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
@@ -592,10 +597,10 @@ export const InfluencerPricingSchedule: React.FC = () => {
                 setSelectedInfluencerId(currentInfluencer.id);
                 setActiveView('influencer-detail');
               }}
-              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#F8FAFC] hover:bg-[#EFF6FF] text-[#172554] hover:text-[#1D4ED8] border border-slate-200/90 font-bold text-xs transition-colors cursor-pointer shadow-xs"
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] font-bold text-xs transition-colors cursor-pointer shadow-xs"
               title="Preview public profile booking slot view as a fan"
             >
-              <Eye className="w-4 h-4 text-brand-500" />
+              <Eye className="w-4 h-4 text-[#FF7417]" />
               <span>Preview Booking Page</span>
             </button>
 
@@ -603,7 +608,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
               type="button"
               onClick={handleSave}
               disabled={isSaving}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 active:scale-[0.98] text-white font-bold text-xs shadow-md shadow-brand-500/25 transition-all cursor-pointer disabled:opacity-50"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#FF7417] hover:bg-[#e0620f] active:scale-[0.98] text-white font-bold text-xs shadow-md shadow-[#FF7417]/25 transition-all cursor-pointer disabled:opacity-50"
             >
               <Save className="w-4 h-4" />
               <span>{isSaving ? 'Saving...' : 'Save Changes'}</span>
@@ -614,7 +619,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
 
         {/* Global Save Success Notification Banner */}
         {saveSuccessBanner && (
-          <div className="mt-4 p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-between text-xs text-emerald-900 font-bold animate-fadeIn">
+          <div className="mt-4 p-3.5 rounded-2xl bg-[#ECFDF5] border border-[#A7F3D0] flex items-center justify-between text-xs text-[#065F46] font-bold animate-fadeIn">
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
               <span>Your weekly schedule, blackout dates, and booking rules are live on BookMyStar!</span>
@@ -622,7 +627,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
             <button
               type="button"
               onClick={() => setSaveSuccessBanner(false)}
-              className="p-1 rounded-lg hover:bg-emerald-100 text-emerald-600 cursor-pointer"
+              className="p-1 rounded-lg hover:bg-emerald-100 text-[#065F46] cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -630,16 +635,16 @@ export const InfluencerPricingSchedule: React.FC = () => {
         )}
       </div>
 
-      {/* ================= 2. AVAILABILITY OVERVIEW (Compact Summary Cards) ================= */}
+      {/* ================= AVAILABILITY OVERVIEW (Compact Summary Cards) ================= */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         
         {/* Card 1: Availability Status Toggle */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-sm flex items-center justify-between">
+        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider block">
               Availability Status
             </span>
-            <span className={`text-sm font-extrabold ${isTakingBookings ? 'text-emerald-700' : 'text-slate-500'}`}>
+            <span className={`text-sm font-extrabold ${isTakingBookings ? 'text-[#065F46]' : 'text-slate-500'}`}>
               {isTakingBookings ? 'Active' : 'Inactive'}
             </span>
             <p className="text-[10px] text-[#64748B]">
@@ -651,7 +656,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
             type="button"
             onClick={() => setIsTakingBookings(prev => !prev)}
             className={`w-12 h-6.5 flex items-center rounded-full p-1 cursor-pointer transition-colors duration-200 ease-in-out ${
-              isTakingBookings ? 'bg-emerald-600' : 'bg-slate-300'
+              isTakingBookings ? 'bg-[#FF7417]' : 'bg-slate-300'
             }`}
             title="Toggle active booking status"
           >
@@ -664,30 +669,30 @@ export const InfluencerPricingSchedule: React.FC = () => {
         </div>
 
         {/* Card 2: Available Days */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-sm flex items-center justify-between">
+        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider block">
               Available Days
             </span>
-            <div className="text-base font-extrabold text-[#172554]">
+            <div className="text-base font-extrabold text-[#102B5C]">
               {weeklySchedule.filter(d => d.enabled).length} of 7 Days Active
             </div>
             <p className="text-[10px] text-[#64748B] truncate">
               {weeklySchedule.filter(d => d.enabled).map(d => d.short).join(', ') || 'No active days'}
             </p>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-[#EFF6FF] text-[#1D4ED8] border border-[#DBEAFE] flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-[#F2F7FF] text-[#102B5C] border border-[#DBEAFE] flex items-center justify-center shrink-0">
             <CalendarIcon className="w-5 h-5" />
           </div>
         </div>
 
         {/* Card 3: Working Hours Average */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-sm flex items-center justify-between">
+        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider block">
               Working Hours
             </span>
-            <div className="text-base font-extrabold text-[#172554]">
+            <div className="text-base font-extrabold text-[#102B5C]">
               {(() => {
                 const active = weeklySchedule.filter(d => d.enabled);
                 if (active.length === 0) return 'Unavailable';
@@ -699,210 +704,43 @@ export const InfluencerPricingSchedule: React.FC = () => {
               Buffer: {preferences.bufferMinutes}m between calls
             </p>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-[#EFF6FF] text-[#1D4ED8] border border-[#DBEAFE] flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-[#F2F7FF] text-[#102B5C] border border-[#DBEAFE] flex items-center justify-center shrink-0">
             <Clock className="w-5 h-5" />
           </div>
         </div>
 
         {/* Card 4: Upcoming Bookings */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-sm flex items-center justify-between">
+        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider block">
               Upcoming Bookings
             </span>
-            <div className="text-base font-extrabold text-[#172554]">
+            <div className="text-base font-extrabold text-[#102B5C]">
               {upcomingBookings.length} {upcomingBookings.length === 1 ? 'Call' : 'Calls'} Scheduled
             </div>
-            <p className="text-[10px] text-emerald-600 font-semibold">
+            <p className="text-[10px] text-emerald-600 font-semibold truncate">
               {upcomingBookings[0] ? `Next: ${upcomingBookings[0].scheduledDate} at ${upcomingBookings[0].scheduledTime}` : 'All caught up'}
             </p>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0] flex items-center justify-center shrink-0">
             <PhoneCall className="w-5 h-5" />
           </div>
         </div>
 
       </div>
 
-      {/* ================= 3. WEEKLY AVAILABILITY MANAGEMENT ================= */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-6">
-        
-        {/* Section Heading + Copy Monday Shortcut */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#EFF6FF] text-[#1D4ED8] border border-[#DBEAFE] flex items-center justify-center">
-              <Clock className="w-4 h-4 text-[#1D4ED8]" />
-            </div>
-            <div>
-              <h2 className="text-base font-extrabold text-[#172554] tracking-tight">
-                Weekly Working Hours
-              </h2>
-              <p className="text-xs text-[#64748B]">
-                Set routine working windows for each day of the week. Supports multiple intervals.
-              </p>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={handleCopyMondayToWeekdays}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#F8FAFC] hover:bg-[#EFF6FF] text-[#172554] hover:text-[#1D4ED8] border border-slate-200/90 text-xs font-bold transition-colors cursor-pointer self-start sm:self-auto shadow-2xs"
-            title="Duplicate Monday hours across Tue-Fri"
-          >
-            <Copy className="w-3.5 h-3.5 text-brand-500" />
-            <span>Copy Mon to Weekdays</span>
-          </button>
-        </div>
-
-        {/* 7 Days Schedule Table */}
-        <div className="divide-y divide-slate-100">
-          {weeklySchedule.map((dayItem, dayIdx) => {
-            return (
-              <div 
-                key={dayItem.day} 
-                className="py-4.5 flex flex-col md:flex-row md:items-start justify-between gap-4 transition-colors"
-              >
-                {/* Left: Toggle & Day Name */}
-                <div className="flex items-center gap-3.5 min-w-[180px]">
-                  <button
-                    type="button"
-                    onClick={() => handleToggleDay(dayIdx)}
-                    className={`w-10 h-6 flex items-center rounded-full p-0.5 cursor-pointer transition-colors duration-200 ease-in-out shrink-0 ${
-                      dayItem.enabled ? 'bg-brand-500' : 'bg-slate-300'
-                    }`}
-                    title={dayItem.enabled ? `Disable ${dayItem.day}` : `Enable ${dayItem.day}`}
-                  >
-                    <div
-                      className={`bg-white w-5 h-5 rounded-full shadow-md transform transition-transform duration-200 ease-in-out ${
-                        dayItem.enabled ? 'translate-x-4' : 'translate-x-0'
-                      }`}
-                    />
-                  </button>
-
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className={`text-xs font-extrabold ${dayItem.enabled ? 'text-[#172554]' : 'text-slate-400'}`}>
-                        {dayItem.day}
-                      </span>
-                      <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded-md ${
-                        dayItem.enabled 
-                          ? 'bg-[#EFF6FF] text-[#1D4ED8]' 
-                          : 'bg-slate-100 text-slate-400'
-                      }`}>
-                        {dayItem.short}
-                      </span>
-                    </div>
-                    {!dayItem.enabled && (
-                      <span className="text-[11px] text-slate-400 font-medium block">
-                        Unavailable
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Right: Working Intervals or Unavailable Badge */}
-                <div className="flex-1 max-w-2xl space-y-2.5">
-                  {!dayItem.enabled ? (
-                    <div className="py-2 text-xs text-slate-400 font-medium italic flex items-center gap-1.5">
-                      <Ban className="w-3.5 h-3.5 text-slate-300" />
-                      <span>Not taking bookings on {dayItem.day}s</span>
-                    </div>
-                  ) : (
-                    <div className="space-y-2">
-                      {dayItem.intervals.map((interval, invIdx) => {
-                        const errorKey = `${dayItem.short}-${interval.id}`;
-                        const errorMsg = scheduleErrors[errorKey];
-
-                        return (
-                          <div key={interval.id} className="space-y-1">
-                            <div className="flex flex-wrap items-center gap-2">
-                              {/* Start Time Dropdown */}
-                              <div className="relative">
-                                <select
-                                  value={interval.start}
-                                  onChange={e => handleUpdateInterval(dayIdx, interval.id, 'start', e.target.value)}
-                                  className="px-3 py-2 rounded-xl bg-[#F8FAFC] border border-slate-200 text-xs font-semibold text-[#172554] focus:outline-none focus:bg-white focus:border-brand-500 cursor-pointer"
-                                >
-                                  {TIME_OPTIONS.map(t => (
-                                    <option key={t} value={t}>{t}</option>
-                                  ))}
-                                </select>
-                              </div>
-
-                              <span className="text-xs text-[#64748B] font-bold">to</span>
-
-                              {/* End Time Dropdown */}
-                              <div className="relative">
-                                <select
-                                  value={interval.end}
-                                  onChange={e => handleUpdateInterval(dayIdx, interval.id, 'end', e.target.value)}
-                                  className="px-3 py-2 rounded-xl bg-[#F8FAFC] border border-slate-200 text-xs font-semibold text-[#172554] focus:outline-none focus:bg-white focus:border-brand-500 cursor-pointer"
-                                >
-                                  {TIME_OPTIONS.map(t => (
-                                    <option key={t} value={t}>{t}</option>
-                                  ))}
-                                </select>
-                              </div>
-
-                              {/* Remove Interval Button (if > 1 interval) */}
-                              {dayItem.intervals.length > 1 && (
-                                <button
-                                  type="button"
-                                  onClick={() => handleRemoveInterval(dayIdx, interval.id)}
-                                  className="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
-                                  title="Remove this time interval"
-                                >
-                                  <Trash2 className="w-3.5 h-3.5" />
-                                </button>
-                              )}
-
-                              {/* Add Interval inline button on last interval */}
-                              {invIdx === dayItem.intervals.length - 1 && dayItem.intervals.length < 3 && (
-                                <button
-                                  type="button"
-                                  onClick={() => handleAddInterval(dayIdx)}
-                                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-[11px] font-bold text-brand-600 hover:bg-[#EFF6FF] transition-colors cursor-pointer"
-                                  title="Add another time interval for this day"
-                                >
-                                  <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-                                  <span>Add Interval</span>
-                                </button>
-                              )}
-                            </div>
-
-                            {/* Validation error message */}
-                            {errorMsg && (
-                              <p className="text-[11px] font-semibold text-rose-500 flex items-center gap-1 animate-fadeIn">
-                                <AlertCircle className="w-3 h-3 shrink-0" />
-                                <span>{errorMsg}</span>
-                              </p>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-
-              </div>
-            );
-          })}
-        </div>
-
-      </div>
-
-      {/* ================= 4. CALENDAR AND DATE MANAGEMENT ================= */}
+      {/* ================= SECTION 1: CALENDAR & BLACKOUT DATES ================= */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
-        {/* Left Column: Interactive Month Calendar (7 cols) */}
-        <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-6">
+        {/* Left Section – Monthly Calendar (7 cols) */}
+        <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-[#E2E8F0] shadow-sm space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-[#EFF6FF] text-[#1D4ED8] border border-[#DBEAFE] flex items-center justify-center">
-                <CalendarDays className="w-4 h-4 text-[#1D4ED8]" />
+              <div className="w-9 h-9 rounded-xl bg-[#F2F7FF] text-[#102B5C] border border-[#DBEAFE] flex items-center justify-center">
+                <CalendarDays className="w-4 h-4 text-[#102B5C]" />
               </div>
               <div>
-                <h2 className="text-base font-extrabold text-[#172554] tracking-tight">
+                <h2 className="text-base font-extrabold text-[#102B5C] tracking-tight">
                   Calendar & Blackout Dates
                 </h2>
                 <p className="text-xs text-[#64748B]">
@@ -917,28 +755,28 @@ export const InfluencerPricingSchedule: React.FC = () => {
                 type="button"
                 onClick={() => {
                   const today = new Date();
-                  setCurrentMonthDate(new Date(today.getFullYear(), today.getMonth(), 1));
-                  setSelectedDate(today.toISOString().split('T')[0]);
+                  setSection1MonthDate(new Date(today.getFullYear(), today.getMonth(), 1));
+                  setSection1SelectedDate(today.toISOString().split('T')[0]);
                 }}
-                className="px-2.5 py-1.5 rounded-xl bg-[#F8FAFC] hover:bg-slate-100 text-[#172554] border border-slate-200 text-xs font-bold transition-colors cursor-pointer mr-1"
+                className="px-3 py-1.5 rounded-xl bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] text-xs font-bold transition-colors cursor-pointer mr-1"
               >
                 Today
               </button>
               <button
                 type="button"
-                onClick={() => setCurrentMonthDate(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))}
-                className="p-1.5 rounded-xl bg-[#F8FAFC] hover:bg-slate-100 text-[#172554] border border-slate-200 transition-colors cursor-pointer"
+                onClick={() => setSection1MonthDate(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))}
+                className="p-1.5 rounded-xl bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] transition-colors cursor-pointer"
                 title="Previous Month"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
-              <span className="text-xs font-extrabold text-[#172554] px-2 min-w-[120px] text-center">
-                {currentMonthDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
+              <span className="text-xs font-extrabold text-[#102B5C] px-2 min-w-[130px] text-center">
+                {section1MonthDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
               </span>
               <button
                 type="button"
-                onClick={() => setCurrentMonthDate(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1))}
-                className="p-1.5 rounded-xl bg-[#F8FAFC] hover:bg-slate-100 text-[#172554] border border-slate-200 transition-colors cursor-pointer"
+                onClick={() => setSection1MonthDate(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1))}
+                className="p-1.5 rounded-xl bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] transition-colors cursor-pointer"
                 title="Next Month"
               >
                 <ChevronRight className="w-4 h-4" />
@@ -946,9 +784,8 @@ export const InfluencerPricingSchedule: React.FC = () => {
             </div>
           </div>
 
-          {/* 7-Day Calendar Grid */}
+          {/* 7-Day Monthly Calendar Grid */}
           <div>
-            {/* Weekday headers */}
             <div className="grid grid-cols-7 gap-1 text-center pb-2 border-b border-slate-100">
               {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(wd => (
                 <span key={wd} className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">
@@ -957,52 +794,50 @@ export const InfluencerPricingSchedule: React.FC = () => {
               ))}
             </div>
 
-            {/* Days cells */}
             <div className="grid grid-cols-7 gap-1.5 pt-2">
-              {calendarDays.map((cell) => {
-                const isSelected = selectedDate === cell.dateStr;
+              {section1Days.map((cell) => {
+                const isSelected = section1SelectedDate === cell.dateStr;
                 const status = getDateAvailabilityStatus(cell.dateStr);
                 const isBlocked = blockedDates.includes(cell.dateStr);
                 const dayBookings = getBookingsForDate(cell.dateStr);
                 const hasBookings = dayBookings.length > 0;
-                
-                const todayStr = new Date().toISOString().split('T')[0];
+                const isPast = cell.dateStr < todayStr;
                 const isToday = cell.dateStr === todayStr;
 
                 return (
                   <button
                     key={cell.dateStr}
                     type="button"
-                    onClick={() => setSelectedDate(cell.dateStr)}
-                    className={`aspect-square p-1 sm:p-1.5 rounded-xl border text-center transition-all cursor-pointer flex flex-col items-center justify-between relative ${
+                    onClick={() => setSection1SelectedDate(cell.dateStr)}
+                    className={`aspect-square p-1.5 rounded-xl border text-center transition-all cursor-pointer flex flex-col items-center justify-between relative ${
                       isSelected
-                        ? 'border-brand-500 ring-2 ring-brand-500/30 bg-[#EFF6FF] text-[#172554] font-black shadow-sm'
+                        ? 'border-2 border-[#FF7417] bg-[#FF7417]/10 text-[#102B5C] font-black shadow-sm ring-2 ring-[#FF7417]/20'
                         : isBlocked
-                        ? 'bg-rose-50/70 border-rose-200 text-rose-700 hover:bg-rose-100/60'
+                        ? 'bg-[#FEF2F2] border-[#FECACA] text-[#B91C1C] hover:bg-red-100/70'
+                        : isPast
+                        ? 'bg-slate-50/60 border-slate-100 text-slate-300'
                         : status.available
-                        ? 'bg-white hover:bg-[#F8FAFC] border-slate-200 text-[#172554] font-semibold'
+                        ? 'bg-[#ECFDF5]/60 hover:bg-[#ECFDF5] border-[#A7F3D0]/80 text-[#102B5C] font-semibold'
                         : 'bg-slate-50 border-slate-100 text-slate-400'
                     } ${!cell.isCurrentMonth ? 'opacity-35' : ''}`}
                   >
-                    {/* Top Row: Day Number & Today indicator */}
                     <div className="w-full flex items-center justify-between text-[11px] leading-none">
-                      <span className={isSelected ? 'font-black text-brand-600' : ''}>
+                      <span className={isSelected ? 'font-black text-[#FF7417]' : ''}>
                         {cell.dayNum}
                       </span>
                       {isToday && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-brand-500" title="Today" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#FF7417]" title="Today" />
                       )}
                     </div>
 
-                    {/* Bottom Status Indicators */}
                     <div className="flex items-center gap-1 justify-center w-full">
                       {isBlocked ? (
-                        <span className="text-[9px] font-bold text-rose-600 bg-rose-100/80 px-1 rounded">
+                        <span className="text-[9px] font-bold text-[#B91C1C] bg-red-100 px-1 py-0.5 rounded">
                           Off
                         </span>
                       ) : hasBookings ? (
-                        <span className="text-[9px] font-bold text-amber-700 bg-amber-100 px-1 rounded flex items-center gap-0.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                        <span className="text-[9px] font-bold text-amber-800 bg-amber-100 px-1 rounded flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#FF7417]" />
                           <span>{dayBookings.length}</span>
                         </span>
                       ) : status.isCustom ? (
@@ -1020,34 +855,37 @@ export const InfluencerPricingSchedule: React.FC = () => {
           {/* Color Legend */}
           <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100 text-[11px] font-semibold text-[#64748B]">
             <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-md bg-white border border-slate-300" />
+              <span className="w-3 h-3 rounded-md bg-[#ECFDF5] border border-[#A7F3D0]" />
               <span>Available</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-md bg-rose-100 border border-rose-300" />
-              <span>Blocked Date</span>
+              <span className="w-3 h-3 rounded-md bg-[#FEF2F2] border border-[#FECACA]" />
+              <span>Blocked Date (Off)</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-md bg-amber-100 border border-amber-300" />
+              <span className="w-3 h-3 rounded-md bg-amber-100 border border-amber-300 flex items-center justify-center">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#FF7417]" />
+              </span>
               <span>Has Bookings</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-md bg-[#EFF6FF] border border-brand-500" />
+              <span className="w-3 h-3 rounded-md bg-[#FF7417]/10 border-2 border-[#FF7417]" />
               <span>Selected</span>
             </div>
           </div>
         </div>
 
-        {/* Right Column: Selected Date Control Card (5 cols) */}
-        <div className="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm flex flex-col justify-between space-y-6">
+        {/* Right Section – Date Configuration (5 cols) */}
+        <div className="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-8 border border-[#E2E8F0] shadow-sm flex flex-col justify-between space-y-6">
           <div className="space-y-4">
+            
             <div className="pb-3 border-b border-slate-100 flex items-center justify-between">
               <div>
                 <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider block">
                   Date Configuration
                 </span>
-                <h3 className="text-base font-extrabold text-[#172554]">
-                  {new Date(selectedDate + 'T00:00:00').toLocaleDateString('default', {
+                <h3 className="text-base font-extrabold text-[#102B5C]">
+                  {new Date(section1SelectedDate + 'T00:00:00').toLocaleDateString('default', {
                     weekday: 'long',
                     month: 'short',
                     day: 'numeric',
@@ -1057,99 +895,382 @@ export const InfluencerPricingSchedule: React.FC = () => {
               </div>
 
               <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
-                isDateBlocked(selectedDate)
-                  ? 'bg-rose-50 text-rose-700 border border-rose-200'
-                  : getDateAvailabilityStatus(selectedDate).available
-                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                isDateBlocked(section1SelectedDate)
+                  ? 'bg-[#FEF2F2] text-[#B91C1C] border border-[#FECACA]'
+                  : getDateAvailabilityStatus(section1SelectedDate).available
+                  ? 'bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]'
                   : 'bg-slate-100 text-slate-500'
               }`}>
-                {isDateBlocked(selectedDate)
-                  ? 'Blocked / Off'
-                  : getDateAvailabilityStatus(selectedDate).available
+                {isDateBlocked(section1SelectedDate)
+                  ? 'Unavailable / Blocked'
+                  : getDateAvailabilityStatus(section1SelectedDate).available
                   ? 'Available'
                   : 'Routine Off'}
               </span>
             </div>
 
-            {/* Status overview for this date */}
-            <div className="p-4 rounded-2xl bg-[#F8FAFC] border border-slate-200/80 space-y-2 text-xs">
-              <div className="flex items-center justify-between">
-                <span className="text-[#64748B] font-medium">Routine Schedule:</span>
-                <span className="font-bold text-[#172554]">
+            <div className="p-4 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2.5 text-xs">
+              <div className="flex items-start justify-between gap-2">
+                <span className="text-[#64748B] font-medium shrink-0">Routine Schedule:</span>
+                <span className="font-bold text-[#102B5C] text-right">
                   {(() => {
-                    const dateObj = new Date(selectedDate + 'T00:00:00');
+                    const dateObj = new Date(section1SelectedDate + 'T00:00:00');
                     let dayIdx = dateObj.getDay() - 1;
                     if (dayIdx === -1) dayIdx = 6;
                     const dayItem = weeklySchedule[dayIdx];
                     return dayItem?.enabled 
-                      ? `${dayItem.intervals.map(i => `${i.start} - ${i.end}`).join(', ')}` 
-                      : 'Unavailable on routine schedule';
+                      ? dayItem.intervals.map(i => `${i.start} – ${i.end}`).join(', ')
+                      : `Not taking bookings on ${dayItem?.day || 'this day'}s`;
                   })()}
                 </span>
               </div>
 
-              {customOverrides[selectedDate] && (
+              {customOverrides[section1SelectedDate] && (
                 <div className="flex items-center justify-between text-blue-700 font-semibold pt-1 border-t border-slate-200">
-                  <span>Custom Override:</span>
-                  <span>
-                    {customOverrides[selectedDate].intervals?.map(i => `${i.start} - ${i.end}`).join(', ') || 'Custom Hours'}
+                  <span className="text-xs">Custom Override:</span>
+                  <span className="text-xs">
+                    {customOverrides[section1SelectedDate].intervals?.map(i => `${i.start} – ${i.end}`).join(', ') || 'Custom Hours'}
                   </span>
                 </div>
               )}
 
               <div className="flex items-center justify-between pt-1 border-t border-slate-200">
                 <span className="text-[#64748B] font-medium">Confirmed Fan Bookings:</span>
-                <span className="font-bold text-[#172554]">
-                  {getBookingsForDate(selectedDate).length} session(s)
+                <span className="font-bold text-[#102B5C] flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#FF7417]" />
+                  <span>{getBookingsForDate(section1SelectedDate).length} session(s)</span>
                 </span>
               </div>
             </div>
 
-            {/* Quick Actions for Selected Date */}
-            <div className="space-y-2 pt-1">
+            <div className="space-y-2.5 pt-2">
               <button
                 type="button"
-                onClick={() => toggleBlockSelectedDate(selectedDate)}
+                onClick={() => handleBlockDateClick(section1SelectedDate)}
                 className={`w-full py-2.5 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer border shadow-xs ${
-                  isDateBlocked(selectedDate)
-                    ? 'bg-emerald-500 hover:bg-emerald-600 text-white border-emerald-500'
-                    : 'bg-rose-50 hover:bg-rose-100 text-rose-700 border-rose-200'
+                  isDateBlocked(section1SelectedDate)
+                    ? 'bg-[#ECFDF5] hover:bg-emerald-100 text-[#065F46] border-[#A7F3D0]'
+                    : 'bg-[#FEF2F2] hover:bg-red-100 text-[#B91C1C] border-[#FECACA]'
                 }`}
               >
                 <Ban className="w-4 h-4" />
-                <span>{isDateBlocked(selectedDate) ? 'Unblock Date (Allow Bookings)' : 'Mark Date Unavailable (Block Date)'}</span>
+                <span>
+                  {isDateBlocked(section1SelectedDate) ? 'Unblock Date (Allow Bookings)' : 'Mark Date Unavailable (Block Date)'}
+                </span>
               </button>
 
               <button
                 type="button"
-                onClick={() => setShowCustomHoursModal(true)}
-                className="w-full py-2.5 px-4 rounded-xl bg-[#F8FAFC] hover:bg-[#EFF6FF] text-[#172554] hover:text-[#1D4ED8] border border-slate-200/90 font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs"
+                onClick={() => handleOpenCustomHoursModal(section1SelectedDate)}
+                className="w-full py-2.5 px-4 rounded-xl bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs"
               >
-                <Sliders className="w-4 h-4 text-brand-500" />
+                <Sliders className="w-4 h-4 text-[#FF7417]" />
                 <span>Set Custom Hours for this Date</span>
               </button>
-
-              {customOverrides[selectedDate] && (
-                <button
-                  type="button"
-                  onClick={() => handleRemoveCustomOverride(selectedDate)}
-                  className="w-full py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs transition-colors cursor-pointer"
-                >
-                  Remove Custom Override
-                </button>
-              )}
             </div>
           </div>
 
           <p className="text-[11px] text-[#64748B] text-center pt-2 border-t border-slate-100">
-            Changes will take effect once you click <span className="font-bold text-[#172554]">Save Changes</span> above.
+            Changes will take effect once you click <span className="font-bold text-[#102B5C]">Save Changes</span>.
           </p>
         </div>
 
       </div>
 
-      {/* ================= 5. BOOKING PREFERENCES (Collapsible Section) ================= */}
-      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden">
+      {/* ================= SECTION 2: WEEKLY WORKING HOURS (CALENDAR-BASED INTERFACE) ================= */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        {/* Left Section – Weekly Working Hours Monthly Calendar (7 cols) */}
+        <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-[#E2E8F0] shadow-sm space-y-6">
+          
+          {/* Header with Title + Configure Routine Button */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-[#F2F7FF] text-[#102B5C] border border-[#DBEAFE] flex items-center justify-center">
+                <Clock className="w-4 h-4 text-[#102B5C]" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-base font-extrabold text-[#102B5C] tracking-tight">
+                    Weekly Working Hours
+                  </h2>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
+                    Recurring Schedule
+                  </span>
+                </div>
+                <p className="text-xs text-[#64748B]">
+                  View and manage your recurring weekly working hours across the monthly calendar.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+              {/* Configure Recurring Weekday Routine Button */}
+              <button
+                type="button"
+                onClick={() => handleOpenRoutineModal()}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] text-xs font-bold transition-colors cursor-pointer shadow-2xs"
+                title="Configure Monday–Sunday recurring routine hours"
+              >
+                <Sliders className="w-3.5 h-3.5 text-[#FF7417]" />
+                <span>Configure Weekly Routine</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Month Navigation & Today Shortcut for Section 2 */}
+          <div className="flex items-center justify-between pb-1">
+            <span className="text-xs font-bold text-[#64748B]">
+              Recurring Schedule Overview
+            </span>
+
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => {
+                  const today = new Date();
+                  setSection2MonthDate(new Date(today.getFullYear(), today.getMonth(), 1));
+                  setSection2SelectedDate(today.toISOString().split('T')[0]);
+                }}
+                className="px-3 py-1.5 rounded-xl bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] text-xs font-bold transition-colors cursor-pointer mr-1"
+              >
+                Today
+              </button>
+              <button
+                type="button"
+                onClick={() => setSection2MonthDate(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))}
+                className="p-1.5 rounded-xl bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] transition-colors cursor-pointer"
+                title="Previous Month"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <span className="text-xs font-extrabold text-[#102B5C] px-2 min-w-[130px] text-center">
+                {section2MonthDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
+              </span>
+              <button
+                type="button"
+                onClick={() => setSection2MonthDate(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1))}
+                className="p-1.5 rounded-xl bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] transition-colors cursor-pointer"
+                title="Next Month"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* Monthly Calendar Grid for Section 2 */}
+          <div>
+            <div className="grid grid-cols-7 gap-1 text-center pb-2 border-b border-slate-100">
+              {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(wd => (
+                <span key={wd} className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">
+                  {wd}
+                </span>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-7 gap-1.5 pt-2">
+              {section2Days.map((cell) => {
+                const isSelected = section2SelectedDate === cell.dateStr;
+                const status = getDateAvailabilityStatus(cell.dateStr);
+                const isBlocked = blockedDates.includes(cell.dateStr);
+                const dayBookings = getBookingsForDate(cell.dateStr);
+                const hasBookings = dayBookings.length > 0;
+                const isPast = cell.dateStr < todayStr;
+                const isToday = cell.dateStr === todayStr;
+
+                return (
+                  <button
+                    key={cell.dateStr}
+                    type="button"
+                    onClick={() => setSection2SelectedDate(cell.dateStr)}
+                    className={`aspect-square p-1.5 rounded-xl border text-center transition-all cursor-pointer flex flex-col items-center justify-between relative ${
+                      isSelected
+                        ? 'border-2 border-[#FF7417] bg-[#FF7417]/10 text-[#102B5C] font-black shadow-sm ring-2 ring-[#FF7417]/20'
+                        : isBlocked
+                        ? 'bg-[#FEF2F2] border-[#FECACA] text-[#B91C1C] hover:bg-red-100/70'
+                        : isPast
+                        ? 'bg-slate-50/60 border-slate-100 text-slate-300'
+                        : status.available
+                        ? 'bg-[#ECFDF5]/60 hover:bg-[#ECFDF5] border-[#A7F3D0]/80 text-[#102B5C] font-semibold'
+                        : 'bg-slate-50 border-slate-100 text-slate-400'
+                    } ${!cell.isCurrentMonth ? 'opacity-35' : ''}`}
+                  >
+                    <div className="w-full flex items-center justify-between text-[11px] leading-none">
+                      <span className={isSelected ? 'font-black text-[#FF7417]' : ''}>
+                        {cell.dayNum}
+                      </span>
+                      {isToday && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#FF7417]" title="Today" />
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-1 justify-center w-full">
+                      {isBlocked ? (
+                        <span className="text-[9px] font-bold text-[#B91C1C] bg-red-100 px-1 py-0.5 rounded">
+                          Off
+                        </span>
+                      ) : hasBookings ? (
+                        <span className="text-[9px] font-bold text-amber-800 bg-amber-100 px-1 rounded flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#FF7417]" />
+                          <span>{dayBookings.length}</span>
+                        </span>
+                      ) : status.isCustom ? (
+                        <span className="text-[9px] font-bold text-blue-700 bg-blue-100 px-1 rounded">
+                          Mod
+                        </span>
+                      ) : (
+                        <span className="w-1 h-1 rounded-full bg-emerald-500 opacity-60" />
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Color Legend for Section 2 */}
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100 text-[11px] font-semibold text-[#64748B]">
+            <div className="flex items-center gap-1.5">
+              <span className="w-3 h-3 rounded-md bg-[#ECFDF5] border border-[#A7F3D0]" />
+              <span>Available (Routine Active)</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-3 h-3 rounded-md bg-[#FEF2F2] border border-[#FECACA]" />
+              <span>Unavailable (Off)</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-3 h-3 rounded-md bg-amber-100 border border-amber-300 flex items-center justify-center">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#FF7417]" />
+              </span>
+              <span>Has Bookings</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-3 h-3 rounded-md bg-[#FF7417]/10 border-2 border-[#FF7417]" />
+              <span>Selected</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Section – Selected Date Configuration Panel for Section 2 (5 cols) */}
+        <div className="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-8 border border-[#E2E8F0] shadow-sm flex flex-col justify-between space-y-6">
+          <div className="space-y-4">
+            
+            <div className="pb-3 border-b border-slate-100 flex items-center justify-between">
+              <div>
+                <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider block">
+                  Date Configuration
+                </span>
+                <h3 className="text-base font-extrabold text-[#102B5C]">
+                  {new Date(section2SelectedDate + 'T00:00:00').toLocaleDateString('default', {
+                    weekday: 'long',
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                  })}
+                </h3>
+              </div>
+
+              <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
+                isDateBlocked(section2SelectedDate)
+                  ? 'bg-[#FEF2F2] text-[#B91C1C] border border-[#FECACA]'
+                  : getDateAvailabilityStatus(section2SelectedDate).available
+                  ? 'bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]'
+                  : 'bg-slate-100 text-slate-500'
+              }`}>
+                {isDateBlocked(section2SelectedDate)
+                  ? 'Unavailable / Blocked'
+                  : getDateAvailabilityStatus(section2SelectedDate).available
+                  ? 'Available'
+                  : 'Routine Off'}
+              </span>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2.5 text-xs">
+              <div className="flex items-start justify-between gap-2">
+                <span className="text-[#64748B] font-medium shrink-0">Routine Schedule:</span>
+                <span className="font-bold text-[#102B5C] text-right">
+                  {(() => {
+                    const dateObj = new Date(section2SelectedDate + 'T00:00:00');
+                    let dayIdx = dateObj.getDay() - 1;
+                    if (dayIdx === -1) dayIdx = 6;
+                    const dayItem = weeklySchedule[dayIdx];
+                    return dayItem?.enabled 
+                      ? dayItem.intervals.map(i => `${i.start} – ${i.end}`).join(', ')
+                      : `Not taking bookings on ${dayItem?.day || 'this day'}s`;
+                  })()}
+                </span>
+              </div>
+
+              {customOverrides[section2SelectedDate] && (
+                <div className="flex items-center justify-between text-blue-700 font-semibold pt-1 border-t border-slate-200">
+                  <span className="text-xs">Custom Override:</span>
+                  <span className="text-xs">
+                    {customOverrides[section2SelectedDate].intervals?.map(i => `${i.start} – ${i.end}`).join(', ') || 'Custom Hours'}
+                  </span>
+                </div>
+              )}
+
+              <div className="flex items-center justify-between pt-1 border-t border-slate-200">
+                <span className="text-[#64748B] font-medium">Confirmed Fan Bookings:</span>
+                <span className="font-bold text-[#102B5C] flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#FF7417]" />
+                  <span>{getBookingsForDate(section2SelectedDate).length} session(s)</span>
+                </span>
+              </div>
+            </div>
+
+            {/* Actions for Section 2: Block Date, Custom Hours, Restore Routine */}
+            <div className="space-y-2.5 pt-2">
+              
+              {/* Action 1: Mark Date Unavailable (Block Date) */}
+              <button
+                type="button"
+                onClick={() => handleBlockDateClick(section2SelectedDate)}
+                className={`w-full py-2.5 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer border shadow-xs ${
+                  isDateBlocked(section2SelectedDate)
+                    ? 'bg-[#ECFDF5] hover:bg-emerald-100 text-[#065F46] border-[#A7F3D0]'
+                    : 'bg-[#FEF2F2] hover:bg-red-100 text-[#B91C1C] border-[#FECACA]'
+                }`}
+              >
+                <Ban className="w-4 h-4" />
+                <span>
+                  {isDateBlocked(section2SelectedDate) ? 'Unblock Date (Allow Bookings)' : 'Mark Date Unavailable (Block Date)'}
+                </span>
+              </button>
+
+              {/* Action 2: Set Custom Hours for this Date */}
+              <button
+                type="button"
+                onClick={() => handleOpenCustomHoursModal(section2SelectedDate)}
+                className="w-full py-2.5 px-4 rounded-xl bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs"
+              >
+                <Sliders className="w-4 h-4 text-[#FF7417]" />
+                <span>Set Custom Hours for this Date</span>
+              </button>
+
+              {/* Action 3: Restore Routine Schedule */}
+              <button
+                type="button"
+                onClick={() => handleRestoreRoutineSchedule(section2SelectedDate)}
+                disabled={!isDateBlocked(section2SelectedDate) && !customOverrides[section2SelectedDate]}
+                className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-[#F8FAFC] text-[#102B5C] border border-[#E2E8F0] disabled:opacity-40 font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs"
+              >
+                <RotateCcw className="w-4 h-4 text-[#FF7417]" />
+                <span>Restore Routine Schedule</span>
+              </button>
+
+            </div>
+          </div>
+
+          <p className="text-[11px] text-[#64748B] text-center pt-2 border-t border-slate-100">
+            Weekly routine hours repeat automatically every week.
+          </p>
+        </div>
+
+      </div>
+
+      {/* ================= SECTION 3: BOOKING PREFERENCES (COLLAPSIBLE ACCORDION) ================= */}
+      <div className="bg-white rounded-3xl border border-[#E2E8F0] shadow-sm overflow-hidden">
         
         {/* Accordion Trigger */}
         <button
@@ -1158,15 +1279,15 @@ export const InfluencerPricingSchedule: React.FC = () => {
           className="w-full p-6 sm:p-8 flex items-center justify-between text-left cursor-pointer hover:bg-[#F8FAFC]/50 transition-colors"
         >
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#EFF6FF] text-[#1D4ED8] border border-[#DBEAFE] flex items-center justify-center">
-              <Sliders className="w-4 h-4 text-[#1D4ED8]" />
+            <div className="w-9 h-9 rounded-xl bg-[#F2F7FF] text-[#102B5C] border border-[#DBEAFE] flex items-center justify-center">
+              <Sliders className="w-4 h-4 text-[#102B5C]" />
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <h2 className="text-base font-extrabold text-[#172554] tracking-tight">
+                <h2 className="text-base font-extrabold text-[#102B5C] tracking-tight">
                   Booking Preferences
                 </h2>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#EFF6FF] text-[#1D4ED8] border border-[#DBEAFE]">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#F2F7FF] text-[#102B5C] border border-[#DBEAFE]">
                   Advanced Rules
                 </span>
               </div>
@@ -1193,14 +1314,14 @@ export const InfluencerPricingSchedule: React.FC = () => {
           <div className="p-6 sm:p-8 pt-0 border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
             
             {/* Setting 1: Minimum Advance Booking Time */}
-            <div className="p-4.5 rounded-2xl bg-[#F8FAFC] border border-slate-200/80 space-y-2">
-              <label className="block text-xs font-bold text-[#172554]">
+            <div className="p-4.5 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2">
+              <label className="block text-xs font-bold text-[#102B5C]">
                 Minimum Advance Notice
               </label>
               <select
                 value={preferences.minNoticeHours}
                 onChange={e => setPreferences(prev => ({ ...prev, minNoticeHours: parseInt(e.target.value, 10) }))}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-[#172554] focus:outline-none focus:border-brand-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#E2E8F0] text-xs font-semibold text-[#102B5C] focus:outline-none focus:border-[#FF7417]"
               >
                 <option value={1}>1 hour before session</option>
                 <option value={2}>2 hours before session (Recommended)</option>
@@ -1215,14 +1336,14 @@ export const InfluencerPricingSchedule: React.FC = () => {
             </div>
 
             {/* Setting 2: Maximum Advance Booking Window */}
-            <div className="p-4.5 rounded-2xl bg-[#F8FAFC] border border-slate-200/80 space-y-2">
-              <label className="block text-xs font-bold text-[#172554]">
+            <div className="p-4.5 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2">
+              <label className="block text-xs font-bold text-[#102B5C]">
                 Maximum Advance Booking Window
               </label>
               <select
                 value={preferences.maxAdvanceDays}
                 onChange={e => setPreferences(prev => ({ ...prev, maxAdvanceDays: parseInt(e.target.value, 10) }))}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-[#172554] focus:outline-none focus:border-brand-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#E2E8F0] text-xs font-semibold text-[#102B5C] focus:outline-none focus:border-[#FF7417]"
               >
                 <option value={7}>Up to 7 days ahead</option>
                 <option value={14}>Up to 14 days ahead</option>
@@ -1236,14 +1357,14 @@ export const InfluencerPricingSchedule: React.FC = () => {
             </div>
 
             {/* Setting 3: Buffer Time Between Calls */}
-            <div className="p-4.5 rounded-2xl bg-[#F8FAFC] border border-slate-200/80 space-y-2">
-              <label className="block text-xs font-bold text-[#172554]">
+            <div className="p-4.5 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2">
+              <label className="block text-xs font-bold text-[#102B5C]">
                 Buffer Time Between Calls
               </label>
               <select
                 value={preferences.bufferMinutes}
                 onChange={e => setPreferences(prev => ({ ...prev, bufferMinutes: parseInt(e.target.value, 10) }))}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-[#172554] focus:outline-none focus:border-brand-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#E2E8F0] text-xs font-semibold text-[#102B5C] focus:outline-none focus:border-[#FF7417]"
               >
                 <option value={0}>0 minutes (Back-to-back)</option>
                 <option value={5}>5 minutes break</option>
@@ -1257,14 +1378,14 @@ export const InfluencerPricingSchedule: React.FC = () => {
             </div>
 
             {/* Setting 4: Maximum Bookings per Day */}
-            <div className="p-4.5 rounded-2xl bg-[#F8FAFC] border border-slate-200/80 space-y-2">
-              <label className="block text-xs font-bold text-[#172554]">
+            <div className="p-4.5 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2">
+              <label className="block text-xs font-bold text-[#102B5C]">
                 Maximum Bookings per Day
               </label>
               <select
                 value={preferences.maxBookingsPerDay}
                 onChange={e => setPreferences(prev => ({ ...prev, maxBookingsPerDay: parseInt(e.target.value, 10) }))}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-[#172554] focus:outline-none focus:border-brand-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#E2E8F0] text-xs font-semibold text-[#102B5C] focus:outline-none focus:border-[#FF7417]"
               >
                 <option value={3}>Max 3 calls / day</option>
                 <option value={5}>Max 5 calls / day</option>
@@ -1278,8 +1399,8 @@ export const InfluencerPricingSchedule: React.FC = () => {
             </div>
 
             {/* Setting 5: Call Duration Compatibility */}
-            <div className="md:col-span-2 p-4.5 rounded-2xl bg-[#F8FAFC] border border-slate-200/80 space-y-2">
-              <label className="block text-xs font-bold text-[#172554]">
+            <div className="md:col-span-2 p-4.5 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2">
+              <label className="block text-xs font-bold text-[#102B5C]">
                 Call Duration Compatibility
               </label>
               <div className="flex flex-wrap gap-3">
@@ -1300,12 +1421,12 @@ export const InfluencerPricingSchedule: React.FC = () => {
                       }}
                       className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer flex items-center gap-2 ${
                         isChecked
-                          ? 'bg-[#EFF6FF] text-[#172554] border-brand-500 shadow-xs'
-                          : 'bg-white text-slate-400 border-slate-200 hover:bg-slate-100'
+                          ? 'bg-[#F2F7FF] text-[#102B5C] border-[#FF7417] shadow-xs'
+                          : 'bg-white text-slate-400 border-[#E2E8F0] hover:bg-slate-100'
                       }`}
                     >
                       <div className={`w-4 h-4 rounded-md flex items-center justify-center ${
-                        isChecked ? 'bg-brand-500 text-white' : 'border border-slate-300'
+                        isChecked ? 'bg-[#FF7417] text-white' : 'border border-slate-300'
                       }`}>
                         {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
                       </div>
@@ -1324,33 +1445,33 @@ export const InfluencerPricingSchedule: React.FC = () => {
 
       </div>
 
-      {/* ================= 6. TIME-SLOT PREVIEW (ClockTimeSelector) ================= */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-6">
+      {/* ================= SECTION 4: TIME-SLOT PREVIEW (CLOCK TIME SELECTOR) ================= */}
+      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#E2E8F0] shadow-sm space-y-6">
         
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#EFF6FF] text-[#1D4ED8] border border-[#DBEAFE] flex items-center justify-center">
-              <Eye className="w-4 h-4 text-[#1D4ED8]" />
+            <div className="w-9 h-9 rounded-xl bg-[#F2F7FF] text-[#102B5C] border border-[#DBEAFE] flex items-center justify-center">
+              <Eye className="w-4 h-4 text-[#102B5C]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-extrabold text-[#172554] tracking-tight">
+                <h2 className="text-base font-extrabold text-[#102B5C] tracking-tight">
                   Time-Slot Preview (Fan Booking View)
                 </h2>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
                   {generatedSlotsForDate.length} Available Slots
                 </span>
               </div>
               <p className="text-xs text-[#64748B]">
-                Preview real-time slots generated for {new Date(selectedDate + 'T00:00:00').toLocaleDateString('default', { month: 'short', day: 'numeric', year: 'numeric' })}.
+                Preview real-time slots generated for {new Date(previewDate + 'T00:00:00').toLocaleDateString('default', { month: 'short', day: 'numeric', year: 'numeric' })}.
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2 text-xs font-bold text-[#64748B]">
             <span>Selected Date:</span>
-            <span className="text-brand-600 font-mono font-bold bg-[#F8FAFC] px-2.5 py-1 rounded-lg border border-slate-200">
-              {selectedDate}
+            <span className="text-[#FF7417] font-mono font-bold bg-[#F8FAFC] px-2.5 py-1 rounded-lg border border-[#E2E8F0]">
+              {previewDate}
             </span>
           </div>
         </div>
@@ -1360,7 +1481,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
           availableSlots={generatedSlotsForDate}
           selectedSlot={previewSelectedSlot}
           onSelectSlot={setPreviewSelectedSlot}
-          selectedDate={selectedDate}
+          selectedDate={previewDate}
           onRetry={() => {
             showToast('Refreshed slot calculation.');
           }}
@@ -1368,12 +1489,12 @@ export const InfluencerPricingSchedule: React.FC = () => {
 
       </div>
 
-      {/* ================= 7. FOOTER SAVE ACTIONS ================= */}
-      <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+      {/* ================= SECTION 5: FOOTER SAVE ACTIONS ================= */}
+      <div className="bg-white rounded-3xl p-6 border border-[#E2E8F0] shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="text-xs text-[#64748B]">
           {isDirty ? (
             <span className="text-amber-600 font-bold flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
+              <span className="w-2 h-2 rounded-full bg-[#FF7417] animate-ping" />
               You have unsaved schedule changes
             </span>
           ) : (
@@ -1389,7 +1510,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
             type="button"
             onClick={handleReset}
             disabled={!isDirty || isSaving}
-            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#F8FAFC] hover:bg-slate-100 text-[#64748B] hover:text-[#172554] border border-slate-200/90 disabled:opacity-40 font-bold text-xs transition-colors cursor-pointer"
+            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#F8FAFC] hover:bg-slate-100 text-[#64748B] hover:text-[#102B5C] border border-[#E2E8F0] disabled:opacity-40 font-bold text-xs transition-colors cursor-pointer"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Cancel</span>
@@ -1399,7 +1520,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
             type="button"
             onClick={handleSave}
             disabled={isSaving}
-            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-7 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 disabled:bg-slate-300 text-white font-bold text-xs shadow-md shadow-brand-500/25 transition-all cursor-pointer"
+            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-7 py-2.5 rounded-xl bg-[#FF7417] hover:bg-[#e0620f] disabled:bg-slate-300 text-white font-bold text-xs shadow-md shadow-[#FF7417]/25 transition-all cursor-pointer"
           >
             {isSaving ? (
               <>
@@ -1416,14 +1537,72 @@ export const InfluencerPricingSchedule: React.FC = () => {
         </div>
       </div>
 
-      {/* ================= CUSTOM HOURS OVERRIDE MODAL ================= */}
-      {showCustomHoursModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 border border-slate-200/90 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+      {/* ================= MODAL 1: BLOCK DATE CONFIRMATION ================= */}
+      {showBlockConfirmModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 border border-[#E2E8F0] shadow-2xl space-y-4">
+            
+            <div className="flex items-center gap-3 pb-3 border-b border-slate-100">
+              <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 border border-amber-200 flex items-center justify-center shrink-0">
+                <AlertTriangle className="w-5 h-5 stroke-[2.5]" />
+              </div>
               <div>
-                <h4 className="text-sm font-bold text-[#172554]">Set Custom Schedule</h4>
-                <p className="text-[11px] text-[#64748B]">Date: {selectedDate}</p>
+                <h4 className="text-sm font-extrabold text-[#102B5C]">
+                  Confirmed Bookings on this Date
+                </h4>
+                <p className="text-xs text-[#64748B]">
+                  Date: {dateToBlock}
+                </p>
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-amber-50/80 border border-amber-200 text-xs text-amber-900 space-y-1">
+              <p className="font-bold">
+                This date has {dateToBlock ? getBookingsForDate(dateToBlock).length : 0} confirmed fan booking(s).
+              </p>
+              <p className="text-[11px] text-amber-800">
+                Marking this date unavailable will block any new fan bookings, but your existing confirmed appointments will remain in your schedule.
+              </p>
+            </div>
+
+            <div className="flex justify-end gap-2.5 pt-2 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowBlockConfirmModal(false);
+                  setDateToBlock(null);
+                }}
+                className="px-4 py-2 rounded-xl bg-[#F8FAFC] hover:bg-slate-100 text-[#64748B] hover:text-[#102B5C] border border-[#E2E8F0] text-xs font-bold cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmBlockDate}
+                className="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shadow-sm shadow-rose-600/25 cursor-pointer"
+              >
+                Yes, Block Date
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* ================= MODAL 2: CUSTOM HOURS OVERRIDE (MULTI-INTERVALS) ================= */}
+      {showCustomHoursModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 border border-[#E2E8F0] shadow-2xl space-y-5">
+            
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-[#F2F7FF] text-[#102B5C] flex items-center justify-center">
+                  <Sliders className="w-4 h-4 text-[#FF7417]" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-extrabold text-[#102B5C]">Set Custom Hours</h4>
+                  <p className="text-xs text-[#64748B]">Date: {targetDateForCustom}</p>
+                </div>
               </div>
               <button
                 type="button"
@@ -1435,53 +1614,391 @@ export const InfluencerPricingSchedule: React.FC = () => {
             </div>
 
             <p className="text-xs text-[#64748B]">
-              Specify special working hours for this single date (e.g. half-day or extended evening slots):
+              Specify special working intervals for this date. Supports multiple working shifts:
             </p>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs font-bold text-[#172554] mb-1">Start Time</label>
-                <select
-                  value={customStart}
-                  onChange={e => setCustomStart(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-[#F8FAFC] border border-slate-200 text-xs font-semibold text-[#172554] focus:outline-none focus:border-brand-500"
-                >
-                  {TIME_OPTIONS.map(t => (
-                    <option key={t} value={t}>{t}</option>
-                  ))}
-                </select>
-              </div>
+            <div className="space-y-3">
+              {customIntervals.map((inv, idx) => (
+                <div key={inv.id} className="p-3.5 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold text-[#102B5C]">
+                      Shift {idx + 1}
+                    </span>
+                    {customIntervals.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => setCustomIntervals(prev => prev.filter(i => i.id !== inv.id))}
+                        className="p-1 rounded text-slate-400 hover:text-rose-600 transition-colors cursor-pointer"
+                        title="Remove interval"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
 
-              <div>
-                <label className="block text-xs font-bold text-[#172554] mb-1">End Time</label>
-                <select
-                  value={customEnd}
-                  onChange={e => setCustomEnd(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-[#F8FAFC] border border-slate-200 text-xs font-semibold text-[#172554] focus:outline-none focus:border-brand-500"
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[10px] font-bold text-[#64748B] mb-1">Start Time</label>
+                      <select
+                        value={inv.start}
+                        onChange={e => setCustomIntervals(prev => prev.map(item => item.id === inv.id ? { ...item, start: e.target.value } : item))}
+                        className="w-full px-3 py-2 rounded-xl bg-white border border-[#E2E8F0] text-xs font-semibold text-[#102B5C] focus:outline-none focus:border-[#FF7417]"
+                      >
+                        {TIME_OPTIONS.map(t => (
+                          <option key={t} value={t}>{t}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-bold text-[#64748B] mb-1">End Time</label>
+                      <select
+                        value={inv.end}
+                        onChange={e => setCustomIntervals(prev => prev.map(item => item.id === inv.id ? { ...item, end: e.target.value } : item))}
+                        className="w-full px-3 py-2 rounded-xl bg-white border border-[#E2E8F0] text-xs font-semibold text-[#102B5C] focus:outline-none focus:border-[#FF7417]"
+                      >
+                        {TIME_OPTIONS.map(t => (
+                          <option key={t} value={t}>{t}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              {customIntervals.length < 3 && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const last = customIntervals[customIntervals.length - 1];
+                    let nextStart = '02:00 PM';
+                    let nextEnd = '06:00 PM';
+                    if (last) {
+                      const lastEndMin = timeToMinutes(last.end);
+                      const newStartMin = Math.min(lastEndMin + 60, 20 * 60);
+                      const newEndMin = Math.min(newStartMin + 180, 22 * 60);
+                      nextStart = minutesToTime(newStartMin);
+                      nextEnd = minutesToTime(newEndMin);
+                    }
+                    setCustomIntervals(prev => [
+                      ...prev,
+                      { id: `custom-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`, start: nextStart, end: nextEnd }
+                    ]);
+                  }}
+                  className="w-full py-2.5 rounded-xl border border-dashed border-[#FF7417]/60 text-xs font-bold text-[#FF7417] hover:bg-[#F2F7FF] transition-colors cursor-pointer flex items-center justify-center gap-1.5"
                 >
-                  {TIME_OPTIONS.map(t => (
-                    <option key={t} value={t}>{t}</option>
-                  ))}
-                </select>
-              </div>
+                  <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+                  <span>Add Another Interval</span>
+                </button>
+              )}
             </div>
 
-            <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
+            {customModalError && (
+              <p className="text-xs font-semibold text-rose-500 flex items-center gap-1.5">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{customModalError}</span>
+              </p>
+            )}
+
+            <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
               <button
                 type="button"
                 onClick={() => setShowCustomHoursModal(false)}
-                className="px-4 py-2 rounded-xl bg-[#F8FAFC] hover:bg-slate-100 text-[#64748B] hover:text-[#172554] border border-slate-200 text-xs font-bold cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-[#F8FAFC] hover:bg-slate-100 text-[#64748B] hover:text-[#102B5C] border border-[#E2E8F0] text-xs font-bold cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="button"
-                onClick={handleApplyCustomHours}
-                className="px-5 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold shadow-sm shadow-brand-500/25 cursor-pointer"
+                onClick={handleSaveCustomHours}
+                className="px-5 py-2 rounded-xl bg-[#FF7417] hover:bg-[#e0620f] text-white text-xs font-bold shadow-sm shadow-[#FF7417]/25 cursor-pointer"
               >
                 Apply Custom Schedule
               </button>
             </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* ================= MODAL 3: CONFIGURE RECURRING WEEKDAY ROUTINE ================= */}
+      {showRoutineConfigModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 border border-[#E2E8F0] shadow-2xl space-y-6">
+            
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-[#F2F7FF] text-[#102B5C] border border-[#DBEAFE] flex items-center justify-center">
+                  <Clock className="w-5 h-5 text-[#102B5C]" />
+                </div>
+                <div>
+                  <h4 className="text-base font-extrabold text-[#102B5C]">
+                    Configure Recurring Weekly Routine
+                  </h4>
+                  <p className="text-xs text-[#64748B]">
+                    Set routine working intervals that repeat automatically every week.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowRoutineConfigModal(false)}
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-700 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* 7 Weekday Selector Tabs */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+              {routineTempSchedule.map((d, idx) => {
+                const isActive = routineActiveDayIdx === idx;
+                return (
+                  <button
+                    key={d.day}
+                    type="button"
+                    onClick={() => setRoutineActiveDayIdx(idx)}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shrink-0 border ${
+                      isActive
+                        ? 'bg-[#102B5C] text-white border-[#102B5C] shadow-sm'
+                        : d.enabled
+                        ? 'bg-[#F2F7FF] text-[#102B5C] border-[#DBEAFE] hover:bg-blue-100'
+                        : 'bg-slate-50 text-slate-400 border-slate-200 hover:bg-slate-100'
+                    }`}
+                  >
+                    <span className={`w-2 h-2 rounded-full ${d.enabled ? 'bg-emerald-400' : 'bg-slate-300'}`} />
+                    <span>{d.short}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Selected Weekday Configuration Form */}
+            {(() => {
+              const activeDay = routineTempSchedule[routineActiveDayIdx];
+              if (!activeDay) return null;
+
+              return (
+                <div className="p-5 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-4">
+                  
+                  {/* Top Bar: Weekday Name & Toggle */}
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-extrabold text-[#102B5C]">
+                        {activeDay.day} Routine
+                      </span>
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                        activeDay.enabled 
+                          ? 'bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]' 
+                          : 'bg-slate-100 text-slate-400'
+                      }`}>
+                        {activeDay.enabled ? 'Taking Bookings' : 'Day Off'}
+                      </span>
+                    </div>
+
+                    {/* Day Toggle Switch */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setRoutineTempSchedule(prev => {
+                          const updated = [...prev];
+                          const target = updated[routineActiveDayIdx];
+                          const nextEnabled = !target.enabled;
+                          updated[routineActiveDayIdx] = {
+                            ...target,
+                            enabled: nextEnabled,
+                            intervals: target.intervals.length === 0 ? [
+                              { id: `int-${target.short}-1`, start: '09:00 AM', end: '01:00 PM' }
+                            ] : target.intervals
+                          };
+                          return updated;
+                        });
+                      }}
+                      className={`w-11 h-6 flex items-center rounded-full p-0.5 cursor-pointer transition-colors ${
+                        activeDay.enabled ? 'bg-[#FF7417]' : 'bg-slate-300'
+                      }`}
+                    >
+                      <div className={`bg-white w-5 h-5 rounded-full shadow-md transform transition-transform ${
+                        activeDay.enabled ? 'translate-x-5' : 'translate-x-0'
+                      }`} />
+                    </button>
+                  </div>
+
+                  {/* Intervals or Day Off Notice */}
+                  {!activeDay.enabled ? (
+                    <div className="py-6 text-center text-xs text-slate-400 italic flex flex-col items-center justify-center gap-1.5">
+                      <Ban className="w-5 h-5 text-slate-300" />
+                      <span>Not taking bookings on {activeDay.day}s. Click toggle above to enable.</span>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {activeDay.intervals.map((inv, invIdx) => (
+                        <div key={inv.id} className="p-3 rounded-xl bg-white border border-[#E2E8F0] flex flex-wrap items-center justify-between gap-3">
+                          <span className="text-xs font-bold text-[#102B5C] w-14">
+                            Shift {invIdx + 1}
+                          </span>
+
+                          <div className="flex items-center gap-2 flex-1">
+                            <select
+                              value={inv.start}
+                              onChange={e => {
+                                const val = e.target.value;
+                                setRoutineTempSchedule(prev => {
+                                  const updated = [...prev];
+                                  const target = updated[routineActiveDayIdx];
+                                  target.intervals = target.intervals.map(i => i.id === inv.id ? { ...i, start: val } : i);
+                                  return updated;
+                                });
+                              }}
+                              className="px-3 py-1.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-xs font-semibold text-[#102B5C]"
+                            >
+                              {TIME_OPTIONS.map(t => <option key={t} value={t}>{t}</option>)}
+                            </select>
+
+                            <span className="text-xs text-[#64748B] font-bold">to</span>
+
+                            <select
+                              value={inv.end}
+                              onChange={e => {
+                                const val = e.target.value;
+                                setRoutineTempSchedule(prev => {
+                                  const updated = [...prev];
+                                  const target = updated[routineActiveDayIdx];
+                                  target.intervals = target.intervals.map(i => i.id === inv.id ? { ...i, end: val } : i);
+                                  return updated;
+                                });
+                              }}
+                              className="px-3 py-1.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-xs font-semibold text-[#102B5C]"
+                            >
+                              {TIME_OPTIONS.map(t => <option key={t} value={t}>{t}</option>)}
+                            </select>
+                          </div>
+
+                          {activeDay.intervals.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setRoutineTempSchedule(prev => {
+                                  const updated = [...prev];
+                                  const target = updated[routineActiveDayIdx];
+                                  target.intervals = target.intervals.filter(i => i.id !== inv.id);
+                                  return updated;
+                                });
+                              }}
+                              className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                              title="Delete shift"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          )}
+                        </div>
+                      ))}
+
+                      {activeDay.intervals.length < 3 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setRoutineTempSchedule(prev => {
+                              const updated = [...prev];
+                              const target = updated[routineActiveDayIdx];
+                              const last = target.intervals[target.intervals.length - 1];
+                              let nextStart = '02:00 PM';
+                              let nextEnd = '06:00 PM';
+                              if (last) {
+                                const lastEndMin = timeToMinutes(last.end);
+                                const newStartMin = Math.min(lastEndMin + 60, 20 * 60);
+                                const newEndMin = Math.min(newStartMin + 180, 22 * 60);
+                                nextStart = minutesToTime(newStartMin);
+                                nextEnd = minutesToTime(newEndMin);
+                              }
+                              target.intervals.push({
+                                id: `int-${target.short}-${Date.now().toString(36)}`,
+                                start: nextStart,
+                                end: nextEnd
+                              });
+                              return updated;
+                            });
+                          }}
+                          className="w-full py-2 rounded-xl border border-dashed border-[#FF7417]/60 text-xs font-bold text-[#FF7417] hover:bg-[#F2F7FF] transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                        >
+                          <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+                          <span>Add Shift Interval</span>
+                        </button>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Routine Quick Duplication Shortcuts */}
+                  <div className="pt-2 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2">
+                    <span className="text-[11px] text-[#64748B] font-medium">Quick Duplicate:</span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const src = routineTempSchedule[routineActiveDayIdx];
+                          setRoutineTempSchedule(prev => prev.map((item, idx) => {
+                            if (idx >= 0 && idx <= 4) {
+                              return {
+                                ...item,
+                                enabled: src.enabled,
+                                intervals: src.intervals.map(i => ({ ...i, id: `int-${item.short}-${Math.random().toString(36).substring(2, 6)}` }))
+                              };
+                            }
+                            return item;
+                          }));
+                          showToast(`Applied ${src.day}'s routine to Mon–Fri.`);
+                        }}
+                        className="px-2.5 py-1 rounded-lg bg-white border border-[#E2E8F0] hover:bg-[#F2F7FF] text-[10px] font-bold text-[#102B5C] cursor-pointer"
+                      >
+                        Copy to Weekdays (Mon-Fri)
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const src = routineTempSchedule[routineActiveDayIdx];
+                          setRoutineTempSchedule(prev => prev.map(item => ({
+                            ...item,
+                            enabled: src.enabled,
+                            intervals: src.intervals.map(i => ({ ...i, id: `int-${item.short}-${Math.random().toString(36).substring(2, 6)}` }))
+                          })));
+                          showToast(`Applied ${src.day}'s routine to all 7 days.`);
+                        }}
+                        className="px-2.5 py-1 rounded-lg bg-white border border-[#E2E8F0] hover:bg-[#F2F7FF] text-[10px] font-bold text-[#102B5C] cursor-pointer"
+                      >
+                        Apply to All 7 Days
+                      </button>
+                    </div>
+                  </div>
+
+                </div>
+              );
+            })()}
+
+            {routineModalError && (
+              <p className="text-xs font-semibold text-rose-500 flex items-center gap-1.5">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{routineModalError}</span>
+              </p>
+            )}
+
+            <div className="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setShowRoutineConfigModal(false)}
+                className="px-4 py-2 rounded-xl bg-[#F8FAFC] hover:bg-slate-100 text-[#64748B] hover:text-[#102B5C] border border-[#E2E8F0] text-xs font-bold cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleSaveRoutineConfig}
+                className="px-5 py-2 rounded-xl bg-[#FF7417] hover:bg-[#e0620f] text-white text-xs font-bold shadow-sm shadow-[#FF7417]/25 cursor-pointer"
+              >
+                Save & Apply Routine
+              </button>
+            </div>
+
           </div>
         </div>
       )}
