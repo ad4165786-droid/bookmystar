@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useApp } from '../../context/AppContext';
-import { Category, InfluencerProfile } from '../../types';
+import { Category, InfluencerProfile, SupportedSocialPlatform, SavedSocialLink } from '../../types';
 import { 
   User, 
   Camera, 
@@ -29,9 +29,14 @@ import {
   Layers,
   Link as LinkIcon,
   HelpCircle,
-  Award,
   ChevronRight,
-  ChevronDown
+  ChevronDown,
+  Video,
+  Hash,
+  Ghost,
+  Send,
+  Pin,
+  Pencil
 } from 'lucide-react';
 
 const CATEGORIES: Category[] = [
@@ -83,6 +88,132 @@ const EXPERIENCE_OPTIONS = [
   '8+ years'
 ];
 
+export interface PlatformOption {
+  name: SupportedSocialPlatform;
+  key: string;
+  placeholder: string;
+  domains: string[];
+  badgeColor: string;
+  bgColor: string;
+  borderLight: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+export const SUPPORTED_PLATFORMS: PlatformOption[] = [
+  {
+    name: 'Instagram',
+    key: 'instagram',
+    placeholder: 'Paste your Instagram profile URL (e.g. https://instagram.com/username)',
+    domains: ['instagram.com'],
+    badgeColor: 'text-pink-600',
+    bgColor: 'bg-pink-50',
+    borderLight: 'border-pink-200',
+    icon: Camera,
+  },
+  {
+    name: 'Facebook',
+    key: 'facebook',
+    placeholder: 'Paste your Facebook profile URL (e.g. https://facebook.com/username)',
+    domains: ['facebook.com', 'fb.com'],
+    badgeColor: 'text-blue-600',
+    bgColor: 'bg-blue-50',
+    borderLight: 'border-blue-200',
+    icon: Share2,
+  },
+  {
+    name: 'YouTube',
+    key: 'youtube',
+    placeholder: 'Paste your YouTube channel URL (e.g. https://youtube.com/@channel)',
+    domains: ['youtube.com', 'youtu.be'],
+    badgeColor: 'text-red-600',
+    bgColor: 'bg-red-50',
+    borderLight: 'border-red-200',
+    icon: Video,
+  },
+  {
+    name: 'X (Twitter)',
+    key: 'twitter',
+    placeholder: 'Paste your X (Twitter) profile URL (e.g. https://x.com/username)',
+    domains: ['x.com', 'twitter.com'],
+    badgeColor: 'text-slate-900',
+    bgColor: 'bg-slate-100',
+    borderLight: 'border-slate-300',
+    icon: Hash,
+  },
+  {
+    name: 'LinkedIn',
+    key: 'linkedin',
+    placeholder: 'Paste your LinkedIn profile URL (e.g. https://linkedin.com/in/username)',
+    domains: ['linkedin.com'],
+    badgeColor: 'text-sky-700',
+    bgColor: 'bg-sky-50',
+    borderLight: 'border-sky-200',
+    icon: Briefcase,
+  },
+  {
+    name: 'Snapchat',
+    key: 'snapchat',
+    placeholder: 'Paste your Snapchat profile URL (e.g. https://snapchat.com/add/username)',
+    domains: ['snapchat.com'],
+    badgeColor: 'text-amber-500',
+    bgColor: 'bg-amber-50',
+    borderLight: 'border-amber-200',
+    icon: Ghost,
+  },
+  {
+    name: 'Telegram',
+    key: 'telegram',
+    placeholder: 'Paste your Telegram profile URL (e.g. https://t.me/username)',
+    domains: ['t.me', 'telegram.me', 'telegram.org'],
+    badgeColor: 'text-cyan-600',
+    bgColor: 'bg-cyan-50',
+    borderLight: 'border-cyan-200',
+    icon: Send,
+  },
+  {
+    name: 'Pinterest',
+    key: 'pinterest',
+    placeholder: 'Paste your Pinterest profile URL (e.g. https://pinterest.com/username)',
+    domains: ['pinterest.com'],
+    badgeColor: 'text-rose-600',
+    bgColor: 'bg-rose-50',
+    borderLight: 'border-rose-200',
+    icon: Pin,
+  },
+];
+
+export const extractInitialSocialLinks = (inf: InfluencerProfile): SavedSocialLink[] => {
+  if (inf.socialLinkList && inf.socialLinkList.length > 0) {
+    return inf.socialLinkList;
+  }
+  const list: SavedSocialLink[] = [];
+  const map: Record<string, SupportedSocialPlatform> = {
+    instagram: 'Instagram',
+    facebook: 'Facebook',
+    youtube: 'YouTube',
+    twitter: 'X (Twitter)',
+    linkedin: 'LinkedIn',
+    snapchat: 'Snapchat',
+    telegram: 'Telegram',
+    pinterest: 'Pinterest',
+  };
+
+  if (inf.socialLinks) {
+    Object.entries(map).forEach(([key, platformName]) => {
+      const url = inf.socialLinks[key];
+      if (url && url.trim()) {
+        list.push({
+          id: `social-${key}-${Date.now()}`,
+          platform: platformName,
+          url: url.trim(),
+          addedAt: new Date().toISOString().split('T')[0],
+        });
+      }
+    });
+  }
+  return list;
+};
+
 interface FormErrors {
   fullName?: string;
   name?: string;
@@ -91,11 +222,6 @@ interface FormErrors {
   phone?: string;
   dob?: string;
   bio?: string;
-  instagram?: string;
-  youtube?: string;
-  facebook?: string;
-  twitter?: string;
-  otherSocial?: string;
   avatar?: string;
 }
 
@@ -156,18 +282,36 @@ export const CoreCreatorDetails: React.FC = () => {
   const [showExperienceDropdown, setShowExperienceDropdown] = useState(false);
   const [experienceYears, setExperienceYears] = useState(currentInfluencer.experienceYears || '3-5 years');
 
-  // Social Links
-  const [instagram, setInstagram] = useState(currentInfluencer.socialLinks.instagram || '');
-  const [youtube, setYoutube] = useState(currentInfluencer.socialLinks.youtube || '');
-  const [facebook, setFacebook] = useState(currentInfluencer.socialLinks.facebook || '');
-  const [twitter, setTwitter] = useState(currentInfluencer.socialLinks.twitter || '');
-  const [otherSocial, setOtherSocial] = useState(currentInfluencer.socialLinks.other || '');
-  const [showSocialDropdown, setShowSocialDropdown] = useState(false);
+  // Dynamic Social Media Links State
+  const [socialLinksList, setSocialLinksList] = useState<SavedSocialLink[]>(() => extractInitialSocialLinks(currentInfluencer));
+  const [selectedPlatform, setSelectedPlatform] = useState<SupportedSocialPlatform>('Instagram');
+  const [platformDropdownOpen, setPlatformDropdownOpen] = useState(false);
+  const [socialUrlInput, setSocialUrlInput] = useState('');
+  const [editingLinkId, setEditingLinkId] = useState<string | null>(null);
+  const [socialInputError, setSocialInputError] = useState<string | null>(null);
+  const [socialSuccessMessage, setSocialSuccessMessage] = useState<string | null>(null);
+  const [showSocialDropdown, setShowSocialDropdown] = useState(true);
+  const platformDropdownRef = useRef<HTMLDivElement | null>(null);
+
+  // Click outside to close platform dropdown smoothly
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (platformDropdownRef.current && !platformDropdownRef.current.contains(event.target as Node)) {
+        setPlatformDropdownOpen(false);
+      }
+    };
+    if (platformDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [platformDropdownOpen]);
 
   // Connected channels count
   const connectedSocialCount = useMemo(() => {
-    return [instagram, youtube, facebook, twitter, otherSocial].filter(s => s && s.trim().length > 0).length;
-  }, [instagram, youtube, facebook, twitter, otherSocial]);
+    return socialLinksList.length;
+  }, [socialLinksList]);
 
   // Avatar states
   const [avatar, setAvatar] = useState(currentInfluencer.avatar);
@@ -201,11 +345,10 @@ export const CoreCreatorDetails: React.FC = () => {
     setBio(currentInfluencer.bio || '');
     setLanguages(currentInfluencer.languages || ['English', 'Hindi']);
     setExperienceYears(currentInfluencer.experienceYears || '3-5 years');
-    setInstagram(currentInfluencer.socialLinks.instagram || '');
-    setYoutube(currentInfluencer.socialLinks.youtube || '');
-    setFacebook(currentInfluencer.socialLinks.facebook || '');
-    setTwitter(currentInfluencer.socialLinks.twitter || '');
-    setOtherSocial(currentInfluencer.socialLinks.other || '');
+    setSocialLinksList(extractInitialSocialLinks(currentInfluencer));
+    setEditingLinkId(null);
+    setSocialUrlInput('');
+    setSocialInputError(null);
   }, [currentInfluencer.id]);
 
   // --- Calculate Age from DOB ---
@@ -260,6 +403,7 @@ export const CoreCreatorDetails: React.FC = () => {
       { id: 'bio', label: 'Professional Bio', weight: 10, complete: bio.trim().length >= 30 },
       { id: 'category', label: 'Primary Category', weight: 5, complete: !!category },
       { id: 'languages', label: 'Languages Spoken', weight: 5, complete: languages.length > 0 },
+      { id: 'social', label: 'Social Channels', weight: 5, complete: socialLinksList.length > 0 },
     ];
 
     const totalWeight = items.reduce((sum, i) => sum + i.weight, 0);
@@ -272,12 +416,16 @@ export const CoreCreatorDetails: React.FC = () => {
   }, [
     avatar, fullName, name, handle, handleAvailability.available, 
     email, phoneDigits, dob, calculatedAge, locationCity, locationState, 
-    bio, category, languages
+    bio, category, languages, socialLinksList
   ]);
 
   // --- Check Dirty State (Has Unsaved Changes) ---
   const isDirty = useMemo(() => {
     const currentPhone = `${phoneCountryCode} ${phoneDigits.trim()}`;
+    const initialLinks = extractInitialSocialLinks(currentInfluencer);
+    const socialLinksChanged = JSON.stringify(socialLinksList.map(l => ({ p: l.platform, u: l.url }))) !== 
+      JSON.stringify(initialLinks.map(l => ({ p: l.platform, u: l.url })));
+
     return (
       fullName !== (currentInfluencer.fullName || currentInfluencer.name) ||
       name !== currentInfluencer.name ||
@@ -294,18 +442,147 @@ export const CoreCreatorDetails: React.FC = () => {
       JSON.stringify(languages) !== JSON.stringify(currentInfluencer.languages || ['English', 'Hindi']) ||
       experienceYears !== (currentInfluencer.experienceYears || '3-5 years') ||
       avatar !== currentInfluencer.avatar ||
-      instagram !== (currentInfluencer.socialLinks.instagram || '') ||
-      youtube !== (currentInfluencer.socialLinks.youtube || '') ||
-      facebook !== (currentInfluencer.socialLinks.facebook || '') ||
-      twitter !== (currentInfluencer.socialLinks.twitter || '') ||
-      otherSocial !== (currentInfluencer.socialLinks.other || '')
+      socialLinksChanged
     );
   }, [
     fullName, name, handle, email, phoneCountryCode, phoneDigits,
     dob, gender, locationCity, locationState, bio, category, secondaryCategory,
-    languages, experienceYears, avatar, instagram, youtube, facebook, twitter,
-    otherSocial, currentInfluencer
+    languages, experienceYears, avatar, socialLinksList, currentInfluencer
   ]);
+
+  // --- Backend Persistence for Social Links ---
+  const syncSocialToBackend = (updatedList: SavedSocialLink[]) => {
+    const legacySocialLinks: InfluencerProfile['socialLinks'] = {
+      ...currentInfluencer.socialLinks,
+      instagram: '',
+      youtube: '',
+      facebook: '',
+      twitter: '',
+      linkedin: '',
+      snapchat: '',
+      telegram: '',
+      pinterest: '',
+      other: '',
+    };
+    updatedList.forEach(link => {
+      const p = SUPPORTED_PLATFORMS.find(opt => opt.name === link.platform);
+      if (p) {
+        legacySocialLinks[p.key] = link.url;
+      }
+    });
+
+    updateInfluencerProfile(currentInfluencer.id, {
+      socialLinkList: updatedList,
+      socialLinks: legacySocialLinks,
+    });
+  };
+
+  // --- Add or Update Social Media Link ---
+  const handleAddOrUpdateLink = () => {
+    const trimmed = socialUrlInput.trim();
+    if (!trimmed) {
+      setSocialInputError(`Please enter your ${selectedPlatform} profile URL.`);
+      return;
+    }
+
+    // Auto-normalize protocol prefix if missing
+    let normalizedUrl = trimmed;
+    if (!/^https?:\/\//i.test(normalizedUrl)) {
+      normalizedUrl = `https://${normalizedUrl}`;
+    }
+
+    // Validate URL syntax
+    let parsed: URL;
+    try {
+      parsed = new URL(normalizedUrl);
+      if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+        setSocialInputError('URL must use HTTP or HTTPS protocol.');
+        return;
+      }
+    } catch {
+      setSocialInputError('Please enter a valid web URL (e.g. https://instagram.com/username).');
+      return;
+    }
+
+    // Validate URL belongs to selected social media platform
+    const platformConfig = SUPPORTED_PLATFORMS.find(p => p.name === selectedPlatform);
+    if (platformConfig) {
+      const host = parsed.hostname.toLowerCase();
+      const isDomainMatch = platformConfig.domains.some(d => host === d || host.endsWith(`.${d}`));
+      if (!isDomainMatch) {
+        setSocialInputError(`The URL must belong to ${selectedPlatform} (allowed: ${platformConfig.domains.join(', ')}).`);
+        return;
+      }
+    }
+
+    // Prevent duplicate platform entries unless editing the same link
+    const duplicate = socialLinksList.find(
+      item => item.platform === selectedPlatform && item.id !== editingLinkId
+    );
+    if (duplicate) {
+      setSocialInputError(`${selectedPlatform} is already connected. You can edit the existing link below.`);
+      return;
+    }
+
+    let updatedList: SavedSocialLink[];
+    if (editingLinkId) {
+      // Update existing link
+      updatedList = socialLinksList.map(item => 
+        item.id === editingLinkId 
+          ? { ...item, platform: selectedPlatform, url: normalizedUrl }
+          : item
+      );
+      setSocialSuccessMessage(`${selectedPlatform} link updated successfully.`);
+    } else {
+      // Create new link
+      const newLink: SavedSocialLink = {
+        id: `social-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+        platform: selectedPlatform,
+        url: normalizedUrl,
+        addedAt: new Date().toISOString().split('T')[0],
+      };
+      updatedList = [...socialLinksList, newLink];
+      setSocialSuccessMessage(`${selectedPlatform} link added successfully.`);
+    }
+
+    setSocialLinksList(updatedList);
+    setEditingLinkId(null);
+    setSocialUrlInput('');
+    setSocialInputError(null);
+    setTimeout(() => setSocialSuccessMessage(null), 3500);
+
+    // Save directly to creator profile in database/state
+    syncSocialToBackend(updatedList);
+  };
+
+  const handleStartEdit = (link: SavedSocialLink) => {
+    setEditingLinkId(link.id);
+    setSelectedPlatform(link.platform);
+    setSocialUrlInput(link.url);
+    setSocialInputError(null);
+    setSocialSuccessMessage(null);
+    setShowSocialDropdown(true);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingLinkId(null);
+    setSocialUrlInput('');
+    setSocialInputError(null);
+  };
+
+  const handleDeleteLink = (id: string) => {
+    const target = socialLinksList.find(l => l.id === id);
+    const updatedList = socialLinksList.filter(l => l.id !== id);
+    setSocialLinksList(updatedList);
+    if (editingLinkId === id) {
+      setEditingLinkId(null);
+      setSocialUrlInput('');
+      setSocialInputError(null);
+    }
+    setSocialSuccessMessage(target ? `${target.platform} link removed.` : 'Link removed.');
+    setTimeout(() => setSocialSuccessMessage(null), 3000);
+    syncSocialToBackend(updatedList);
+  };
 
   // --- Validation Helpers ---
   const validateForm = (): boolean => {
@@ -348,33 +625,6 @@ export const CoreCreatorDetails: React.FC = () => {
       newErrors.bio = 'Professional bio is required.';
     } else if (bio.trim().length < 20) {
       newErrors.bio = 'Bio should be at least 20 characters to give fans clear context.';
-    }
-
-    // URL Validation helpers
-    const urlPattern = /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+\.[a-zA-Z0-9().%-_+~#?&//=]+$/;
-    
-    if (instagram.trim() && !instagram.toLowerCase().includes('instagram.com')) {
-      newErrors.instagram = 'Must be a valid Instagram URL (e.g. https://instagram.com/handle)';
-    }
-
-    if (youtube.trim() && !youtube.toLowerCase().includes('youtube.com') && !youtube.toLowerCase().includes('youtu.be')) {
-      newErrors.youtube = 'Must be a valid YouTube URL (e.g. https://youtube.com/@channel)';
-    }
-
-    if (facebook.trim() && !facebook.toLowerCase().includes('facebook.com') && !facebook.toLowerCase().includes('fb.com')) {
-      newErrors.facebook = 'Must be a valid Facebook URL (e.g. https://facebook.com/page)';
-    }
-
-    if (twitter.trim() && !twitter.toLowerCase().includes('twitter.com') && !twitter.toLowerCase().includes('x.com')) {
-      newErrors.twitter = 'Must be a valid X/Twitter URL (e.g. https://x.com/handle)';
-    }
-
-    if (otherSocial.trim() && !urlPattern.test(otherSocial.trim())) {
-      newErrors.otherSocial = 'Please enter a valid URL (e.g. https://yourportfolio.com)';
-    }
-
-    if (newErrors.instagram || newErrors.youtube || newErrors.facebook || newErrors.twitter || newErrors.otherSocial) {
-      setShowSocialDropdown(true);
     }
 
     setErrors(newErrors);
@@ -502,11 +752,10 @@ export const CoreCreatorDetails: React.FC = () => {
     setExperienceYears(currentInfluencer.experienceYears || '3-5 years');
     setAvatar(currentInfluencer.avatar);
     setAvatarPreview(currentInfluencer.avatar);
-    setInstagram(currentInfluencer.socialLinks.instagram || '');
-    setYoutube(currentInfluencer.socialLinks.youtube || '');
-    setFacebook(currentInfluencer.socialLinks.facebook || '');
-    setTwitter(currentInfluencer.socialLinks.twitter || '');
-    setOtherSocial(currentInfluencer.socialLinks.other || '');
+    setSocialLinksList(extractInitialSocialLinks(currentInfluencer));
+    setEditingLinkId(null);
+    setSocialUrlInput('');
+    setSocialInputError(null);
     setErrors({});
     showToast('Changes discarded.');
   };
@@ -526,15 +775,25 @@ export const CoreCreatorDetails: React.FC = () => {
     const formattedHandle = handle.trim().startsWith('@') ? handle.trim() : `@${handle.trim()}`;
     const fullPhone = `${phoneCountryCode} ${phoneDigits.trim()}`;
 
-    // Normalize social URLs (ensure https://)
-    const normalizeUrl = (url: string) => {
-      if (!url.trim()) return '';
-      let clean = url.trim();
-      if (!clean.startsWith('http://') && !clean.startsWith('https://')) {
-        clean = `https://${clean}`;
-      }
-      return clean;
+    // Map to legacy socialLinks dictionary and update socialLinkList
+    const legacySocialLinks: InfluencerProfile['socialLinks'] = {
+      ...currentInfluencer.socialLinks,
+      instagram: '',
+      youtube: '',
+      facebook: '',
+      twitter: '',
+      linkedin: '',
+      snapchat: '',
+      telegram: '',
+      pinterest: '',
+      other: '',
     };
+    socialLinksList.forEach(item => {
+      const p = SUPPORTED_PLATFORMS.find(opt => opt.name === item.platform);
+      if (p) {
+        legacySocialLinks[p.key] = item.url;
+      }
+    });
 
     const updates: Partial<InfluencerProfile> = {
       fullName: fullName.trim(),
@@ -554,14 +813,8 @@ export const CoreCreatorDetails: React.FC = () => {
       languages,
       experienceYears,
       avatar,
-      socialLinks: {
-        ...currentInfluencer.socialLinks,
-        instagram: normalizeUrl(instagram),
-        youtube: normalizeUrl(youtube),
-        facebook: normalizeUrl(facebook),
-        twitter: normalizeUrl(twitter),
-        other: normalizeUrl(otherSocial),
-      }
+      socialLinks: legacySocialLinks,
+      socialLinkList: socialLinksList,
     };
 
     // Realistic API delay
@@ -922,14 +1175,25 @@ export const CoreCreatorDetails: React.FC = () => {
                 </div>
 
                 {/* Social Icons Bar in Preview */}
-                <div className="flex items-center gap-2 pt-2 border-t border-slate-200/60 text-slate-400">
-                  <span className="text-[10px] font-semibold text-slate-500">Channels:</span>
-                  {instagram && <span className="text-pink-600 text-xs font-bold">IG</span>}
-                  {youtube && <span className="text-red-600 text-xs font-bold">YT</span>}
-                  {facebook && <span className="text-blue-600 text-xs font-bold">FB</span>}
-                  {twitter && <span className="text-slate-900 text-xs font-bold">X</span>}
-                  {otherSocial && <span className="text-indigo-600 text-xs font-bold">Web</span>}
-                  {!instagram && !youtube && !facebook && !twitter && !otherSocial && (
+                <div className="flex items-center gap-1.5 pt-2 border-t border-slate-200/60 text-slate-400 flex-wrap">
+                  <span className="text-[10px] font-semibold text-slate-500 mr-0.5">Channels:</span>
+                  {socialLinksList.map(link => {
+                    const platformOpt = SUPPORTED_PLATFORMS.find(p => p.name === link.platform);
+                    const PlatformIcon = platformOpt?.icon || Globe;
+                    return (
+                      <a
+                        key={link.id}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`w-6 h-6 rounded-lg ${platformOpt?.bgColor || 'bg-slate-100'} ${platformOpt?.badgeColor || 'text-slate-700'} border ${platformOpt?.borderLight || 'border-slate-200'} flex items-center justify-center hover:scale-110 transition-transform shadow-2xs`}
+                        title={`${link.platform}: ${link.url}`}
+                      >
+                        <PlatformIcon className="w-3 h-3" />
+                      </a>
+                    );
+                  })}
+                  {socialLinksList.length === 0 && (
                     <span className="text-[10px] italic text-slate-400">No social links added yet</span>
                   )}
                 </div>
@@ -937,28 +1201,6 @@ export const CoreCreatorDetails: React.FC = () => {
               </div>
 
             </div>
-          </div>
-
-          {/* C. Pro Optimization Tips */}
-          <div className="bg-gradient-to-br from-navy-50/70 via-slate-50 to-brand-50/50 rounded-3xl p-5 border border-navy-100 shadow-soft space-y-3">
-            <div className="flex items-center gap-2 text-navy-800">
-              <Award className="w-4 h-4 text-navy-600" />
-              <h4 className="text-xs font-bold uppercase tracking-wider">Creator Economy Insights</h4>
-            </div>
-            <ul className="text-[11px] text-slate-600 space-y-2">
-              <li className="flex items-start gap-1.5">
-                <span className="text-brand-500 font-bold">•</span>
-                <span>Profiles with a verified profile picture receive <strong>3.4x</strong> more call bookings.</span>
-              </li>
-              <li className="flex items-start gap-1.5">
-                <span className="text-navy-600 font-bold">•</span>
-                <span>Listing 2 or more spoken languages helps reach regional fans seeking 1-on-1 mentorship.</span>
-              </li>
-              <li className="flex items-start gap-1.5">
-                <span className="text-emerald-600 font-bold">•</span>
-                <span>Connecting your YouTube or Instagram provides social proof during fan discovery.</span>
-              </li>
-            </ul>
           </div>
 
         </div>
@@ -1553,8 +1795,8 @@ export const CoreCreatorDetails: React.FC = () => {
 
             </div>
 
-            {/* CARD 3: Social Media Channels (with Dropdown Effect) */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-soft space-y-4">
+            {/* CARD 3: Social Media Channels (with Single Dropdown + Single URL Input) */}
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-soft space-y-5">
               
               <button
                 type="button"
@@ -1585,12 +1827,25 @@ export const CoreCreatorDetails: React.FC = () => {
                   {/* Mini channel icons preview when collapsed */}
                   {!showSocialDropdown && (
                     <div className="flex items-center gap-1.5 text-[10px] font-bold">
-                      {instagram && <span className="w-6 h-6 rounded-md bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 text-white flex items-center justify-center text-[9px]">IG</span>}
-                      {youtube && <span className="w-6 h-6 rounded-md bg-red-600 text-white flex items-center justify-center text-[9px]">YT</span>}
-                      {facebook && <span className="w-6 h-6 rounded-md bg-blue-600 text-white flex items-center justify-center text-[9px]">FB</span>}
-                      {twitter && <span className="w-6 h-6 rounded-md bg-slate-900 text-white flex items-center justify-center text-[9px]">X</span>}
-                      {otherSocial && <span className="w-6 h-6 rounded-md bg-indigo-600 text-white flex items-center justify-center text-[9px]"><Globe className="w-3 h-3" /></span>}
-                      {connectedSocialCount === 0 && (
+                      {socialLinksList.slice(0, 4).map(link => {
+                        const plat = SUPPORTED_PLATFORMS.find(p => p.name === link.platform);
+                        const Icon = plat?.icon || Globe;
+                        return (
+                          <span
+                            key={link.id}
+                            className={`w-6 h-6 rounded-md ${plat?.bgColor || 'bg-slate-100'} ${plat?.badgeColor || 'text-slate-700'} border ${plat?.borderLight || 'border-slate-200'} flex items-center justify-center`}
+                            title={link.platform}
+                          >
+                            <Icon className="w-3.5 h-3.5" />
+                          </span>
+                        );
+                      })}
+                      {socialLinksList.length > 4 && (
+                        <span className="text-[10px] text-slate-500 font-bold px-1.5 py-0.5 rounded-md bg-slate-100">
+                          +{socialLinksList.length - 4}
+                        </span>
+                      )}
+                      {socialLinksList.length === 0 && (
                         <span className="text-[11px] text-slate-400 italic">No links added</span>
                       )}
                     </div>
@@ -1605,203 +1860,314 @@ export const CoreCreatorDetails: React.FC = () => {
 
               {/* Collapsible Dropdown Content */}
               {showSocialDropdown && (
-                <div className="space-y-4 pt-4 border-t border-slate-100 animate-fadeIn">
+                <div className="space-y-6 pt-4 border-t border-slate-100 animate-fadeIn">
                   
-                  {/* Instagram */}
-                  <div className="space-y-1">
-                    <label className="block text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                      <span className="w-5 h-5 rounded-md bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 text-white flex items-center justify-center text-[10px] font-black">
-                        IG
-                      </span>
-                      <span>Instagram Profile URL</span>
-                    </label>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={instagram}
-                        onChange={e => {
-                          setInstagram(e.target.value);
-                          if (errors.instagram) setErrors(prev => ({ ...prev, instagram: undefined }));
-                        }}
-                        placeholder="https://instagram.com/your_handle"
-                        className={`flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 transition-all focus:outline-none focus:bg-white ${
-                          errors.instagram ? 'border-rose-400' : 'border-slate-200 focus:border-brand-500'
-                        }`}
-                      />
-                      {instagram && (
-                        <a
-                          href={instagram.startsWith('http') ? instagram : `https://${instagram}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold inline-flex items-center gap-1"
-                          title="Test link"
-                        >
-                          <ExternalLink className="w-3.5 h-3.5" />
-                          <span className="hidden sm:inline">Test</span>
-                        </a>
-                      )}
+                  {/* Informational Guidance */}
+                  <div className="p-3.5 rounded-2xl bg-gradient-to-r from-purple-50/70 to-indigo-50/40 border border-purple-100/80 flex items-start gap-2.5">
+                    <Info className="w-4 h-4 text-purple-600 shrink-0 mt-0.5" />
+                    <p className="text-[11px] text-purple-900 leading-relaxed font-medium">
+                      Select your platform from the dropdown, paste your profile URL, and click <strong className="font-bold">Add Link</strong>. You can open, edit, or remove linked profiles anytime.
+                    </p>
+                  </div>
+
+                  {/* Single Dropdown + Single Dynamic URL Input Section */}
+                  <div className="p-4 sm:p-5 rounded-2xl bg-slate-50/70 border border-slate-200/90 space-y-3">
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+                      
+                      {/* 1. Social Media Platform Dropdown */}
+                      <div className="md:col-span-4 relative" ref={platformDropdownRef}>
+                        <label className="block text-xs font-bold text-slate-800 mb-1.5 flex items-center justify-between">
+                          <span>Social Media Platform</span>
+                          <span className="text-[10px] text-slate-400 font-normal">8 options</span>
+                        </label>
+                        
+                        {(() => {
+                          const activePlatformConfig = SUPPORTED_PLATFORMS.find(p => p.name === selectedPlatform) || SUPPORTED_PLATFORMS[0];
+                          const ActiveIcon = activePlatformConfig.icon;
+                          return (
+                            <>
+                              <button
+                                type="button"
+                                onClick={() => setPlatformDropdownOpen(prev => !prev)}
+                                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all cursor-pointer shadow-xs"
+                                aria-haspopup="listbox"
+                                aria-expanded={platformDropdownOpen}
+                              >
+                                <div className="flex items-center gap-2.5 min-w-0">
+                                  <div className={`w-6 h-6 rounded-lg ${activePlatformConfig.bgColor} ${activePlatformConfig.badgeColor} border ${activePlatformConfig.borderLight} flex items-center justify-center shrink-0`}>
+                                    <ActiveIcon className="w-3.5 h-3.5" />
+                                  </div>
+                                  <span className="truncate">{selectedPlatform}</span>
+                                </div>
+                                <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ml-1.5 ${platformDropdownOpen ? 'rotate-180 text-brand-600' : ''}`} />
+                              </button>
+
+                              {/* Dropdown Options Menu */}
+                              {platformDropdownOpen && (
+                                <div className="absolute z-30 left-0 right-0 mt-2 bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden animate-fadeIn py-1 min-w-[220px]">
+                                  <div className="max-h-60 overflow-y-auto divide-y divide-slate-100">
+                                    {SUPPORTED_PLATFORMS.map(platform => {
+                                      const IconComp = platform.icon;
+                                      const isSelected = selectedPlatform === platform.name;
+                                      const isAlreadyAdded = socialLinksList.some(l => l.platform === platform.name && l.id !== editingLinkId);
+
+                                      return (
+                                        <button
+                                          key={platform.name}
+                                          type="button"
+                                          onClick={() => {
+                                            setSelectedPlatform(platform.name);
+                                            setPlatformDropdownOpen(false);
+                                            setSocialInputError(null);
+                                          }}
+                                          className={`w-full flex items-center justify-between px-3.5 py-2.5 text-xs text-left transition-colors cursor-pointer ${
+                                            isSelected ? 'bg-brand-50/70 text-brand-700 font-bold' : 'hover:bg-slate-50 text-slate-700 font-medium'
+                                          }`}
+                                        >
+                                          <div className="flex items-center gap-2.5 min-w-0">
+                                            <div className={`w-6 h-6 rounded-lg ${platform.bgColor} ${platform.badgeColor} border ${platform.borderLight} flex items-center justify-center shrink-0`}>
+                                              <IconComp className="w-3.5 h-3.5" />
+                                            </div>
+                                            <div className="min-w-0">
+                                              <div className="flex items-center gap-1.5">
+                                                <span className="font-bold text-slate-900 truncate">{platform.name}</span>
+                                                {isAlreadyAdded && (
+                                                  <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 shrink-0">
+                                                    Added
+                                                  </span>
+                                                )}
+                                              </div>
+                                              <span className="text-[10px] text-slate-400 font-normal truncate block">
+                                                {platform.domains[0]}
+                                              </span>
+                                            </div>
+                                          </div>
+                                          {isSelected && (
+                                            <Check className="w-4 h-4 text-brand-600 stroke-[2.5] shrink-0" />
+                                          )}
+                                        </button>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              )}
+                            </>
+                          );
+                        })()}
+                      </div>
+
+                      {/* 2. URL Input Field & Add Button */}
+                      <div className="md:col-span-8 space-y-1.5">
+                        <label className="block text-xs font-bold text-slate-800 flex items-center justify-between">
+                          <span>Profile URL</span>
+                          {editingLinkId && (
+                            <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
+                              Editing {selectedPlatform} Link
+                            </span>
+                          )}
+                        </label>
+                        
+                        <div className="flex flex-col sm:flex-row gap-2">
+                          <div className="relative flex-1">
+                            <input
+                              type="text"
+                              value={socialUrlInput}
+                              onChange={e => {
+                                setSocialUrlInput(e.target.value);
+                                if (socialInputError) setSocialInputError(null);
+                              }}
+                              onKeyDown={e => {
+                                if (e.key === 'Enter') {
+                                  e.preventDefault();
+                                  handleAddOrUpdateLink();
+                                }
+                              }}
+                              placeholder={`Paste your ${selectedPlatform} profile URL`}
+                              className={`w-full px-4 py-2.5 rounded-xl bg-white border text-xs font-medium text-slate-900 transition-all focus:outline-none ${
+                                socialInputError 
+                                  ? 'border-rose-400 focus:border-rose-500 ring-2 ring-rose-500/10' 
+                                  : 'border-slate-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20'
+                              }`}
+                            />
+                            {socialUrlInput && (
+                              <button
+                                type="button"
+                                onClick={() => setSocialUrlInput('')}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+                                title="Clear input"
+                              >
+                                <X className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                          </div>
+
+                          <div className="flex items-center gap-2 shrink-0">
+                            <button
+                              type="button"
+                              onClick={handleAddOrUpdateLink}
+                              className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 active:scale-[0.98] text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm shadow-brand-500/20 cursor-pointer"
+                            >
+                              {editingLinkId ? (
+                                <>
+                                  <Check className="w-4 h-4 stroke-[2.5]" />
+                                  <span>Update Link</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Plus className="w-4 h-4 stroke-[2.5]" />
+                                  <span>Add Link</span>
+                                </>
+                              )}
+                            </button>
+
+                            {editingLinkId && (
+                              <button
+                                type="button"
+                                onClick={handleCancelEdit}
+                                className="px-3 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs transition-colors cursor-pointer"
+                              >
+                                Cancel
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
                     </div>
-                    {errors.instagram && (
-                      <p className="text-[10px] font-semibold text-rose-500">{errors.instagram}</p>
+
+                    {/* Inline Validation Error Message */}
+                    {socialInputError && (
+                      <div className="flex items-center gap-1.5 pt-1 text-[11px] font-semibold text-rose-600 animate-fadeIn">
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0 text-rose-500" />
+                        <span>{socialInputError}</span>
+                      </div>
+                    )}
+
+                    {/* Inline Success Notification */}
+                    {socialSuccessMessage && (
+                      <div className="flex items-center gap-1.5 pt-1 text-[11px] font-bold text-emerald-600 animate-fadeIn">
+                        <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-emerald-500" />
+                        <span>{socialSuccessMessage}</span>
+                      </div>
                     )}
                   </div>
 
-                  {/* YouTube */}
-                  <div className="space-y-1">
-                    <label className="block text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                      <span className="w-5 h-5 rounded-md bg-red-600 text-white flex items-center justify-center text-[10px] font-black">
-                        YT
-                      </span>
-                      <span>YouTube Channel URL</span>
-                    </label>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={youtube}
-                        onChange={e => {
-                          setYoutube(e.target.value);
-                          if (errors.youtube) setErrors(prev => ({ ...prev, youtube: undefined }));
-                        }}
-                        placeholder="https://youtube.com/@channel"
-                        className={`flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 transition-all focus:outline-none focus:bg-white ${
-                          errors.youtube ? 'border-rose-400' : 'border-slate-200 focus:border-brand-500'
-                        }`}
-                      />
-                      {youtube && (
-                        <a
-                          href={youtube.startsWith('http') ? youtube : `https://${youtube}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold inline-flex items-center gap-1"
-                          title="Test link"
-                        >
-                          <ExternalLink className="w-3.5 h-3.5" />
-                          <span className="hidden sm:inline">Test</span>
-                        </a>
+                  {/* 3. Saved Social Media Links Management List */}
+                  <div className="space-y-3 pt-2">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+                        <span>Connected Profiles</span>
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">
+                          {socialLinksList.length}
+                        </span>
+                      </h3>
+                      {socialLinksList.length > 0 && (
+                        <span className="text-[10px] text-slate-400">
+                          Open in browser or edit anytime
+                        </span>
                       )}
                     </div>
-                    {errors.youtube && (
-                      <p className="text-[10px] font-semibold text-rose-500">{errors.youtube}</p>
+
+                    {socialLinksList.length === 0 ? (
+                      <div className="p-8 rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 text-center space-y-1">
+                        <Share2 className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                        <p className="text-xs font-bold text-slate-700">No social media links connected yet</p>
+                        <p className="text-[11px] text-slate-400 max-w-md mx-auto">
+                          Choose a platform from the dropdown above, enter your public profile URL, and click Add Link.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        {socialLinksList.map(link => {
+                          const platformConfig = SUPPORTED_PLATFORMS.find(p => p.name === link.platform);
+                          const IconComp = platformConfig?.icon || Globe;
+                          const isCurrentlyEditing = editingLinkId === link.id;
+
+                          return (
+                            <div
+                              key={link.id}
+                              className={`flex flex-col sm:flex-row sm:items-center justify-between p-3.5 rounded-2xl border transition-all gap-3 ${
+                                isCurrentlyEditing
+                                  ? 'bg-amber-50/60 border-amber-300 shadow-xs'
+                                  : 'bg-white hover:bg-slate-50/80 border-slate-200/90 shadow-xs'
+                              }`}
+                            >
+                              {/* Left: Platform Icon & Details */}
+                              <div className="flex items-center gap-3 min-w-0">
+                                <div className={`w-9 h-9 rounded-xl ${platformConfig?.bgColor || 'bg-slate-100'} ${platformConfig?.badgeColor || 'text-slate-700'} border ${platformConfig?.borderLight || 'border-slate-200'} flex items-center justify-center shrink-0 shadow-xs`}>
+                                  <IconComp className="w-4 h-4" />
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <span className="text-xs font-bold text-slate-900">
+                                      {link.platform}
+                                    </span>
+                                    {isCurrentlyEditing && (
+                                      <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-md bg-amber-100 text-amber-800">
+                                        Editing
+                                      </span>
+                                    )}
+                                    <span className="text-[10px] text-slate-400 font-normal hidden md:inline">
+                                      Connected {link.addedAt}
+                                    </span>
+                                  </div>
+                                  <a
+                                    href={link.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-[11px] text-slate-500 hover:text-brand-600 hover:underline truncate block max-w-xs sm:max-w-sm md:max-w-md font-mono mt-0.5"
+                                    title={link.url}
+                                  >
+                                    {link.url}
+                                  </a>
+                                </div>
+                              </div>
+
+                              {/* Right: Actions (Open Link, Edit, Delete) */}
+                              <div className="flex items-center gap-1.5 shrink-0 self-end sm:self-auto">
+                                <a
+                                  href={link.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-brand-50 text-slate-700 hover:text-brand-600 text-xs font-bold transition-colors cursor-pointer"
+                                  title="Open profile in new tab"
+                                >
+                                  <ExternalLink className="w-3.5 h-3.5" />
+                                  <span>Open Link</span>
+                                </a>
+
+                                <button
+                                  type="button"
+                                  onClick={() => handleStartEdit(link)}
+                                  className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
+                                    isCurrentlyEditing
+                                      ? 'bg-amber-500 text-white shadow-xs'
+                                      : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                                  }`}
+                                  title="Edit this link"
+                                >
+                                  <Pencil className="w-3.5 h-3.5" />
+                                  <span>Edit</span>
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteLink(link.id)}
+                                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 text-xs font-bold transition-colors cursor-pointer"
+                                  title="Delete this link"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                  <span>Delete</span>
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
                     )}
                   </div>
 
-                  {/* Facebook */}
-                  <div className="space-y-1">
-                    <label className="block text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                      <span className="w-5 h-5 rounded-md bg-blue-600 text-white flex items-center justify-center text-[10px] font-black">
-                        FB
-                      </span>
-                      <span>Facebook Profile or Page URL</span>
-                    </label>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={facebook}
-                        onChange={e => {
-                          setFacebook(e.target.value);
-                          if (errors.facebook) setErrors(prev => ({ ...prev, facebook: undefined }));
-                        }}
-                        placeholder="https://facebook.com/your_page"
-                        className={`flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 transition-all focus:outline-none focus:bg-white ${
-                          errors.facebook ? 'border-rose-400' : 'border-slate-200 focus:border-brand-500'
-                        }`}
-                      />
-                      {facebook && (
-                        <a
-                          href={facebook.startsWith('http') ? facebook : `https://${facebook}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold inline-flex items-center gap-1"
-                          title="Test link"
-                        >
-                          <ExternalLink className="w-3.5 h-3.5" />
-                          <span className="hidden sm:inline">Test</span>
-                        </a>
-                      )}
-                    </div>
-                    {errors.facebook && (
-                      <p className="text-[10px] font-semibold text-rose-500">{errors.facebook}</p>
-                    )}
-                  </div>
-
-                  {/* X (Twitter) */}
-                  <div className="space-y-1">
-                    <label className="block text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                      <span className="w-5 h-5 rounded-md bg-slate-900 text-white flex items-center justify-center text-[10px] font-black">
-                        X
-                      </span>
-                      <span>X (Twitter) URL</span>
-                    </label>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={twitter}
-                        onChange={e => {
-                          setTwitter(e.target.value);
-                          if (errors.twitter) setErrors(prev => ({ ...prev, twitter: undefined }));
-                        }}
-                        placeholder="https://x.com/your_handle"
-                        className={`flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 transition-all focus:outline-none focus:bg-white ${
-                          errors.twitter ? 'border-rose-400' : 'border-slate-200 focus:border-brand-500'
-                        }`}
-                      />
-                      {twitter && (
-                        <a
-                          href={twitter.startsWith('http') ? twitter : `https://${twitter}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold inline-flex items-center gap-1"
-                          title="Test link"
-                        >
-                          <ExternalLink className="w-3.5 h-3.5" />
-                          <span className="hidden sm:inline">Test</span>
-                        </a>
-                      )}
-                    </div>
-                    {errors.twitter && (
-                      <p className="text-[10px] font-semibold text-rose-500">{errors.twitter}</p>
-                    )}
-                  </div>
-
-                  {/* Other Social Profile / Website */}
-                  <div className="space-y-1">
-                    <label className="block text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                      <span className="w-5 h-5 rounded-md bg-indigo-600 text-white flex items-center justify-center text-[10px] font-black">
-                        <Globe className="w-3 h-3" />
-                      </span>
-                      <span>Other Portfolio / Linktree / Twitch Profile <span className="text-slate-400 font-normal">(Optional)</span></span>
-                    </label>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={otherSocial}
-                        onChange={e => {
-                          setOtherSocial(e.target.value);
-                          if (errors.otherSocial) setErrors(prev => ({ ...prev, otherSocial: undefined }));
-                        }}
-                        placeholder="https://linktr.ee/yourname or https://twitch.tv/..."
-                        className={`flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 transition-all focus:outline-none focus:bg-white ${
-                          errors.otherSocial ? 'border-rose-400' : 'border-slate-200 focus:border-brand-500'
-                        }`}
-                      />
-                      {otherSocial && (
-                        <a
-                          href={otherSocial.startsWith('http') ? otherSocial : `https://${otherSocial}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold inline-flex items-center gap-1"
-                          title="Test link"
-                        >
-                          <ExternalLink className="w-3.5 h-3.5" />
-                          <span className="hidden sm:inline">Test</span>
-                        </a>
-                      )}
-                    </div>
-                    {errors.otherSocial && (
-                      <p className="text-[10px] font-semibold text-rose-500">{errors.otherSocial}</p>
-                    )}
-                  </div>
-
+                  {/* Section Collapse Footer */}
                   <div className="pt-2 flex justify-end">
                     <button
                       type="button"

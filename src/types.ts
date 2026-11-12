@@ -33,6 +33,23 @@ export interface InfluencerGalleryItem {
   uploadedAt: string;
 }
 
+export type SupportedSocialPlatform = 
+  | 'Instagram'
+  | 'Facebook'
+  | 'YouTube'
+  | 'X (Twitter)'
+  | 'LinkedIn'
+  | 'Snapchat'
+  | 'Telegram'
+  | 'Pinterest';
+
+export interface SavedSocialLink {
+  id: string;
+  platform: SupportedSocialPlatform;
+  url: string;
+  addedAt: string;
+}
+
 export interface InfluencerProfile {
   id: string;
   name: string; // Display Name / Creator Name
@@ -63,8 +80,14 @@ export interface InfluencerProfile {
     twitter?: string;
     facebook?: string;
     tiktok?: string;
+    linkedin?: string;
+    snapchat?: string;
+    telegram?: string;
+    pinterest?: string;
     other?: string;
+    [key: string]: string | undefined;
   };
+  socialLinkList?: SavedSocialLink[];
   gallery: InfluencerGalleryItem[];
   voiceCallEnabled: boolean;
   videoCallEnabled: boolean;
