@@ -50,6 +50,34 @@ export interface SavedSocialLink {
   addedAt: string;
 }
 
+export interface TimeIntervalItem {
+  id: string;
+  start: string; // e.g. "09:00 AM"
+  end: string;   // e.g. "06:00 PM"
+}
+
+export interface DayScheduleItem {
+  day: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
+  short: 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat' | 'Sun';
+  enabled: boolean;
+  intervals: TimeIntervalItem[];
+}
+
+export interface BookingPreferencesConfig {
+  minNoticeHours: number;
+  maxAdvanceDays: number;
+  bufferMinutes: number;
+  maxBookingsPerDay: number;
+  allowedDurations: number[];
+}
+
+export interface CustomDateOverrideConfig {
+  date: string; // "YYYY-MM-DD"
+  isUnavailable: boolean;
+  intervals?: TimeIntervalItem[];
+  note?: string;
+}
+
 export interface InfluencerProfile {
   id: string;
   name: string; // Display Name / Creator Name
@@ -112,6 +140,10 @@ export interface InfluencerProfile {
     days: string[]; // ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     timeSlots: string[]; // ['10:00 AM', '11:00 AM', ...]
     blockedDates: string[]; // ['2026-11-20']
+    isTakingBookings?: boolean;
+    weeklySchedule?: DayScheduleItem[];
+    preferences?: BookingPreferencesConfig;
+    customDateOverrides?: Record<string, CustomDateOverrideConfig>;
   };
   payoutDetails?: {
     method: 'bank' | 'upi';

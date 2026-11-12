@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { 
-  Sparkles, 
-  LayoutDashboard, 
-  Image, 
-  Clock, 
-  Calendar, 
-  Wallet, 
-  LogOut, 
-  Bell, 
-  Menu, 
-  X, 
-  CheckCircle2, 
+import {
+  Sparkles,
+  LayoutDashboard,
+  Image,
+  Clock,
+  Calendar,
+  Wallet,
+  LogOut,
+  Bell,
+  Menu,
+  X,
+  CheckCircle2,
   AlertCircle,
   ChevronRight,
   Star,
@@ -27,21 +27,21 @@ import { InfluencerEarningsPayouts } from '../influencer/InfluencerEarningsPayou
 import { InfluencerReviewsGrievances } from '../influencer/InfluencerReviewsGrievances';
 
 export const InfluencerDashboardLayout: React.FC = () => {
-  const { 
-    currentInfluencer, 
+  const {
+    currentInfluencer,
     currentPath,
     navigate,
-    activeView, 
-    setActiveView, 
-    logout, 
+    activeView,
+    setActiveView,
+    logout,
     notifications,
-    showToast 
+    showToast
   } = useApp();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showNotifDropdown, setShowNotifDropdown] = useState(false);
 
-  const unreadNotifs = notifications.filter(n => 
+  const unreadNotifs = notifications.filter(n =>
     !n.read && (n.targetAudience === 'all' || n.targetAudience === 'influencers' || n.recipientId === currentInfluencer?.id)
   );
 
@@ -56,17 +56,16 @@ export const InfluencerDashboardLayout: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-900 flex flex-col lg:flex-row font-sans selection:bg-brand-500 selection:text-white">
-      
+
       {/* 1. Left Sidebar for Influencer Portal (Pure White Sidebar) */}
-      <aside className={`fixed inset-y-0 left-0 z-40 w-72 bg-white text-slate-900 border-r border-slate-200/90 flex flex-col justify-between transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${
-        mobileMenuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
-      }`}>
-        
+      <aside className={`fixed inset-y-0 left-0 z-40 w-72 bg-white text-slate-900 border-r border-slate-200/90 flex flex-col justify-between transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${mobileMenuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
+        }`}>
+
         {/* Top: Logo & Creator Identity */}
         <div>
           {/* Logo Bar */}
           <div className="h-18 p-5 border-b border-slate-100 flex items-center justify-between">
-            <div 
+            <div
               className="flex items-center gap-3 cursor-pointer"
               onClick={() => {
                 setActiveView('dashboard');
@@ -86,7 +85,7 @@ export const InfluencerDashboardLayout: React.FC = () => {
               </div>
             </div>
 
-            <button 
+            <button
               onClick={() => setMobileMenuOpen(false)}
               className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-slate-700"
             >
@@ -134,11 +133,10 @@ export const InfluencerDashboardLayout: React.FC = () => {
                     navigate(item.path);
                     setMobileMenuOpen(false);
                   }}
-                  className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-bold transition-all ${
-                    isActive
+                  className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-bold transition-all ${isActive
                       ? 'bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-md shadow-brand-500/25'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-3">
                     <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
@@ -166,15 +164,15 @@ export const InfluencerDashboardLayout: React.FC = () => {
 
       {/* Backdrop for mobile */}
       {mobileMenuOpen && (
-        <div 
+        <div
           onClick={() => setMobileMenuOpen(false)}
           className="fixed inset-0 bg-slate-950/40 z-30 lg:hidden"
         />
       )}
 
       {/* 2. Main Workspace Layout */}
-      <div className="flex-1 lg:pl-72 flex flex-col min-h-screen">
-        
+      <div className="flex-1 lg:pl-72 flex flex-col min-h-screen bg-[#F8FAFC]">
+
         {/* Top Header */}
         <header className="sticky top-0 z-20 h-16 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-8 flex items-center justify-between shadow-xs">
           <div className="flex items-center gap-3">
@@ -186,10 +184,10 @@ export const InfluencerDashboardLayout: React.FC = () => {
             </button>
 
             <div>
-              <h2 className="text-sm sm:text-base font-extrabold text-slate-900">
+              <h2 className="text-sm sm:text-base font-extrabold text-[#172554]">
                 Creator Studio • {currentInfluencer?.name}
               </h2>
-              <p className="text-[11px] text-slate-500 hidden sm:block">
+              <p className="text-[11px] text-[#64748B] hidden sm:block">
                 Manage rates, upcoming fan calls, live rooms, and payout balance.
               </p>
             </div>
@@ -197,7 +195,7 @@ export const InfluencerDashboardLayout: React.FC = () => {
 
           {/* Right Controls */}
           <div className="flex items-center gap-3">
-            
+
             {/* Verification Status Pill */}
             {currentInfluencer?.isVerified ? (
               <span className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold">

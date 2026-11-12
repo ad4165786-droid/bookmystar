@@ -1623,17 +1623,17 @@ export const CoreCreatorDetails: React.FC = () => {
         </div>
 
         {/* ================= 5. CREATOR CONTENT & PROFILE MEDIA ================= */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-soft space-y-6">
+        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 border border-purple-200/60 flex items-center justify-center">
-                <ImageIcon className="w-4 h-4 text-purple-600" />
+              <div className="w-9 h-9 rounded-xl bg-[#EFF6FF] text-[#1D4ED8] border border-[#DBEAFE] flex items-center justify-center">
+                <ImageIcon className="w-4 h-4 text-[#1D4ED8]" />
               </div>
               <div>
-                <h2 className="text-base font-extrabold text-slate-900 tracking-tight">
+                <h2 className="text-base font-extrabold text-[#172554] tracking-tight">
                   Creator Content & Profile Media
                 </h2>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-[#64748B]">
                   Upload showcase photos, tournament trophies, event pictures, or video clips for fans.
                 </p>
               </div>
@@ -1651,13 +1651,13 @@ export const CoreCreatorDetails: React.FC = () => {
 
           {/* Inline Media Upload Form */}
           {showMediaUploadForm && (
-            <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4 animate-fadeIn">
-              <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+            <div className="p-4 sm:p-5 rounded-2xl bg-[#EFF6FF]/50 border border-[#DBEAFE] space-y-4 animate-fadeIn">
+              <h3 className="text-xs font-bold text-[#172554] uppercase tracking-wider">
                 Add Showcase Photo / Video Clip
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-800 mb-1">
+                  <label className="block text-xs font-bold text-[#172554] mb-1">
                     Media Title <span className="text-rose-500">*</span>
                   </label>
                   <input
@@ -1665,13 +1665,13 @@ export const CoreCreatorDetails: React.FC = () => {
                     value={mediaTitle}
                     onChange={e => setMediaTitle(e.target.value)}
                     placeholder="e.g. Esports Finals MVP Trophy"
-                    className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-brand-500"
+                    className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs text-[#172554] placeholder-[#94A3B8] focus:outline-none focus:border-brand-500"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-800 mb-1">
+                  <label className="block text-xs font-bold text-[#172554] mb-1">
                     Media Type
                   </label>
                   <div className="flex gap-2">
@@ -1679,7 +1679,7 @@ export const CoreCreatorDetails: React.FC = () => {
                       type="button"
                       onClick={() => setMediaType('image')}
                       className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold border transition-colors cursor-pointer ${
-                        mediaType === 'image' ? 'bg-brand-500 text-white border-brand-500' : 'bg-white text-slate-700 border-slate-200'
+                        mediaType === 'image' ? 'bg-brand-500 text-white border-brand-500' : 'bg-white text-[#64748B] border-slate-200 hover:text-[#172554]'
                       }`}
                     >
                       Photo / Image
@@ -1688,7 +1688,7 @@ export const CoreCreatorDetails: React.FC = () => {
                       type="button"
                       onClick={() => setMediaType('video')}
                       className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold border transition-colors cursor-pointer ${
-                        mediaType === 'video' ? 'bg-brand-500 text-white border-brand-500' : 'bg-white text-slate-700 border-slate-200'
+                        mediaType === 'video' ? 'bg-brand-500 text-white border-brand-500' : 'bg-white text-[#64748B] border-slate-200 hover:text-[#172554]'
                       }`}
                     >
                       Video Highlight
@@ -1697,20 +1697,20 @@ export const CoreCreatorDetails: React.FC = () => {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-xs font-bold text-slate-800 mb-1">
-                    Media URL (Direct Link to Image or Video) <span className="text-slate-400 font-normal">(Optional, default provided)</span>
+                  <label className="block text-xs font-bold text-[#172554] mb-1">
+                    Media URL (Direct Link to Image or Video) <span className="text-[#64748B] font-normal">(Optional, default provided)</span>
                   </label>
                   <input
                     type="url"
                     value={mediaUrl}
                     onChange={e => setMediaUrl(e.target.value)}
                     placeholder="https://images.unsplash.com/photo-..."
-                    className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-brand-500"
+                    className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs text-[#172554] placeholder-[#94A3B8] focus:outline-none focus:border-brand-500"
                   />
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-xs font-bold text-slate-800 mb-1">
+                  <label className="block text-xs font-bold text-[#172554] mb-1">
                     Brief Caption / Description
                   </label>
                   <input
@@ -1718,7 +1718,7 @@ export const CoreCreatorDetails: React.FC = () => {
                     value={mediaDesc}
                     onChange={e => setMediaDesc(e.target.value)}
                     placeholder="Short description of this highlight..."
-                    className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-brand-500"
+                    className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs text-[#172554] placeholder-[#94A3B8] focus:outline-none focus:border-brand-500"
                   />
                 </div>
               </div>
@@ -1727,7 +1727,7 @@ export const CoreCreatorDetails: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowMediaUploadForm(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-white hover:bg-[#F8FAFC] text-[#64748B] hover:text-[#172554] border border-slate-200/90 font-bold text-xs cursor-pointer transition-colors"
                 >
                   Cancel
                 </button>
@@ -1744,10 +1744,10 @@ export const CoreCreatorDetails: React.FC = () => {
 
           {/* Media Grid */}
           {(!currentInfluencer.gallery || currentInfluencer.gallery.length === 0) ? (
-            <div className="p-8 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200 space-y-2">
-              <ImageIcon className="w-8 h-8 text-slate-300 mx-auto" />
-              <p className="text-xs font-bold text-slate-700">No showcase media added yet</p>
-              <p className="text-[11px] text-slate-400 max-w-sm mx-auto">
+            <div className="p-8 text-center bg-[#F8FAFC] rounded-2xl border border-dashed border-slate-200 space-y-2">
+              <ImageIcon className="w-8 h-8 text-[#94A3B8] mx-auto" />
+              <p className="text-xs font-bold text-[#172554]">No showcase media added yet</p>
+              <p className="text-[11px] text-[#64748B] max-w-sm mx-auto">
                 Upload pictures, event photos, or video thumbnails to stand out in the BookMyStar marketplace.
               </p>
             </div>
@@ -1756,7 +1756,7 @@ export const CoreCreatorDetails: React.FC = () => {
               {currentInfluencer.gallery.map(item => (
                 <div
                   key={item.id}
-                  className="group rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col"
+                  className="group rounded-2xl border border-slate-200/90 bg-white overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col"
                 >
                   <div className="aspect-video bg-slate-100 relative overflow-hidden">
                     <img
@@ -1773,23 +1773,23 @@ export const CoreCreatorDetails: React.FC = () => {
 
                   <div className="p-3 flex-1 flex flex-col justify-between space-y-2">
                     <div>
-                      <h4 className="text-xs font-bold text-slate-900 truncate" title={item.title}>
+                      <h4 className="text-xs font-bold text-[#172554] truncate" title={item.title}>
                         {item.title}
                       </h4>
-                      <p className="text-[10px] text-slate-500 line-clamp-1 mt-0.5">
+                      <p className="text-[10px] text-[#64748B] line-clamp-1 mt-0.5">
                         {item.description}
                       </p>
                     </div>
 
                     <div className="flex items-center justify-between pt-2 border-t border-slate-100">
-                      <span className="text-[9px] text-slate-400 font-medium">
+                      <span className="text-[9px] text-[#64748B] font-medium">
                         {item.uploadedAt}
                       </span>
                       <div className="flex items-center gap-1">
                         <button
                           type="button"
                           onClick={() => setMediaPreviewModal(item)}
-                          className="p-1.5 rounded-lg text-slate-500 hover:text-brand-600 hover:bg-slate-100 transition-colors cursor-pointer"
+                          className="p-1.5 rounded-lg text-[#64748B] hover:text-brand-600 hover:bg-[#F8FAFC] transition-colors cursor-pointer"
                           title="Preview media"
                         >
                           <Eye className="w-3.5 h-3.5" />
@@ -1797,7 +1797,7 @@ export const CoreCreatorDetails: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => deleteGalleryItem(currentInfluencer.id, item.id)}
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                          className="p-1.5 rounded-lg text-[#64748B] hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
                           title="Delete media"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -1812,17 +1812,17 @@ export const CoreCreatorDetails: React.FC = () => {
         </div>
 
         {/* ================= 6. PUBLIC PROFILE PREVIEW PANEL ================= */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-soft space-y-4">
+        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200/60 flex items-center justify-center">
-                <Eye className="w-4 h-4" />
+              <div className="w-8 h-8 rounded-xl bg-[#EFF6FF] text-[#1D4ED8] border border-[#DBEAFE] flex items-center justify-center">
+                <Eye className="w-4 h-4 text-[#1D4ED8]" />
               </div>
               <div>
-                <h2 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider">
+                <h2 className="text-sm font-extrabold text-[#172554] uppercase tracking-wider">
                   Public Creator Profile Preview
                 </h2>
-                <p className="text-[11px] text-slate-500">
+                <p className="text-[11px] text-[#64748B]">
                   How your profile card, credentials, and showcase will appear to fans in the marketplace.
                 </p>
               </div>
@@ -1834,7 +1834,7 @@ export const CoreCreatorDetails: React.FC = () => {
                 setSelectedInfluencerId(currentInfluencer.id);
                 setActiveView('influencer-detail');
               }}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors cursor-pointer self-start sm:self-auto"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#F8FAFC] hover:bg-[#EFF6FF] text-[#172554] border border-slate-200/90 text-xs font-bold transition-colors cursor-pointer self-start sm:self-auto"
             >
               <ExternalLink className="w-3.5 h-3.5 text-brand-500" />
               <span>Open Fan Discovery View</span>
@@ -1842,7 +1842,7 @@ export const CoreCreatorDetails: React.FC = () => {
           </div>
 
           {/* Compact Fan Preview Card */}
-          <div className="rounded-2xl border border-slate-200 overflow-hidden bg-slate-50/60 shadow-xs">
+          <div className="rounded-2xl border border-slate-200 overflow-hidden bg-[#F8FAFC] shadow-xs">
             {/* Banner */}
             <div className="h-20 bg-gradient-to-r from-slate-900 via-slate-800 to-brand-900 relative">
               <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-black/40 backdrop-blur-md px-2.5 py-0.5 rounded-full text-white text-[11px] font-semibold">
@@ -1862,7 +1862,7 @@ export const CoreCreatorDetails: React.FC = () => {
                   </div>
                   <div className="pb-1">
                     <div className="flex items-center gap-1.5">
-                      <h3 className="text-base font-extrabold text-slate-900 leading-tight">
+                      <h3 className="text-base font-extrabold text-[#172554] leading-tight">
                         {name || 'Creator Name'}
                       </h3>
                       {currentInfluencer.isVerified && (
@@ -1873,7 +1873,7 @@ export const CoreCreatorDetails: React.FC = () => {
                       {handle || '@username'}
                     </p>
                     {professionalTitle && (
-                      <p className="text-[11px] text-slate-600 font-semibold mt-0.5">
+                      <p className="text-[11px] text-[#64748B] font-semibold mt-0.5">
                         {professionalTitle}
                       </p>
                     )}
@@ -1891,13 +1891,13 @@ export const CoreCreatorDetails: React.FC = () => {
               </div>
 
               {/* Bio Snippet */}
-              <div className="p-3 rounded-xl bg-white border border-slate-200 text-xs text-slate-600 leading-relaxed">
+              <div className="p-3 rounded-xl bg-white border border-slate-200 text-xs text-[#64748B] leading-relaxed">
                 {bio || 'Your public creator bio will appear here to prospective fans.'}
               </div>
 
               {/* Social Media Links Bar */}
               <div className="flex items-center gap-2 pt-1 border-t border-slate-200 flex-wrap">
-                <span className="text-[10px] font-semibold text-slate-500 mr-1">Connected Channels:</span>
+                <span className="text-[10px] font-semibold text-[#64748B] mr-1">Connected Channels:</span>
                 {socialLinksList.map(link => {
                   const plat = SUPPORTED_PLATFORMS.find(p => p.name === link.platform);
                   const Icon = plat?.icon || Globe;
@@ -1915,14 +1915,14 @@ export const CoreCreatorDetails: React.FC = () => {
                   );
                 })}
                 {socialLinksList.length === 0 && (
-                  <span className="text-[10px] italic text-slate-400">No social media links connected</span>
+                  <span className="text-[10px] italic text-[#64748B]">No social media links connected</span>
                 )}
               </div>
 
               {/* Uploaded Content Thumbnails Preview */}
               {currentInfluencer.gallery && currentInfluencer.gallery.length > 0 && (
                 <div className="pt-2 border-t border-slate-200">
-                  <div className="text-[10px] font-semibold text-slate-500 mb-2">
+                  <div className="text-[10px] font-semibold text-[#64748B] mb-2">
                     Showcase Content ({currentInfluencer.gallery.length})
                   </div>
                   <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
@@ -1950,15 +1950,15 @@ export const CoreCreatorDetails: React.FC = () => {
         </div>
 
         {/* ================= 7. FOOTER ACTIONS ================= */}
-        <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-soft flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="text-xs text-slate-500">
+        <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="text-xs text-[#64748B]">
             {isDirty ? (
               <span className="text-amber-600 font-bold flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
                 You have unsaved creator profile changes
               </span>
             ) : (
-              <span className="text-slate-400 flex items-center gap-1">
+              <span className="text-[#64748B] flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
                 All profile information is synchronized
               </span>
@@ -1970,7 +1970,7 @@ export const CoreCreatorDetails: React.FC = () => {
               type="button"
               onClick={handleReset}
               disabled={!isDirty || isSaving}
-              className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 disabled:opacity-40 font-bold text-xs transition-colors cursor-pointer"
+              className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#F8FAFC] hover:bg-slate-100 text-[#64748B] hover:text-[#172554] border border-slate-200/90 disabled:opacity-40 font-bold text-xs transition-colors cursor-pointer"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Cancel</span>
@@ -2001,18 +2001,18 @@ export const CoreCreatorDetails: React.FC = () => {
       {/* ================= DIRECT IMAGE URL MODAL ================= */}
       {showUrlModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 border border-slate-200 shadow-2xl space-y-4">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 border border-slate-200/90 shadow-2xl space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <h4 className="text-sm font-bold text-slate-900">Direct Profile Picture URL</h4>
+              <h4 className="text-sm font-bold text-[#172554]">Direct Profile Picture URL</h4>
               <button
                 type="button"
                 onClick={() => setShowUrlModal(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-700"
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-700 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-[#64748B]">
               Enter a direct web image link (Unsplash, Cloudinary, AWS S3, etc.) for your creator profile photo:
             </p>
             <input
@@ -2020,20 +2020,20 @@ export const CoreCreatorDetails: React.FC = () => {
               value={customUrlInput}
               onChange={e => setCustomUrlInput(e.target.value)}
               placeholder="https://images.unsplash.com/..."
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-brand-500"
+              className="w-full px-4 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-200 text-xs text-[#172554] placeholder-[#94A3B8] focus:outline-none focus:border-brand-500 focus:bg-white transition-all"
             />
             <div className="flex justify-end gap-2 pt-2">
               <button
                 type="button"
                 onClick={() => setShowUrlModal(false)}
-                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold"
+                className="px-4 py-2 rounded-xl bg-[#F8FAFC] hover:bg-slate-100 text-[#64748B] hover:text-[#172554] border border-slate-200 text-xs font-bold cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleApplyCustomUrl}
-                className="px-5 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold"
+                className="px-5 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold shadow-sm shadow-brand-500/25 cursor-pointer"
               >
                 Apply Image
               </button>
@@ -2045,9 +2045,9 @@ export const CoreCreatorDetails: React.FC = () => {
       {/* ================= MEDIA PREVIEW MODAL ================= */}
       {mediaPreviewModal && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-white rounded-3xl max-w-xl w-full overflow-hidden shadow-2xl border border-slate-200">
+          <div className="bg-white rounded-3xl max-w-xl w-full overflow-hidden shadow-2xl border border-slate-200/90">
             <div className="p-4 border-b border-slate-100 flex items-center justify-between">
-              <h4 className="text-xs font-bold text-slate-900 truncate">{mediaPreviewModal.title}</h4>
+              <h4 className="text-xs font-bold text-[#172554] truncate">{mediaPreviewModal.title}</h4>
               <button
                 type="button"
                 onClick={() => setMediaPreviewModal(null)}
@@ -2060,8 +2060,8 @@ export const CoreCreatorDetails: React.FC = () => {
               <img src={mediaPreviewModal.url} alt={mediaPreviewModal.title} className="max-h-full max-w-full object-contain" />
             </div>
             <div className="p-4 space-y-1">
-              <p className="text-xs text-slate-600">{mediaPreviewModal.description}</p>
-              <span className="text-[10px] text-slate-400">Uploaded {mediaPreviewModal.uploadedAt}</span>
+              <p className="text-xs text-[#64748B]">{mediaPreviewModal.description}</p>
+              <span className="text-[10px] text-[#64748B]/70">Uploaded {mediaPreviewModal.uploadedAt}</span>
             </div>
           </div>
         </div>
