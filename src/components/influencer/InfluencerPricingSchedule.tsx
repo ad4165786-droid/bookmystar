@@ -7,7 +7,6 @@ import {
   CustomDateOverrideConfig,
   Booking
 } from '../../types';
-import { ClockTimeSelector, SlotItem } from '../common/ClockTimeSelector';
 import { 
   Calendar as CalendarIcon, 
   Clock, 
@@ -205,9 +204,6 @@ export const InfluencerPricingSchedule: React.FC = () => {
     tomorrow.setDate(tomorrow.getDate() + 1);
     return tomorrow.toISOString().split('T')[0];
   });
-
-  // Preview Selected Slot for ClockTimeSelector
-  const [previewSelectedSlot, setPreviewSelectedSlot] = useState<SlotItem | null>(null);
 
   // UI state feedback
   const [isSaving, setIsSaving] = useState(false);
@@ -449,51 +445,6 @@ export const InfluencerPricingSchedule: React.FC = () => {
     showToast('Weekly routine working hours updated and applied across all calendar weeks!');
   };
 
-  // --- Generated Preview Available Slots for Selected Date (ClockTimeSelector) ---
-  const previewDate = section2SelectedDate;
-  const generatedSlotsForDate: SlotItem[] = useMemo(() => {
-    const status = getDateAvailabilityStatus(previewDate);
-    if (!status.available) return [];
-
-    let intervals: TimeIntervalItem[] = [];
-    if (customOverrides[previewDate]?.intervals) {
-      intervals = customOverrides[previewDate].intervals!;
-    } else {
-      const dateObj = new Date(previewDate + 'T00:00:00');
-      let dayIdx = dateObj.getDay() - 1;
-      if (dayIdx === -1) dayIdx = 6;
-      intervals = weeklySchedule[dayIdx]?.intervals || [];
-    }
-
-    const slotDuration = 30; // 30-min slot interval
-    const buffer = preferences.bufferMinutes || 10;
-    const step = slotDuration + buffer;
-    const dateBookings = getBookingsForDate(previewDate);
-    const bookedTimes = new Set(dateBookings.map(b => b.scheduledTime));
-
-    const slots: SlotItem[] = [];
-
-    intervals.forEach(inv => {
-      const startMin = timeToMinutes(inv.start);
-      const endMin = timeToMinutes(inv.end);
-
-      for (let m = startMin; m + slotDuration <= endMin; m += step) {
-        const timeLabel = minutesToTime(m);
-        if (!bookedTimes.has(timeLabel)) {
-          slots.push({
-            coachId: currentInfluencer.id,
-            coachName: currentInfluencer.name,
-            date: previewDate,
-            slot: timeLabel,
-            timezone: 'Asia/Kolkata'
-          });
-        }
-      }
-    });
-
-    return slots;
-  }, [previewDate, weeklySchedule, blockedDates, customOverrides, isTakingBookings, preferences, creatorBookings, currentInfluencer]);
-
   // --- Reset All Changes ---
   const handleReset = () => {
     setWeeklySchedule(initialWeeklySchedule);
@@ -559,10 +510,10 @@ export const InfluencerPricingSchedule: React.FC = () => {
   }, [section2MonthDate]);
 
   return (
-    <div className="space-y-8 pb-24 max-w-7xl mx-auto font-sans">
+    <div className="space-y-5 pb-16 max-w-7xl mx-auto font-sans">
       
       {/* ================= PAGE HEADER ================= */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#E2E8F0] shadow-sm">
+      <div className="bg-white rounded-2xl p-4 sm:p-6 border border-[#E2E8F0] shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           
           <div className="flex items-start sm:items-center gap-4">
@@ -636,10 +587,10 @@ export const InfluencerPricingSchedule: React.FC = () => {
       </div>
 
       {/* ================= AVAILABILITY OVERVIEW (Compact Summary Cards) ================= */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         
         {/* Card 1: Availability Status Toggle */}
-        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm flex items-center justify-between">
+        <div className="p-3.5 sm:p-4 rounded-xl bg-white border border-[#E2E8F0] shadow-sm flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider block">
               Availability Status
@@ -669,7 +620,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
         </div>
 
         {/* Card 2: Available Days */}
-        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm flex items-center justify-between">
+        <div className="p-3.5 sm:p-4 rounded-xl bg-white border border-[#E2E8F0] shadow-sm flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider block">
               Available Days
@@ -687,7 +638,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
         </div>
 
         {/* Card 3: Working Hours Average */}
-        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm flex items-center justify-between">
+        <div className="p-3.5 sm:p-4 rounded-xl bg-white border border-[#E2E8F0] shadow-sm flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider block">
               Working Hours
@@ -710,7 +661,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
         </div>
 
         {/* Card 4: Upcoming Bookings */}
-        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm flex items-center justify-between">
+        <div className="p-3.5 sm:p-4 rounded-xl bg-white border border-[#E2E8F0] shadow-sm flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider block">
               Upcoming Bookings
@@ -729,276 +680,28 @@ export const InfluencerPricingSchedule: React.FC = () => {
 
       </div>
 
-      {/* ================= SECTION 1: CALENDAR & BLACKOUT DATES ================= */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        {/* Left Section – Monthly Calendar (7 cols) */}
-        <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-[#E2E8F0] shadow-sm space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-[#F2F7FF] text-[#102B5C] border border-[#DBEAFE] flex items-center justify-center">
-                <CalendarDays className="w-4 h-4 text-[#102B5C]" />
-              </div>
-              <div>
-                <h2 className="text-base font-extrabold text-[#102B5C] tracking-tight">
-                  Calendar & Blackout Dates
-                </h2>
-                <p className="text-xs text-[#64748B]">
-                  Click any date to block it or set custom date-specific hours.
-                </p>
-              </div>
-            </div>
-
-            {/* Month Navigation & Today Shortcut */}
-            <div className="flex items-center gap-1.5 self-start sm:self-auto">
-              <button
-                type="button"
-                onClick={() => {
-                  const today = new Date();
-                  setSection1MonthDate(new Date(today.getFullYear(), today.getMonth(), 1));
-                  setSection1SelectedDate(today.toISOString().split('T')[0]);
-                }}
-                className="px-3 py-1.5 rounded-xl bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] text-xs font-bold transition-colors cursor-pointer mr-1"
-              >
-                Today
-              </button>
-              <button
-                type="button"
-                onClick={() => setSection1MonthDate(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))}
-                className="p-1.5 rounded-xl bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] transition-colors cursor-pointer"
-                title="Previous Month"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <span className="text-xs font-extrabold text-[#102B5C] px-2 min-w-[130px] text-center">
-                {section1MonthDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
-              </span>
-              <button
-                type="button"
-                onClick={() => setSection1MonthDate(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1))}
-                className="p-1.5 rounded-xl bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] transition-colors cursor-pointer"
-                title="Next Month"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
-          {/* 7-Day Monthly Calendar Grid */}
-          <div>
-            <div className="grid grid-cols-7 gap-1 text-center pb-2 border-b border-slate-100">
-              {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(wd => (
-                <span key={wd} className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">
-                  {wd}
-                </span>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-7 gap-1.5 pt-2">
-              {section1Days.map((cell) => {
-                const isSelected = section1SelectedDate === cell.dateStr;
-                const status = getDateAvailabilityStatus(cell.dateStr);
-                const isBlocked = blockedDates.includes(cell.dateStr);
-                const dayBookings = getBookingsForDate(cell.dateStr);
-                const hasBookings = dayBookings.length > 0;
-                const isPast = cell.dateStr < todayStr;
-                const isToday = cell.dateStr === todayStr;
-
-                return (
-                  <button
-                    key={cell.dateStr}
-                    type="button"
-                    onClick={() => setSection1SelectedDate(cell.dateStr)}
-                    className={`aspect-square p-1.5 rounded-xl border text-center transition-all cursor-pointer flex flex-col items-center justify-between relative ${
-                      isSelected
-                        ? 'border-2 border-[#FF7417] bg-[#FF7417]/10 text-[#102B5C] font-black shadow-sm ring-2 ring-[#FF7417]/20'
-                        : isBlocked
-                        ? 'bg-[#FEF2F2] border-[#FECACA] text-[#B91C1C] hover:bg-red-100/70'
-                        : isPast
-                        ? 'bg-slate-50/60 border-slate-100 text-slate-300'
-                        : status.available
-                        ? 'bg-[#ECFDF5]/60 hover:bg-[#ECFDF5] border-[#A7F3D0]/80 text-[#102B5C] font-semibold'
-                        : 'bg-slate-50 border-slate-100 text-slate-400'
-                    } ${!cell.isCurrentMonth ? 'opacity-35' : ''}`}
-                  >
-                    <div className="w-full flex items-center justify-between text-[11px] leading-none">
-                      <span className={isSelected ? 'font-black text-[#FF7417]' : ''}>
-                        {cell.dayNum}
-                      </span>
-                      {isToday && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#FF7417]" title="Today" />
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-1 justify-center w-full">
-                      {isBlocked ? (
-                        <span className="text-[9px] font-bold text-[#B91C1C] bg-red-100 px-1 py-0.5 rounded">
-                          Off
-                        </span>
-                      ) : hasBookings ? (
-                        <span className="text-[9px] font-bold text-amber-800 bg-amber-100 px-1 rounded flex items-center gap-1">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#FF7417]" />
-                          <span>{dayBookings.length}</span>
-                        </span>
-                      ) : status.isCustom ? (
-                        <span className="text-[9px] font-bold text-blue-700 bg-blue-100 px-1 rounded">
-                          Mod
-                        </span>
-                      ) : null}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Color Legend */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100 text-[11px] font-semibold text-[#64748B]">
-            <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-md bg-[#ECFDF5] border border-[#A7F3D0]" />
-              <span>Available</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-md bg-[#FEF2F2] border border-[#FECACA]" />
-              <span>Blocked Date (Off)</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-md bg-amber-100 border border-amber-300 flex items-center justify-center">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#FF7417]" />
-              </span>
-              <span>Has Bookings</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-md bg-[#FF7417]/10 border-2 border-[#FF7417]" />
-              <span>Selected</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Section – Date Configuration (5 cols) */}
-        <div className="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-8 border border-[#E2E8F0] shadow-sm flex flex-col justify-between space-y-6">
-          <div className="space-y-4">
-            
-            <div className="pb-3 border-b border-slate-100 flex items-center justify-between">
-              <div>
-                <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider block">
-                  Date Configuration
-                </span>
-                <h3 className="text-base font-extrabold text-[#102B5C]">
-                  {new Date(section1SelectedDate + 'T00:00:00').toLocaleDateString('default', {
-                    weekday: 'long',
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric'
-                  })}
-                </h3>
-              </div>
-
-              <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
-                isDateBlocked(section1SelectedDate)
-                  ? 'bg-[#FEF2F2] text-[#B91C1C] border border-[#FECACA]'
-                  : getDateAvailabilityStatus(section1SelectedDate).available
-                  ? 'bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]'
-                  : 'bg-slate-100 text-slate-500'
-              }`}>
-                {isDateBlocked(section1SelectedDate)
-                  ? 'Unavailable / Blocked'
-                  : getDateAvailabilityStatus(section1SelectedDate).available
-                  ? 'Available'
-                  : 'Routine Off'}
-              </span>
-            </div>
-
-            <div className="p-4 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2.5 text-xs">
-              <div className="flex items-start justify-between gap-2">
-                <span className="text-[#64748B] font-medium shrink-0">Routine Schedule:</span>
-                <span className="font-bold text-[#102B5C] text-right">
-                  {(() => {
-                    const dateObj = new Date(section1SelectedDate + 'T00:00:00');
-                    let dayIdx = dateObj.getDay() - 1;
-                    if (dayIdx === -1) dayIdx = 6;
-                    const dayItem = weeklySchedule[dayIdx];
-                    return dayItem?.enabled 
-                      ? dayItem.intervals.map(i => `${i.start} – ${i.end}`).join(', ')
-                      : `Not taking bookings on ${dayItem?.day || 'this day'}s`;
-                  })()}
-                </span>
-              </div>
-
-              {customOverrides[section1SelectedDate] && (
-                <div className="flex items-center justify-between text-blue-700 font-semibold pt-1 border-t border-slate-200">
-                  <span className="text-xs">Custom Override:</span>
-                  <span className="text-xs">
-                    {customOverrides[section1SelectedDate].intervals?.map(i => `${i.start} – ${i.end}`).join(', ') || 'Custom Hours'}
-                  </span>
-                </div>
-              )}
-
-              <div className="flex items-center justify-between pt-1 border-t border-slate-200">
-                <span className="text-[#64748B] font-medium">Confirmed Fan Bookings:</span>
-                <span className="font-bold text-[#102B5C] flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-[#FF7417]" />
-                  <span>{getBookingsForDate(section1SelectedDate).length} session(s)</span>
-                </span>
-              </div>
-            </div>
-
-            <div className="space-y-2.5 pt-2">
-              <button
-                type="button"
-                onClick={() => handleBlockDateClick(section1SelectedDate)}
-                className={`w-full py-2.5 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer border shadow-xs ${
-                  isDateBlocked(section1SelectedDate)
-                    ? 'bg-[#ECFDF5] hover:bg-emerald-100 text-[#065F46] border-[#A7F3D0]'
-                    : 'bg-[#FEF2F2] hover:bg-red-100 text-[#B91C1C] border-[#FECACA]'
-                }`}
-              >
-                <Ban className="w-4 h-4" />
-                <span>
-                  {isDateBlocked(section1SelectedDate) ? 'Unblock Date (Allow Bookings)' : 'Mark Date Unavailable (Block Date)'}
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleOpenCustomHoursModal(section1SelectedDate)}
-                className="w-full py-2.5 px-4 rounded-xl bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs"
-              >
-                <Sliders className="w-4 h-4 text-[#FF7417]" />
-                <span>Set Custom Hours for this Date</span>
-              </button>
-            </div>
-          </div>
-
-          <p className="text-[11px] text-[#64748B] text-center pt-2 border-t border-slate-100">
-            Changes will take effect once you click <span className="font-bold text-[#102B5C]">Save Changes</span>.
-          </p>
-        </div>
-
-      </div>
-
-      {/* ================= SECTION 2: WEEKLY WORKING HOURS (CALENDAR-BASED INTERFACE) ================= */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      {/* ================= 1. WEEKLY WORKING HOURS (CALENDAR-BASED INTERFACE) ================= */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         
         {/* Left Section – Weekly Working Hours Monthly Calendar (7 cols) */}
-        <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-[#E2E8F0] shadow-sm space-y-6">
+        <div className="lg:col-span-7 bg-white rounded-2xl p-4 sm:p-5 border border-[#E2E8F0] shadow-sm space-y-3">
           
           {/* Header with Title + Configure Routine Button */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-[#F2F7FF] text-[#102B5C] border border-[#DBEAFE] flex items-center justify-center">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-slate-100">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-[#F2F7FF] text-[#102B5C] border border-[#DBEAFE] flex items-center justify-center shrink-0">
                 <Clock className="w-4 h-4 text-[#102B5C]" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="text-base font-extrabold text-[#102B5C] tracking-tight">
+                  <h2 className="text-sm sm:text-base font-extrabold text-[#102B5C] tracking-tight">
                     Weekly Working Hours
                   </h2>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
-                    Recurring Schedule
+                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
+                    Recurring
                   </span>
                 </div>
-                <p className="text-xs text-[#64748B]">
+                <p className="text-[11px] text-[#64748B]">
                   View and manage your recurring weekly working hours across the monthly calendar.
                 </p>
               </div>
@@ -1009,7 +712,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
               <button
                 type="button"
                 onClick={() => handleOpenRoutineModal()}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] text-xs font-bold transition-colors cursor-pointer shadow-2xs"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] text-xs font-bold transition-colors cursor-pointer shadow-2xs"
                 title="Configure Monday–Sunday recurring routine hours"
               >
                 <Sliders className="w-3.5 h-3.5 text-[#FF7417]" />
@@ -1018,13 +721,13 @@ export const InfluencerPricingSchedule: React.FC = () => {
             </div>
           </div>
 
-          {/* Month Navigation & Today Shortcut for Section 2 */}
-          <div className="flex items-center justify-between pb-1">
-            <span className="text-xs font-bold text-[#64748B]">
+          {/* Month Navigation & Today Shortcut for Weekly Working Hours */}
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold text-[#64748B]">
               Recurring Schedule Overview
             </span>
 
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1">
               <button
                 type="button"
                 onClick={() => {
@@ -1032,25 +735,25 @@ export const InfluencerPricingSchedule: React.FC = () => {
                   setSection2MonthDate(new Date(today.getFullYear(), today.getMonth(), 1));
                   setSection2SelectedDate(today.toISOString().split('T')[0]);
                 }}
-                className="px-3 py-1.5 rounded-xl bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] text-xs font-bold transition-colors cursor-pointer mr-1"
+                className="px-2.5 py-1 rounded-lg bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] text-xs font-bold transition-colors cursor-pointer mr-1"
               >
                 Today
               </button>
               <button
                 type="button"
                 onClick={() => setSection2MonthDate(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))}
-                className="p-1.5 rounded-xl bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] transition-colors cursor-pointer"
+                className="p-1 rounded-lg bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] transition-colors cursor-pointer"
                 title="Previous Month"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
-              <span className="text-xs font-extrabold text-[#102B5C] px-2 min-w-[130px] text-center">
+              <span className="text-xs font-extrabold text-[#102B5C] px-1.5 min-w-[120px] text-center">
                 {section2MonthDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
               </span>
               <button
                 type="button"
                 onClick={() => setSection2MonthDate(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1))}
-                className="p-1.5 rounded-xl bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] transition-colors cursor-pointer"
+                className="p-1 rounded-lg bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] transition-colors cursor-pointer"
                 title="Next Month"
               >
                 <ChevronRight className="w-4 h-4" />
@@ -1058,17 +761,17 @@ export const InfluencerPricingSchedule: React.FC = () => {
             </div>
           </div>
 
-          {/* Monthly Calendar Grid for Section 2 */}
+          {/* Monthly Calendar Grid for Weekly Working Hours */}
           <div>
-            <div className="grid grid-cols-7 gap-1 text-center pb-2 border-b border-slate-100">
+            <div className="grid grid-cols-7 gap-1 text-center pb-1 border-b border-slate-100">
               {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(wd => (
-                <span key={wd} className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">
+                <span key={wd} className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">
                   {wd}
                 </span>
               ))}
             </div>
 
-            <div className="grid grid-cols-7 gap-1.5 pt-2">
+            <div className="grid grid-cols-7 gap-1 pt-1">
               {section2Days.map((cell) => {
                 const isSelected = section2SelectedDate === cell.dateStr;
                 const status = getDateAvailabilityStatus(cell.dateStr);
@@ -1083,7 +786,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
                     key={cell.dateStr}
                     type="button"
                     onClick={() => setSection2SelectedDate(cell.dateStr)}
-                    className={`aspect-square p-1.5 rounded-xl border text-center transition-all cursor-pointer flex flex-col items-center justify-between relative ${
+                    className={`h-11 sm:h-12 p-1 rounded-lg border text-center transition-all cursor-pointer flex flex-col items-center justify-between relative ${
                       isSelected
                         ? 'border-2 border-[#FF7417] bg-[#FF7417]/10 text-[#102B5C] font-black shadow-sm ring-2 ring-[#FF7417]/20'
                         : isBlocked
@@ -1106,16 +809,16 @@ export const InfluencerPricingSchedule: React.FC = () => {
 
                     <div className="flex items-center gap-1 justify-center w-full">
                       {isBlocked ? (
-                        <span className="text-[9px] font-bold text-[#B91C1C] bg-red-100 px-1 py-0.5 rounded">
+                        <span className="text-[8.5px] font-bold text-[#B91C1C] bg-red-100 px-1 py-0.2 rounded">
                           Off
                         </span>
                       ) : hasBookings ? (
-                        <span className="text-[9px] font-bold text-amber-800 bg-amber-100 px-1 rounded flex items-center gap-1">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#FF7417]" />
+                        <span className="text-[8.5px] font-bold text-amber-800 bg-amber-100 px-1 rounded flex items-center gap-0.5">
+                          <span className="w-1 h-1 rounded-full bg-[#FF7417]" />
                           <span>{dayBookings.length}</span>
                         </span>
                       ) : status.isCustom ? (
-                        <span className="text-[9px] font-bold text-blue-700 bg-blue-100 px-1 rounded">
+                        <span className="text-[8.5px] font-bold text-blue-700 bg-blue-100 px-1 rounded">
                           Mod
                         </span>
                       ) : (
@@ -1128,39 +831,39 @@ export const InfluencerPricingSchedule: React.FC = () => {
             </div>
           </div>
 
-          {/* Color Legend for Section 2 */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100 text-[11px] font-semibold text-[#64748B]">
+          {/* Color Legend for Weekly Working Hours */}
+          <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 text-[10px] font-semibold text-[#64748B]">
             <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-md bg-[#ECFDF5] border border-[#A7F3D0]" />
+              <span className="w-2.5 h-2.5 rounded bg-[#ECFDF5] border border-[#A7F3D0]" />
               <span>Available (Routine Active)</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-md bg-[#FEF2F2] border border-[#FECACA]" />
+              <span className="w-2.5 h-2.5 rounded bg-[#FEF2F2] border border-[#FECACA]" />
               <span>Unavailable (Off)</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-md bg-amber-100 border border-amber-300 flex items-center justify-center">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#FF7417]" />
+              <span className="w-2.5 h-2.5 rounded bg-amber-100 border border-amber-300 flex items-center justify-center">
+                <span className="w-1 h-1 rounded-full bg-[#FF7417]" />
               </span>
               <span>Has Bookings</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-md bg-[#FF7417]/10 border-2 border-[#FF7417]" />
+              <span className="w-2.5 h-2.5 rounded bg-[#FF7417]/10 border-2 border-[#FF7417]" />
               <span>Selected</span>
             </div>
           </div>
         </div>
 
-        {/* Right Section – Selected Date Configuration Panel for Section 2 (5 cols) */}
-        <div className="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-8 border border-[#E2E8F0] shadow-sm flex flex-col justify-between space-y-6">
-          <div className="space-y-4">
+        {/* Right Section – Selected Date Configuration Panel for Weekly Working Hours (5 cols) */}
+        <div className="lg:col-span-5 bg-white rounded-2xl p-4 sm:p-5 border border-[#E2E8F0] shadow-sm flex flex-col justify-between space-y-3">
+          <div className="space-y-2.5">
             
-            <div className="pb-3 border-b border-slate-100 flex items-center justify-between">
+            <div className="pb-2 border-b border-slate-100 flex items-center justify-between">
               <div>
                 <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider block">
                   Date Configuration
                 </span>
-                <h3 className="text-base font-extrabold text-[#102B5C]">
+                <h3 className="text-sm sm:text-base font-extrabold text-[#102B5C]">
                   {new Date(section2SelectedDate + 'T00:00:00').toLocaleDateString('default', {
                     weekday: 'long',
                     month: 'short',
@@ -1170,7 +873,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
                 </h3>
               </div>
 
-              <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
+              <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
                 isDateBlocked(section2SelectedDate)
                   ? 'bg-[#FEF2F2] text-[#B91C1C] border border-[#FECACA]'
                   : getDateAvailabilityStatus(section2SelectedDate).available
@@ -1185,7 +888,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
               </span>
             </div>
 
-            <div className="p-4 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2.5 text-xs">
+            <div className="p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-1.5 text-xs">
               <div className="flex items-start justify-between gap-2">
                 <span className="text-[#64748B] font-medium shrink-0">Routine Schedule:</span>
                 <span className="font-bold text-[#102B5C] text-right">
@@ -1213,26 +916,26 @@ export const InfluencerPricingSchedule: React.FC = () => {
               <div className="flex items-center justify-between pt-1 border-t border-slate-200">
                 <span className="text-[#64748B] font-medium">Confirmed Fan Bookings:</span>
                 <span className="font-bold text-[#102B5C] flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-[#FF7417]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF7417]" />
                   <span>{getBookingsForDate(section2SelectedDate).length} session(s)</span>
                 </span>
               </div>
             </div>
 
-            {/* Actions for Section 2: Block Date, Custom Hours, Restore Routine */}
-            <div className="space-y-2.5 pt-2">
+            {/* Actions for Weekly Working Hours: Block Date, Custom Hours, Restore Routine */}
+            <div className="space-y-2 pt-1">
               
               {/* Action 1: Mark Date Unavailable (Block Date) */}
               <button
                 type="button"
                 onClick={() => handleBlockDateClick(section2SelectedDate)}
-                className={`w-full py-2.5 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer border shadow-xs ${
+                className={`w-full py-2 px-3.5 rounded-lg font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer border shadow-xs ${
                   isDateBlocked(section2SelectedDate)
                     ? 'bg-[#ECFDF5] hover:bg-emerald-100 text-[#065F46] border-[#A7F3D0]'
                     : 'bg-[#FEF2F2] hover:bg-red-100 text-[#B91C1C] border-[#FECACA]'
                 }`}
               >
-                <Ban className="w-4 h-4" />
+                <Ban className="w-3.5 h-3.5" />
                 <span>
                   {isDateBlocked(section2SelectedDate) ? 'Unblock Date (Allow Bookings)' : 'Mark Date Unavailable (Block Date)'}
                 </span>
@@ -1242,9 +945,9 @@ export const InfluencerPricingSchedule: React.FC = () => {
               <button
                 type="button"
                 onClick={() => handleOpenCustomHoursModal(section2SelectedDate)}
-                className="w-full py-2.5 px-4 rounded-xl bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs"
+                className="w-full py-2 px-3.5 rounded-lg bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs"
               >
-                <Sliders className="w-4 h-4 text-[#FF7417]" />
+                <Sliders className="w-3.5 h-3.5 text-[#FF7417]" />
                 <span>Set Custom Hours for this Date</span>
               </button>
 
@@ -1253,45 +956,293 @@ export const InfluencerPricingSchedule: React.FC = () => {
                 type="button"
                 onClick={() => handleRestoreRoutineSchedule(section2SelectedDate)}
                 disabled={!isDateBlocked(section2SelectedDate) && !customOverrides[section2SelectedDate]}
-                className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-[#F8FAFC] text-[#102B5C] border border-[#E2E8F0] disabled:opacity-40 font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs"
+                className="w-full py-2 px-3.5 rounded-lg bg-white hover:bg-[#F8FAFC] text-[#102B5C] border border-[#E2E8F0] disabled:opacity-40 font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs"
               >
-                <RotateCcw className="w-4 h-4 text-[#FF7417]" />
+                <RotateCcw className="w-3.5 h-3.5 text-[#FF7417]" />
                 <span>Restore Routine Schedule</span>
               </button>
 
             </div>
           </div>
 
-          <p className="text-[11px] text-[#64748B] text-center pt-2 border-t border-slate-100">
+          <p className="text-[10px] text-[#64748B] text-center pt-1.5 border-t border-slate-100">
             Weekly routine hours repeat automatically every week.
           </p>
         </div>
 
       </div>
 
+      {/* ================= 2. CALENDAR & BLACKOUT DATES ================= */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        
+        {/* Left Section – Monthly Calendar (7 cols) */}
+        <div className="lg:col-span-7 bg-white rounded-2xl p-4 sm:p-5 border border-[#E2E8F0] shadow-sm space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-slate-100">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-[#F2F7FF] text-[#102B5C] border border-[#DBEAFE] flex items-center justify-center shrink-0">
+                <CalendarDays className="w-4 h-4 text-[#102B5C]" />
+              </div>
+              <div>
+                <h2 className="text-sm sm:text-base font-extrabold text-[#102B5C] tracking-tight">
+                  Calendar & Blackout Dates
+                </h2>
+                <p className="text-[11px] text-[#64748B]">
+                  Click any date to block it or set custom date-specific hours.
+                </p>
+              </div>
+            </div>
+
+            {/* Month Navigation & Today Shortcut */}
+            <div className="flex items-center gap-1 self-start sm:self-auto">
+              <button
+                type="button"
+                onClick={() => {
+                  const today = new Date();
+                  setSection1MonthDate(new Date(today.getFullYear(), today.getMonth(), 1));
+                  setSection1SelectedDate(today.toISOString().split('T')[0]);
+                }}
+                className="px-2.5 py-1 rounded-lg bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] text-xs font-bold transition-colors cursor-pointer mr-1"
+              >
+                Today
+              </button>
+              <button
+                type="button"
+                onClick={() => setSection1MonthDate(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))}
+                className="p-1 rounded-lg bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] transition-colors cursor-pointer"
+                title="Previous Month"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <span className="text-xs font-extrabold text-[#102B5C] px-1.5 min-w-[120px] text-center">
+                {section1MonthDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
+              </span>
+              <button
+                type="button"
+                onClick={() => setSection1MonthDate(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1))}
+                className="p-1 rounded-lg bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] transition-colors cursor-pointer"
+                title="Next Month"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* 7-Day Monthly Calendar Grid */}
+          <div>
+            <div className="grid grid-cols-7 gap-1 text-center pb-1 border-b border-slate-100">
+              {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(wd => (
+                <span key={wd} className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">
+                  {wd}
+                </span>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-7 gap-1 pt-1">
+              {section1Days.map((cell) => {
+                const isSelected = section1SelectedDate === cell.dateStr;
+                const status = getDateAvailabilityStatus(cell.dateStr);
+                const isBlocked = blockedDates.includes(cell.dateStr);
+                const dayBookings = getBookingsForDate(cell.dateStr);
+                const hasBookings = dayBookings.length > 0;
+                const isPast = cell.dateStr < todayStr;
+                const isToday = cell.dateStr === todayStr;
+
+                return (
+                  <button
+                    key={cell.dateStr}
+                    type="button"
+                    onClick={() => setSection1SelectedDate(cell.dateStr)}
+                    className={`h-11 sm:h-12 p-1 rounded-lg border text-center transition-all cursor-pointer flex flex-col items-center justify-between relative ${
+                      isSelected
+                        ? 'border-2 border-[#FF7417] bg-[#FF7417]/10 text-[#102B5C] font-black shadow-sm ring-2 ring-[#FF7417]/20'
+                        : isBlocked
+                        ? 'bg-[#FEF2F2] border-[#FECACA] text-[#B91C1C] hover:bg-red-100/70'
+                        : isPast
+                        ? 'bg-slate-50/60 border-slate-100 text-slate-300'
+                        : status.available
+                        ? 'bg-[#ECFDF5]/60 hover:bg-[#ECFDF5] border-[#A7F3D0]/80 text-[#102B5C] font-semibold'
+                        : 'bg-slate-50 border-slate-100 text-slate-400'
+                    } ${!cell.isCurrentMonth ? 'opacity-35' : ''}`}
+                  >
+                    <div className="w-full flex items-center justify-between text-[11px] leading-none">
+                      <span className={isSelected ? 'font-black text-[#FF7417]' : ''}>
+                        {cell.dayNum}
+                      </span>
+                      {isToday && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#FF7417]" title="Today" />
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-1 justify-center w-full">
+                      {isBlocked ? (
+                        <span className="text-[8.5px] font-bold text-[#B91C1C] bg-red-100 px-1 py-0.2 rounded">
+                          Off
+                        </span>
+                      ) : hasBookings ? (
+                        <span className="text-[8.5px] font-bold text-amber-800 bg-amber-100 px-1 rounded flex items-center gap-0.5">
+                          <span className="w-1 h-1 rounded-full bg-[#FF7417]" />
+                          <span>{dayBookings.length}</span>
+                        </span>
+                      ) : status.isCustom ? (
+                        <span className="text-[8.5px] font-bold text-blue-700 bg-blue-100 px-1 rounded">
+                          Mod
+                        </span>
+                      ) : null}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Color Legend */}
+          <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 text-[10px] font-semibold text-[#64748B]">
+            <div className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded bg-[#ECFDF5] border border-[#A7F3D0]" />
+              <span>Available</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded bg-[#FEF2F2] border border-[#FECACA]" />
+              <span>Blocked Date (Off)</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded bg-amber-100 border border-amber-300 flex items-center justify-center">
+                <span className="w-1 h-1 rounded-full bg-[#FF7417]" />
+              </span>
+              <span>Has Bookings</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded bg-[#FF7417]/10 border-2 border-[#FF7417]" />
+              <span>Selected</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Section – Date Configuration (5 cols) */}
+        <div className="lg:col-span-5 bg-white rounded-2xl p-4 sm:p-5 border border-[#E2E8F0] shadow-sm flex flex-col justify-between space-y-3">
+          <div className="space-y-2.5">
+            
+            <div className="pb-2 border-b border-slate-100 flex items-center justify-between">
+              <div>
+                <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider block">
+                  Date Configuration
+                </span>
+                <h3 className="text-sm sm:text-base font-extrabold text-[#102B5C]">
+                  {new Date(section1SelectedDate + 'T00:00:00').toLocaleDateString('default', {
+                    weekday: 'long',
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                  })}
+                </h3>
+              </div>
+
+              <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
+                isDateBlocked(section1SelectedDate)
+                  ? 'bg-[#FEF2F2] text-[#B91C1C] border border-[#FECACA]'
+                  : getDateAvailabilityStatus(section1SelectedDate).available
+                  ? 'bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]'
+                  : 'bg-slate-100 text-slate-500'
+              }`}>
+                {isDateBlocked(section1SelectedDate)
+                  ? 'Unavailable / Blocked'
+                  : getDateAvailabilityStatus(section1SelectedDate).available
+                  ? 'Available'
+                  : 'Routine Off'}
+              </span>
+            </div>
+
+            <div className="p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-1.5 text-xs">
+              <div className="flex items-start justify-between gap-2">
+                <span className="text-[#64748B] font-medium shrink-0">Routine Schedule:</span>
+                <span className="font-bold text-[#102B5C] text-right">
+                  {(() => {
+                    const dateObj = new Date(section1SelectedDate + 'T00:00:00');
+                    let dayIdx = dateObj.getDay() - 1;
+                    if (dayIdx === -1) dayIdx = 6;
+                    const dayItem = weeklySchedule[dayIdx];
+                    return dayItem?.enabled 
+                      ? dayItem.intervals.map(i => `${i.start} – ${i.end}`).join(', ')
+                      : `Not taking bookings on ${dayItem?.day || 'this day'}s`;
+                  })()}
+                </span>
+              </div>
+
+              {customOverrides[section1SelectedDate] && (
+                <div className="flex items-center justify-between text-blue-700 font-semibold pt-1 border-t border-slate-200">
+                  <span className="text-xs">Custom Override:</span>
+                  <span className="text-xs">
+                    {customOverrides[section1SelectedDate].intervals?.map(i => `${i.start} – ${i.end}`).join(', ') || 'Custom Hours'}
+                  </span>
+                </div>
+              )}
+
+              <div className="flex items-center justify-between pt-1 border-t border-slate-200">
+                <span className="text-[#64748B] font-medium">Confirmed Fan Bookings:</span>
+                <span className="font-bold text-[#102B5C] flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF7417]" />
+                  <span>{getBookingsForDate(section1SelectedDate).length} session(s)</span>
+                </span>
+              </div>
+            </div>
+
+            <div className="space-y-2 pt-1">
+              <button
+                type="button"
+                onClick={() => handleBlockDateClick(section1SelectedDate)}
+                className={`w-full py-2 px-3.5 rounded-lg font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer border shadow-xs ${
+                  isDateBlocked(section1SelectedDate)
+                    ? 'bg-[#ECFDF5] hover:bg-emerald-100 text-[#065F46] border-[#A7F3D0]'
+                    : 'bg-[#FEF2F2] hover:bg-red-100 text-[#B91C1C] border-[#FECACA]'
+                }`}
+              >
+                <Ban className="w-3.5 h-3.5" />
+                <span>
+                  {isDateBlocked(section1SelectedDate) ? 'Unblock Date (Allow Bookings)' : 'Mark Date Unavailable (Block Date)'}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleOpenCustomHoursModal(section1SelectedDate)}
+                className="w-full py-2 px-3.5 rounded-lg bg-[#F8FAFC] hover:bg-[#F2F7FF] text-[#102B5C] border border-[#E2E8F0] font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs"
+              >
+                <Sliders className="w-3.5 h-3.5 text-[#FF7417]" />
+                <span>Set Custom Hours for this Date</span>
+              </button>
+            </div>
+          </div>
+
+          <p className="text-[10px] text-[#64748B] text-center pt-1.5 border-t border-slate-100">
+            Changes will take effect once you click <span className="font-bold text-[#102B5C]">Save Changes</span>.
+          </p>
+        </div>
+
+      </div>
+
       {/* ================= SECTION 3: BOOKING PREFERENCES (COLLAPSIBLE ACCORDION) ================= */}
-      <div className="bg-white rounded-3xl border border-[#E2E8F0] shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden">
         
         {/* Accordion Trigger */}
         <button
           type="button"
           onClick={() => setPreferencesOpen(prev => !prev)}
-          className="w-full p-6 sm:p-8 flex items-center justify-between text-left cursor-pointer hover:bg-[#F8FAFC]/50 transition-colors"
+          className="w-full p-4 sm:p-5 flex items-center justify-between text-left cursor-pointer hover:bg-[#F8FAFC]/50 transition-colors"
         >
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#F2F7FF] text-[#102B5C] border border-[#DBEAFE] flex items-center justify-center">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-[#F2F7FF] text-[#102B5C] border border-[#DBEAFE] flex items-center justify-center shrink-0">
               <Sliders className="w-4 h-4 text-[#102B5C]" />
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <h2 className="text-base font-extrabold text-[#102B5C] tracking-tight">
+                <h2 className="text-sm sm:text-base font-extrabold text-[#102B5C] tracking-tight">
                   Booking Preferences
                 </h2>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#F2F7FF] text-[#102B5C] border border-[#DBEAFE]">
-                  Advanced Rules
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#F2F7FF] text-[#102B5C] border border-[#DBEAFE]">
+                  Rules
                 </span>
               </div>
-              <p className="text-xs text-[#64748B]">
+              <p className="text-[11px] text-[#64748B]">
                 Buffer time, advance notice, daily session limits, and supported durations.
               </p>
             </div>
@@ -1302,26 +1253,26 @@ export const InfluencerPricingSchedule: React.FC = () => {
               {preferencesOpen ? 'Hide' : 'Configure'}
             </span>
             {preferencesOpen ? (
-              <ChevronUp className="w-5 h-5 text-[#64748B]" />
+              <ChevronUp className="w-4 h-4 text-[#64748B]" />
             ) : (
-              <ChevronDown className="w-5 h-5 text-[#64748B]" />
+              <ChevronDown className="w-4 h-4 text-[#64748B]" />
             )}
           </div>
         </button>
 
         {/* Accordion Body */}
         {preferencesOpen && (
-          <div className="p-6 sm:p-8 pt-0 border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
+          <div className="p-4 sm:p-5 pt-0 border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-3.5 animate-fadeIn">
             
             {/* Setting 1: Minimum Advance Booking Time */}
-            <div className="p-4.5 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2">
+            <div className="p-3.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-1.5">
               <label className="block text-xs font-bold text-[#102B5C]">
                 Minimum Advance Notice
               </label>
               <select
                 value={preferences.minNoticeHours}
                 onChange={e => setPreferences(prev => ({ ...prev, minNoticeHours: parseInt(e.target.value, 10) }))}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#E2E8F0] text-xs font-semibold text-[#102B5C] focus:outline-none focus:border-[#FF7417]"
+                className="w-full px-3 py-2 rounded-lg bg-white border border-[#E2E8F0] text-xs font-semibold text-[#102B5C] focus:outline-none focus:border-[#FF7417]"
               >
                 <option value={1}>1 hour before session</option>
                 <option value={2}>2 hours before session (Recommended)</option>
@@ -1330,20 +1281,20 @@ export const InfluencerPricingSchedule: React.FC = () => {
                 <option value={24}>24 hours (1 full day notice)</option>
                 <option value={48}>48 hours (2 days notice)</option>
               </select>
-              <p className="text-[11px] text-[#64748B]">
+              <p className="text-[10px] text-[#64748B]">
                 Prevents sudden bookings so you always have time to prepare.
               </p>
             </div>
 
             {/* Setting 2: Maximum Advance Booking Window */}
-            <div className="p-4.5 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2">
+            <div className="p-3.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-1.5">
               <label className="block text-xs font-bold text-[#102B5C]">
                 Maximum Advance Booking Window
               </label>
               <select
                 value={preferences.maxAdvanceDays}
                 onChange={e => setPreferences(prev => ({ ...prev, maxAdvanceDays: parseInt(e.target.value, 10) }))}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#E2E8F0] text-xs font-semibold text-[#102B5C] focus:outline-none focus:border-[#FF7417]"
+                className="w-full px-3 py-2 rounded-lg bg-white border border-[#E2E8F0] text-xs font-semibold text-[#102B5C] focus:outline-none focus:border-[#FF7417]"
               >
                 <option value={7}>Up to 7 days ahead</option>
                 <option value={14}>Up to 14 days ahead</option>
@@ -1351,20 +1302,20 @@ export const InfluencerPricingSchedule: React.FC = () => {
                 <option value={60}>Up to 60 days ahead</option>
                 <option value={90}>Up to 90 days ahead</option>
               </select>
-              <p className="text-[11px] text-[#64748B]">
+              <p className="text-[10px] text-[#64748B]">
                 How far into the future fans can schedule booking sessions.
               </p>
             </div>
 
             {/* Setting 3: Buffer Time Between Calls */}
-            <div className="p-4.5 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2">
+            <div className="p-3.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-1.5">
               <label className="block text-xs font-bold text-[#102B5C]">
                 Buffer Time Between Calls
               </label>
               <select
                 value={preferences.bufferMinutes}
                 onChange={e => setPreferences(prev => ({ ...prev, bufferMinutes: parseInt(e.target.value, 10) }))}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#E2E8F0] text-xs font-semibold text-[#102B5C] focus:outline-none focus:border-[#FF7417]"
+                className="w-full px-3 py-2 rounded-lg bg-white border border-[#E2E8F0] text-xs font-semibold text-[#102B5C] focus:outline-none focus:border-[#FF7417]"
               >
                 <option value={0}>0 minutes (Back-to-back)</option>
                 <option value={5}>5 minutes break</option>
@@ -1372,20 +1323,20 @@ export const InfluencerPricingSchedule: React.FC = () => {
                 <option value={15}>15 minutes break</option>
                 <option value={30}>30 minutes break</option>
               </select>
-              <p className="text-[11px] text-[#64748B]">
+              <p className="text-[10px] text-[#64748B]">
                 Automatic breathing room added between consecutive bookings.
               </p>
             </div>
 
             {/* Setting 4: Maximum Bookings per Day */}
-            <div className="p-4.5 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2">
+            <div className="p-3.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-1.5">
               <label className="block text-xs font-bold text-[#102B5C]">
                 Maximum Bookings per Day
               </label>
               <select
                 value={preferences.maxBookingsPerDay}
                 onChange={e => setPreferences(prev => ({ ...prev, maxBookingsPerDay: parseInt(e.target.value, 10) }))}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#E2E8F0] text-xs font-semibold text-[#102B5C] focus:outline-none focus:border-[#FF7417]"
+                className="w-full px-3 py-2 rounded-lg bg-white border border-[#E2E8F0] text-xs font-semibold text-[#102B5C] focus:outline-none focus:border-[#FF7417]"
               >
                 <option value={3}>Max 3 calls / day</option>
                 <option value={5}>Max 5 calls / day</option>
@@ -1393,17 +1344,17 @@ export const InfluencerPricingSchedule: React.FC = () => {
                 <option value={10}>Max 10 calls / day</option>
                 <option value={999}>Unlimited</option>
               </select>
-              <p className="text-[11px] text-[#64748B]">
+              <p className="text-[10px] text-[#64748B]">
                 Prevents creator fatigue by capping the daily booking volume.
               </p>
             </div>
 
             {/* Setting 5: Call Duration Compatibility */}
-            <div className="md:col-span-2 p-4.5 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2">
+            <div className="md:col-span-2 p-3.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-1.5">
               <label className="block text-xs font-bold text-[#102B5C]">
                 Call Duration Compatibility
               </label>
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-2.5">
                 {[10, 15, 30].map(duration => {
                   const isChecked = preferences.allowedDurations?.includes(duration);
                   return (
@@ -1419,23 +1370,23 @@ export const InfluencerPricingSchedule: React.FC = () => {
                         const updated = isChecked ? current.filter(d => d !== duration) : [...current, duration];
                         setPreferences(prev => ({ ...prev, allowedDurations: updated }));
                       }}
-                      className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer flex items-center gap-2 ${
+                      className={`px-3.5 py-1.5 rounded-lg text-xs font-bold border transition-all cursor-pointer flex items-center gap-2 ${
                         isChecked
                           ? 'bg-[#F2F7FF] text-[#102B5C] border-[#FF7417] shadow-xs'
                           : 'bg-white text-slate-400 border-[#E2E8F0] hover:bg-slate-100'
                       }`}
                     >
-                      <div className={`w-4 h-4 rounded-md flex items-center justify-center ${
+                      <div className={`w-3.5 h-3.5 rounded flex items-center justify-center ${
                         isChecked ? 'bg-[#FF7417] text-white' : 'border border-slate-300'
                       }`}>
-                        {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
+                        {isChecked && <Check className="w-2.5 h-2.5 stroke-[3]" />}
                       </div>
                       <span>{duration} Minutes Session</span>
                     </button>
                   );
                 })}
               </div>
-              <p className="text-[11px] text-[#64748B]">
+              <p className="text-[10px] text-[#64748B]">
                 Only durations enabled above will be generated as bookable slots for fans.
               </p>
             </div>
@@ -1445,52 +1396,8 @@ export const InfluencerPricingSchedule: React.FC = () => {
 
       </div>
 
-      {/* ================= SECTION 4: TIME-SLOT PREVIEW (CLOCK TIME SELECTOR) ================= */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#E2E8F0] shadow-sm space-y-6">
-        
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#F2F7FF] text-[#102B5C] border border-[#DBEAFE] flex items-center justify-center">
-              <Eye className="w-4 h-4 text-[#102B5C]" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-base font-extrabold text-[#102B5C] tracking-tight">
-                  Time-Slot Preview (Fan Booking View)
-                </h2>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
-                  {generatedSlotsForDate.length} Available Slots
-                </span>
-              </div>
-              <p className="text-xs text-[#64748B]">
-                Preview real-time slots generated for {new Date(previewDate + 'T00:00:00').toLocaleDateString('default', { month: 'short', day: 'numeric', year: 'numeric' })}.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 text-xs font-bold text-[#64748B]">
-            <span>Selected Date:</span>
-            <span className="text-[#FF7417] font-mono font-bold bg-[#F8FAFC] px-2.5 py-1 rounded-lg border border-[#E2E8F0]">
-              {previewDate}
-            </span>
-          </div>
-        </div>
-
-        {/* Embedded ClockTimeSelector Component */}
-        <ClockTimeSelector
-          availableSlots={generatedSlotsForDate}
-          selectedSlot={previewSelectedSlot}
-          onSelectSlot={setPreviewSelectedSlot}
-          selectedDate={previewDate}
-          onRetry={() => {
-            showToast('Refreshed slot calculation.');
-          }}
-        />
-
-      </div>
-
-      {/* ================= SECTION 5: FOOTER SAVE ACTIONS ================= */}
-      <div className="bg-white rounded-3xl p-6 border border-[#E2E8F0] shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+      {/* ================= SECTION 4: FOOTER SAVE ACTIONS ================= */}
+      <div className="bg-white rounded-2xl p-4 sm:p-5 border border-[#E2E8F0] shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
         <div className="text-xs text-[#64748B]">
           {isDirty ? (
             <span className="text-amber-600 font-bold flex items-center gap-1.5">
