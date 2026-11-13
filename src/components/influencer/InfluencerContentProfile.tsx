@@ -59,7 +59,7 @@ export const InfluencerContentProfile: React.FC = () => {
     <div className="space-y-6 pb-16 max-w-7xl mx-auto">
       
       {/* Studio Profile Top Navigation Tabs */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200/80">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-white border border-slate-200/90 self-start sm:self-auto shadow-sm">
           <button
             type="button"

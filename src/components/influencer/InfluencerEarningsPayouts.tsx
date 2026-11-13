@@ -1,30 +1,30 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { 
-  Wallet, 
-  TrendingUp, 
-  DollarSign, 
-  Video, 
-  PhoneCall, 
-  Building2, 
-  Smartphone, 
-  Clock, 
-  CheckCircle2, 
-  AlertCircle, 
-  ArrowUpRight, 
-  PlusCircle, 
+import {
+  Wallet,
+  TrendingUp,
+  DollarSign,
+  Video,
+  PhoneCall,
+  Building2,
+  Smartphone,
+  Clock,
+  CheckCircle2,
+  AlertCircle,
+  ArrowUpRight,
+  PlusCircle,
   FileText,
   X
 } from 'lucide-react';
 
 export const InfluencerEarningsPayouts: React.FC = () => {
-  const { 
-    currentInfluencer, 
-    bookings, 
-    payouts, 
-    requestPayout, 
-    settings, 
-    showToast 
+  const {
+    currentInfluencer,
+    bookings,
+    payouts,
+    requestPayout,
+    settings,
+    showToast
   } = useApp();
 
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
@@ -74,14 +74,11 @@ export const InfluencerEarningsPayouts: React.FC = () => {
 
   return (
     <div className="space-y-8 pb-16 max-w-5xl">
-      
+
       {/* Title */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200/80">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900">Earnings & Payout Disbursals</h1>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Transparent revenue tracking, platform commission breakdown, and direct bank/UPI withdrawals
-          </p>
         </div>
 
         <button
@@ -96,7 +93,7 @@ export const InfluencerEarningsPayouts: React.FC = () => {
 
       {/* Financial Overview Cards (Pure White Cards on Clean Neutral Background) */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-        
+
         {/* Available for Withdrawal */}
         <div className="p-6 rounded-3xl bg-white border border-slate-200/80 space-y-3 shadow-sm hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between text-xs text-slate-700 font-bold">
@@ -143,7 +140,7 @@ export const InfluencerEarningsPayouts: React.FC = () => {
 
       {/* Platform Commission & Revenue Stream Breakdown */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        
+
         {/* Commission Transparency Ledger */}
         <div className="p-6 rounded-3xl bg-white border border-slate-200/80 space-y-4 shadow-sm">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
@@ -253,13 +250,12 @@ export const InfluencerEarningsPayouts: React.FC = () => {
                       {p.destination}
                     </td>
                     <td className="py-3.5 px-3">
-                      <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                        p.status === 'paid'
+                      <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${p.status === 'paid'
                           ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                           : p.status === 'rejected'
-                          ? 'bg-rose-50 text-rose-700 border border-rose-200'
-                          : 'bg-amber-50 text-amber-700 border border-amber-200'
-                      }`}>
+                            ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                            : 'bg-amber-50 text-amber-700 border border-amber-200'
+                        }`}>
                         {p.status}
                       </span>
                     </td>
@@ -283,7 +279,7 @@ export const InfluencerEarningsPayouts: React.FC = () => {
                 <Wallet className="w-5 h-5 text-brand-500" />
                 <h3 className="text-base font-bold text-slate-900">Request Balance Withdrawal</h3>
               </div>
-              <button 
+              <button
                 onClick={() => setShowWithdrawModal(false)}
                 className="p-1 rounded-lg text-slate-400 hover:text-slate-600"
               >
@@ -318,9 +314,8 @@ export const InfluencerEarningsPayouts: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setWithdrawMethod('upi')}
-                    className={`py-2 px-3 rounded-xl font-bold border transition-all flex items-center justify-center gap-1.5 ${
-                      withdrawMethod === 'upi' ? 'bg-brand-500 text-white border-brand-500 shadow-sm' : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
-                    }`}
+                    className={`py-2 px-3 rounded-xl font-bold border transition-all flex items-center justify-center gap-1.5 ${withdrawMethod === 'upi' ? 'bg-brand-500 text-white border-brand-500 shadow-sm' : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+                      }`}
                   >
                     <Smartphone className="w-4 h-4" /> UPI Instant
                   </button>
@@ -328,9 +323,8 @@ export const InfluencerEarningsPayouts: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setWithdrawMethod('bank')}
-                    className={`py-2 px-3 rounded-xl font-bold border transition-all flex items-center justify-center gap-1.5 ${
-                      withdrawMethod === 'bank' ? 'bg-brand-500 text-white border-brand-500 shadow-sm' : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
-                    }`}
+                    className={`py-2 px-3 rounded-xl font-bold border transition-all flex items-center justify-center gap-1.5 ${withdrawMethod === 'bank' ? 'bg-brand-500 text-white border-brand-500 shadow-sm' : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+                      }`}
                   >
                     <Building2 className="w-4 h-4" /> Bank Account
                   </button>

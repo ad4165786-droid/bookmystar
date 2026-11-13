@@ -1,28 +1,28 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { GrievanceTicket } from '../../types';
-import { 
-  Star, 
-  Flag, 
-  MessageSquareWarning, 
-  ShieldAlert, 
-  LifeBuoy, 
-  CheckCircle2, 
-  AlertCircle, 
-  Plus, 
+import {
+  Star,
+  Flag,
+  MessageSquareWarning,
+  ShieldAlert,
+  LifeBuoy,
+  CheckCircle2,
+  AlertCircle,
+  Plus,
   Send,
   X
 } from 'lucide-react';
 
 export const InfluencerReviewsGrievances: React.FC = () => {
-  const { 
-    currentInfluencer, 
-    reviews, 
-    grievances, 
-    flagReview, 
-    submitGrievance, 
+  const {
+    currentInfluencer,
+    reviews,
+    grievances,
+    flagReview,
+    submitGrievance,
     replyToGrievance,
-    showToast 
+    showToast
   } = useApp();
 
   const [activeSubTab, setActiveSubTab] = useState<'reviews' | 'grievances'>('reviews');
@@ -30,7 +30,7 @@ export const InfluencerReviewsGrievances: React.FC = () => {
   const [reportSubject, setReportSubject] = useState('');
   const [reportDesc, setReportDesc] = useState('');
   const [reportCategory, setReportCategory] = useState<GrievanceTicket['category']>('behaviour');
-  
+
   // Flag review modal
   const [flaggingReviewId, setFlaggingReviewId] = useState<string | null>(null);
   const [flagReason, setFlagReason] = useState('');
@@ -74,34 +74,29 @@ export const InfluencerReviewsGrievances: React.FC = () => {
 
   return (
     <div className="space-y-6 pb-16 max-w-5xl">
-      
+
       {/* Title */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-white">Fan Reviews & Safety Reports</h1>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Monitor post-call fan ratings and report misconduct or boundary violations to platform admins
-          </p>
+          <h1 className="text-2xl font-black text-slate-900">Fan Reviews & Safety Reports</h1>
         </div>
 
         <div className="flex items-center gap-2">
           <button
             onClick={() => setActiveSubTab('reviews')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-              activeSubTab === 'reviews'
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${activeSubTab === 'reviews'
                 ? 'bg-purple-600 text-white shadow-glow'
                 : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
-            }`}
+              }`}
           >
             Fan Reviews ({creatorReviews.length})
           </button>
           <button
             onClick={() => setActiveSubTab('grievances')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-              activeSubTab === 'grievances'
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${activeSubTab === 'grievances'
                 ? 'bg-purple-600 text-white shadow-glow'
                 : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
-            }`}
+              }`}
           >
             Safety Grievances ({creatorGrievances.length})
           </button>
@@ -138,11 +133,10 @@ export const InfluencerReviewsGrievances: React.FC = () => {
               {creatorReviews.map(rev => (
                 <div
                   key={rev.id}
-                  className={`p-4 rounded-xl border text-xs space-y-2 ${
-                    rev.isFlagged
+                  className={`p-4 rounded-xl border text-xs space-y-2 ${rev.isFlagged
                       ? 'bg-rose-950/20 border-rose-500/30'
                       : 'bg-slate-900/80 border-slate-800'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
@@ -251,7 +245,7 @@ export const InfluencerReviewsGrievances: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
           <div className="w-full max-w-md rounded-2xl bg-slate-900 border border-slate-800 p-6 space-y-4 shadow-2xl">
             <h3 className="text-base font-bold text-white">Report Inappropriate Fan Feedback</h3>
-            
+
             <form onSubmit={handleFlagSubmit} className="space-y-3 text-xs">
               <div>
                 <label className="block text-slate-300 font-semibold mb-1">Reason for Flagging</label>

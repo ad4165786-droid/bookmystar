@@ -41,7 +41,7 @@ export const InfluencerBookings: React.FC = () => {
     <div className="space-y-6 pb-16">
       
       {/* Title */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200/80">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900">Call Booking Schedule</h1>
           <p className="text-xs text-slate-500 mt-0.5">Manage incoming fan requests, upcoming live calls, and completed records</p>
