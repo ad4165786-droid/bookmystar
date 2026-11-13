@@ -105,11 +105,6 @@ export const UserDashboardLayout: React.FC = () => {
               <div className="min-w-0 flex-1">
                 <h4 className="text-sm font-bold text-slate-900 truncate">{currentUser?.name}</h4>
                 <p className="text-[11px] text-slate-500 truncate">{currentUser?.email}</p>
-                <div className="mt-1 flex items-center gap-1.5 text-[10px] text-brand-700 font-bold">
-                  <span>Spent: ₹{currentUser?.totalSpent.toLocaleString('en-IN')}</span>
-                  <span>•</span>
-                  <span>{currentUser?.totalBookings} Calls</span>
-                </div>
               </div>
             </div>
           </div>
