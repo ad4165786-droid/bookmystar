@@ -1,40 +1,29 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
-import { 
-  TrendingUp, 
-  DollarSign, 
-  Calendar, 
-  Clock, 
-  Video, 
-  PhoneCall, 
-  CheckCircle2, 
-  AlertCircle, 
-  ArrowUpRight, 
-  PlusCircle, 
-  Wallet, 
-  ShieldCheck,
-  Star,
+import {
+  Calendar,
+  CheckCircle2,
+  AlertCircle,
+  ArrowUpRight,
   Radio
 } from 'lucide-react';
 
 export const InfluencerDashboard: React.FC = () => {
-  const { 
-    currentInfluencer, 
-    bookings, 
-    setActiveView, 
+  const {
+    currentInfluencer,
+    bookings,
+    setActiveView,
     navigate,
-    startCall,
-    settings 
+    startCall
   } = useApp();
 
   // Bookings for this influencer
   const creatorBookings = bookings.filter(b => b.influencerId === currentInfluencer.id);
   const upcomingBookings = creatorBookings.filter(b => b.bookingStatus === 'upcoming');
-  const completedBookings = creatorBookings.filter(b => b.bookingStatus === 'completed');
 
   return (
     <div className="space-y-8 pb-16">
-      
+
       {/* Welcome Banner */}
       <div className="relative rounded-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white p-6 sm:p-8 overflow-hidden shadow-xl border border-slate-700/80">
         <div className="absolute right-0 top-0 -mr-10 -mt-10 w-72 h-72 bg-brand-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -89,77 +78,6 @@ export const InfluencerDashboard: React.FC = () => {
             </button>
           </div>
         </div>
-      </div>
-
-      {/* Summary KPI Cards Grid (Pure White Cards on Light Neutral Background) */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-        
-        {/* Total Net Earnings */}
-        <div className="p-5 rounded-3xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-all space-y-2">
-          <div className="flex items-center justify-between text-slate-500 text-xs font-semibold">
-            <span>Total Net Earnings</span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
-              ₹
-            </div>
-          </div>
-          <div className="text-2xl font-black text-slate-900">
-            ₹{currentInfluencer.totalEarnings.toLocaleString('en-IN')}
-          </div>
-          <div className="text-[11px] text-emerald-600 flex items-center gap-1 font-semibold">
-            <TrendingUp className="w-3.5 h-3.5" />
-            <span>After {settings.commissionRate}% platform fee</span>
-          </div>
-        </div>
-
-        {/* Available for Payout */}
-        <div className="p-5 rounded-3xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-all space-y-2">
-          <div className="flex items-center justify-between text-slate-500 text-xs font-semibold">
-            <span>Available Balance</span>
-            <div className="w-8 h-8 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center">
-              <Wallet className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="text-2xl font-black text-brand-600">
-            ₹{currentInfluencer.pendingBalance.toLocaleString('en-IN')}
-          </div>
-          <div className="text-[11px] text-slate-500">
-            Min. withdrawal ₹{settings.minPayoutAmount}
-          </div>
-        </div>
-
-        {/* Upcoming Live Calls */}
-        <div className="p-5 rounded-3xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-all space-y-2">
-          <div className="flex items-center justify-between text-slate-500 text-xs font-semibold">
-            <span>Upcoming Sessions</span>
-            <div className="w-8 h-8 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center">
-              <Calendar className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="text-2xl font-black text-slate-900">
-            {upcomingBookings.length}
-          </div>
-          <div className="text-[11px] text-sky-600 font-semibold">
-            Ready to join room
-          </div>
-        </div>
-
-        {/* Rating & Completed */}
-        <div className="p-5 rounded-3xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition-all space-y-2">
-          <div className="flex items-center justify-between text-slate-500 text-xs font-semibold">
-            <span>Fan Satisfaction</span>
-            <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center">
-              <Star className="w-4 h-4 fill-amber-400" />
-            </div>
-          </div>
-          <div className="text-2xl font-black text-slate-900">
-            {currentInfluencer.rating > 0 ? currentInfluencer.rating : '5.0'}
-            <span className="text-xs text-slate-400 font-normal"> / 5.0</span>
-          </div>
-          <div className="text-[11px] text-slate-500">
-            {currentInfluencer.completedCallsCount} completed calls
-          </div>
-        </div>
-
       </div>
 
       {/* Next Upcoming Call Highlight */}
@@ -243,13 +161,12 @@ export const InfluencerDashboard: React.FC = () => {
 
                 <div className="text-right">
                   <div className="font-bold text-emerald-600">+₹{b.influencerEarnings}</div>
-                  <span className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${
-                    b.bookingStatus === 'upcoming' 
-                      ? 'bg-sky-50 text-sky-700' 
-                      : b.bookingStatus === 'completed' 
-                      ? 'bg-emerald-50 text-emerald-700' 
-                      : 'bg-slate-100 text-slate-600'
-                  }`}>
+                  <span className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${b.bookingStatus === 'upcoming'
+                      ? 'bg-sky-50 text-sky-700'
+                      : b.bookingStatus === 'completed'
+                        ? 'bg-emerald-50 text-emerald-700'
+                        : 'bg-slate-100 text-slate-600'
+                    }`}>
                     {b.bookingStatus}
                   </span>
                 </div>
