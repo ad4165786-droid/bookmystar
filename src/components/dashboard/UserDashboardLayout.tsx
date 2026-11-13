@@ -12,8 +12,7 @@ import {
   X, 
   ShieldCheck,
   CreditCard,
-  ChevronRight,
-  FileText
+  ChevronRight
 } from 'lucide-react';
 
 // Child views
@@ -22,7 +21,6 @@ import { InfluencerDetailView } from '../user/InfluencerDetailView';
 import { UserBookings } from '../user/UserBookings';
 import { UserGrievances } from '../user/UserGrievances';
 import { UserProfileSettings } from '../user/UserProfileSettings';
-import { InfluencerTermsConditions } from '../influencer/InfluencerTermsConditions';
 
 export const UserDashboardLayout: React.FC = () => {
   const { 
@@ -50,7 +48,6 @@ export const UserDashboardLayout: React.FC = () => {
     { path: '/fan/bookings', id: 'bookings', label: 'My Call Bookings', icon: Calendar },
     { path: '/fan/grievances', id: 'grievances', label: 'Help & Grievances', icon: LifeBuoy },
     { path: '/fan/profile', id: 'settings', label: 'Profile & Settings', icon: User },
-    { path: '/fan/terms-conditions', id: 'terms-conditions', label: 'Terms & Conditions', icon: FileText },
   ];
 
   return (
@@ -259,8 +256,7 @@ export const UserDashboardLayout: React.FC = () => {
           {currentPath === '/fan/bookings' && <UserBookings />}
           {currentPath === '/fan/grievances' && <UserGrievances />}
           {currentPath === '/fan/profile' && <UserProfileSettings />}
-          {currentPath === '/fan/terms-conditions' && <InfluencerTermsConditions />}
-          {(currentPath === '/fan/dashboard' || (!currentPath.startsWith('/fan/creators/') && currentPath !== '/fan/bookings' && currentPath !== '/fan/grievances' && currentPath !== '/fan/profile' && currentPath !== '/fan/terms-conditions')) && (
+          {(currentPath === '/fan/dashboard' || (!currentPath.startsWith('/fan/creators/') && currentPath !== '/fan/bookings' && currentPath !== '/fan/grievances' && currentPath !== '/fan/profile')) && (
             <UserHome />
           )}
         </main>

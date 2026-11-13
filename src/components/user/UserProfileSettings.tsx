@@ -938,31 +938,6 @@ export const UserProfileSettings: React.FC = () => {
       {activeTab === 'billing' && (
         <div className="space-y-6">
 
-          {/* Escrow Guarantee Banner */}
-          <div className="p-6 rounded-3xl bg-gradient-to-r from-emerald-950 via-slate-900 to-slate-900 text-white border border-emerald-500/30 shadow-sm relative overflow-hidden">
-            <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.25),transparent_70%)]" />
-            <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="flex items-start gap-4">
-                <div className="p-3 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 text-emerald-400">
-                  <ShieldCheck className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="text-base font-extrabold text-white">100% Escrow Protection Guarantee</h3>
-                  <p className="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
-                    When you book a session on BookMyStar, your payment is held safely in escrow. Creator funds are only disbursed after your 1-on-1 session is successfully conducted. If the creator fails to attend or cancels, a 100% full refund is credited back instantly.
-                  </p>
-                </div>
-              </div>
-
-              <div className="self-start sm:self-auto shrink-0">
-                <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-bold">
-                  RBI Compliant Escrow
-                </span>
-              </div>
-            </div>
-          </div>
-
-
           {/* Transactions Table & Controls */}
           <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-5">
 

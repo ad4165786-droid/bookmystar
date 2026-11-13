@@ -16,7 +16,6 @@ const VALID_FAN_ROUTES = [
   '/fan/bookings',
   '/fan/grievances',
   '/fan/profile',
-  '/fan/terms-conditions',
 ];
 
 const VALID_INFLUENCER_ROUTES = [
