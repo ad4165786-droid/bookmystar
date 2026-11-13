@@ -199,8 +199,12 @@ export const InfluencerPricingSchedule: React.FC = () => {
       return currentInfluencer.availability.weeklySchedule;
     }
 
+    const hasLegacyDays = Array.isArray(currentInfluencer.availability?.days) && currentInfluencer.availability.days.length > 0;
+
     return ALL_DAYS.map(d => {
-      const isEnabled = d.short !== 'Sun';
+      const isEnabled = hasLegacyDays 
+        ? currentInfluencer.availability!.days.includes(d.short)
+        : d.short !== 'Sun';
       return {
         day: d.day,
         short: d.short,
@@ -217,6 +221,8 @@ export const InfluencerPricingSchedule: React.FC = () => {
 
   // --- Core State ---
   const [weeklySchedule, setWeeklySchedule] = useState<DayScheduleItem[]>(initialWeeklySchedule);
+  const [weeklyHoursOpen, setWeeklyHoursOpen] = useState<boolean>(true);
+  const [selectedDayFilter, setSelectedDayFilter] = useState<string>('all');
   const [blockedDates, setBlockedDates] = useState<string[]>(currentInfluencer.availability?.blockedDates || []);
   const [isTakingBookings, setIsTakingBookings] = useState<boolean>(
     currentInfluencer.availability?.isTakingBookings !== false
@@ -342,10 +348,10 @@ export const InfluencerPricingSchedule: React.FC = () => {
   };
 
   // --- SECTION 1: WEEKLY HOURS HANDLERS ---
-  const handleToggleDay = (dayIdx: number) => {
+  const handleToggleDay = (dayIdx: number, forceState?: boolean) => {
     setWeeklySchedule(prev => prev.map((item, idx) => {
       if (idx !== dayIdx) return item;
-      const nextEnabled = !item.enabled;
+      const nextEnabled = typeof forceState === 'boolean' ? forceState : !item.enabled;
       return {
         ...item,
         enabled: nextEnabled,
@@ -354,6 +360,104 @@ export const InfluencerPricingSchedule: React.FC = () => {
         ] : item.intervals
       };
     }));
+  };
+
+  // Quick Preset for a single day
+  const handleApplyDayPreset = (dayIdx: number, presetKey: string) => {
+    const short = weeklySchedule[dayIdx]?.short || 'Day';
+    let intervals: TimeIntervalItem[] = [];
+
+    switch (presetKey) {
+      case 'standard':
+        intervals = [{ id: `int-${short}-${Date.now()}`, start: '09:00 AM', end: '05:00 PM' }];
+        break;
+      case 'midday':
+        intervals = [{ id: `int-${short}-${Date.now()}`, start: '10:00 AM', end: '06:00 PM' }];
+        break;
+      case 'afternoon':
+        intervals = [{ id: `int-${short}-${Date.now()}`, start: '02:00 PM', end: '08:00 PM' }];
+        break;
+      case 'evening':
+        intervals = [{ id: `int-${short}-${Date.now()}`, start: '06:00 PM', end: '10:00 PM' }];
+        break;
+      case 'split':
+        intervals = [
+          { id: `int-${short}-${Date.now()}-1`, start: '10:00 AM', end: '01:00 PM' },
+          { id: `int-${short}-${Date.now()}-2`, start: '03:00 PM', end: '07:00 PM' }
+        ];
+        break;
+      case 'custom':
+      default:
+        intervals = [{ id: `int-${short}-${Date.now()}`, start: '09:00 AM', end: '05:00 PM' }];
+        break;
+    }
+
+    setWeeklySchedule(prev => prev.map((item, idx) => {
+      if (idx !== dayIdx) return item;
+      return {
+        ...item,
+        enabled: true,
+        intervals
+      };
+    }));
+    showToast(`Updated ${weeklySchedule[dayIdx]?.day} schedule.`);
+  };
+
+  // Quick Preset template for entire week
+  const handleApplyWeeklyTemplate = (templateKey: string) => {
+    setWeeklySchedule(prev => prev.map(item => {
+      const isWeekend = item.short === 'Sat' || item.short === 'Sun';
+
+      switch (templateKey) {
+        case 'weekdays-9-5':
+          return {
+            ...item,
+            enabled: !isWeekend,
+            intervals: !isWeekend ? [{ id: `int-${item.short}-1`, start: '09:00 AM', end: '05:00 PM' }] : item.intervals
+          };
+        case 'weekdays-10-6':
+          return {
+            ...item,
+            enabled: !isWeekend,
+            intervals: !isWeekend ? [{ id: `int-${item.short}-1`, start: '10:00 AM', end: '06:00 PM' }] : item.intervals
+          };
+        case 'weekdays-split':
+          return {
+            ...item,
+            enabled: !isWeekend,
+            intervals: !isWeekend ? [
+              { id: `int-${item.short}-1`, start: '10:00 AM', end: '01:00 PM' },
+              { id: `int-${item.short}-2`, start: '03:00 PM', end: '07:00 PM' }
+            ] : item.intervals
+          };
+        case 'weekdays-evening':
+          return {
+            ...item,
+            enabled: !isWeekend,
+            intervals: !isWeekend ? [{ id: `int-${item.short}-1`, start: '06:00 PM', end: '10:00 PM' }] : item.intervals
+          };
+        case 'all-7-days':
+          return {
+            ...item,
+            enabled: true,
+            intervals: [{ id: `int-${item.short}-1`, start: '10:00 AM', end: '06:00 PM' }]
+          };
+        case 'weekends-only':
+          return {
+            ...item,
+            enabled: isWeekend,
+            intervals: isWeekend ? [{ id: `int-${item.short}-1`, start: '11:00 AM', end: '05:00 PM' }] : item.intervals
+          };
+        case 'clear-all':
+          return {
+            ...item,
+            enabled: false
+          };
+        default:
+          return item;
+      }
+    }));
+    showToast('Applied schedule template to week.');
   };
 
   const handleUpdateInterval = (dayIdx: number, intervalIdx: number, field: 'start' | 'end', val: string) => {
@@ -887,9 +991,12 @@ export const InfluencerPricingSchedule: React.FC = () => {
       {/* ================= SECTION 1: WEEKLY WORKING HOURS ================= */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
         
-        {/* Section Header */}
-        <div className="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
+        {/* Section Header with Dropdown / Accordion Toggle */}
+        <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white">
+          <div 
+            onClick={() => setWeeklyHoursOpen(!weeklyHoursOpen)}
+            className="flex items-center gap-3 cursor-pointer select-none flex-1"
+          >
             <div className="w-9 h-9 rounded-xl bg-brand-50 text-brand-600 border border-brand-200/60 flex items-center justify-center shrink-0">
               <Sliders className="w-4 h-4 text-brand-600" />
             </div>
@@ -899,7 +1006,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
                   1. Weekly Working Hours
                 </h2>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                  Recurring Routine
+                  {weeklySchedule.filter(d => d.enabled).length} of 7 Days Active
                 </span>
               </div>
               <p className="text-xs text-slate-500">
@@ -908,172 +1015,338 @@ export const InfluencerPricingSchedule: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 text-xs text-slate-500">
-            <span className="inline-flex items-center gap-1.5 font-semibold">
-              <Clock className="w-3.5 h-3.5 text-slate-400" />
-              <span>Breaks supported via multiple ranges per day</span>
-            </span>
+          {/* Header Controls: Routine Template Dropdown, Day Filter & Accordion Toggle */}
+          <div className="flex items-center gap-2.5 flex-wrap">
+            {/* Quick Template Dropdown */}
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs font-semibold text-slate-500 whitespace-nowrap hidden lg:inline">
+                Template:
+              </span>
+              <select
+                onChange={(e) => {
+                  if (e.target.value) {
+                    handleApplyWeeklyTemplate(e.target.value);
+                    e.target.value = '';
+                  }
+                }}
+                defaultValue=""
+                className="px-3 py-1.5 rounded-xl border border-slate-300 text-xs font-bold bg-white text-slate-800 hover:border-brand-500 focus:outline-none focus:border-brand-500 cursor-pointer shadow-xs transition-colors"
+                title="Quick schedule templates"
+              >
+                <option value="" disabled>⚡ Routine Template Dropdown...</option>
+                <option value="weekdays-9-5">Weekdays (Mon–Fri, 09:00 AM – 05:00 PM)</option>
+                <option value="weekdays-10-6">Weekdays (Mon–Fri, 10:00 AM – 06:00 PM)</option>
+                <option value="weekdays-split">Weekdays Split (10 AM–1 PM, 3 PM–7 PM)</option>
+                <option value="weekdays-evening">Weekdays Evening (06:00 PM – 10:00 PM)</option>
+                <option value="all-7-days">Full Week (Mon–Sun, 10:00 AM – 06:00 PM)</option>
+                <option value="weekends-only">Weekends Only (Sat–Sun, 11:00 AM – 05:00 PM)</option>
+                <option value="clear-all">Clear All (Mark All Days Off)</option>
+              </select>
+            </div>
+
+            {/* View / Filter By Day Dropdown */}
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs font-semibold text-slate-500 whitespace-nowrap hidden lg:inline">
+                Filter:
+              </span>
+              <select
+                value={selectedDayFilter}
+                onChange={(e) => setSelectedDayFilter(e.target.value)}
+                className="px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold bg-slate-50 hover:bg-white text-slate-700 hover:border-brand-400 focus:outline-none cursor-pointer"
+                title="Filter which days to display"
+              >
+                <option value="all">View: All 7 Days</option>
+                <option value="active">View: Active Days Only</option>
+                <option value="Mon">Monday Only</option>
+                <option value="Tue">Tuesday Only</option>
+                <option value="Wed">Wednesday Only</option>
+                <option value="Thu">Thursday Only</option>
+                <option value="Fri">Friday Only</option>
+                <option value="Sat">Saturday Only</option>
+                <option value="Sun">Sunday Only</option>
+              </select>
+            </div>
+
+            {/* Accordion Dropdown Collapse/Expand Toggle Button */}
+            <button
+              type="button"
+              onClick={() => setWeeklyHoursOpen(!weeklyHoursOpen)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200/80 text-slate-700 text-xs font-bold transition-colors cursor-pointer"
+              title={weeklyHoursOpen ? "Collapse Weekly Working Hours" : "Expand Weekly Working Hours"}
+            >
+              <span>{weeklyHoursOpen ? 'Collapse' : 'Expand'}</span>
+              {weeklyHoursOpen ? (
+                <ChevronUp className="w-3.5 h-3.5 text-slate-500" />
+              ) : (
+                <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
+              )}
+            </button>
           </div>
         </div>
 
-        {/* 7-Day Interactive Weekly Schedule Rows */}
-        <div className="divide-y divide-slate-100">
-          {weeklySchedule.map((dayItem, dayIdx) => {
-            const hasIntervals = dayItem.enabled && dayItem.intervals.length > 0;
-            const validation = dayItem.enabled ? validateDayIntervals(dayItem.intervals) : { valid: true };
+        {/* Collapsed Compact Summary */}
+        {!weeklyHoursOpen && (
+          <div className="p-4 bg-slate-50/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-600">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="font-bold text-slate-900">Current Routine:</span>
+              {weeklySchedule.filter(d => d.enabled).map(d => (
+                <span key={d.day} className="px-2 py-0.5 rounded-md bg-white border border-slate-200 font-semibold text-slate-700">
+                  {d.short}: {d.intervals.map(i => `${i.start} - ${i.end}`).join(', ')}
+                </span>
+              ))}
+              {weeklySchedule.filter(d => d.enabled).length === 0 && (
+                <span className="text-rose-600 font-medium italic">No days currently taking bookings</span>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={() => setWeeklyHoursOpen(true)}
+              className="text-brand-600 hover:text-brand-700 font-bold underline cursor-pointer shrink-0"
+            >
+              Expand Working Hours
+            </button>
+          </div>
+        )}
 
-            return (
-              <div 
-                key={dayItem.day}
-                className={`p-4 sm:p-5 transition-colors ${
-                  dayItem.enabled ? 'bg-white' : 'bg-slate-50/60'
-                }`}
-              >
-                <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
-                  
-                  {/* Left: Day Name & Enable Toggle */}
-                  <div className="flex items-center gap-3 w-48 shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => handleToggleDay(dayIdx)}
-                      className={`w-10 h-5.5 flex items-center rounded-full p-0.5 cursor-pointer transition-colors ${
-                        dayItem.enabled ? 'bg-brand-500' : 'bg-slate-300'
-                      }`}
-                      title={dayItem.enabled ? `Disable ${dayItem.day}` : `Enable ${dayItem.day}`}
-                    >
-                      <div className={`bg-white w-4.5 h-4.5 rounded-full shadow-sm transform transition-transform ${
-                        dayItem.enabled ? 'translate-x-4.5' : 'translate-x-0'
-                      }`} />
-                    </button>
+        {/* 7-Day Interactive Weekly Schedule Rows (when open) */}
+        {weeklyHoursOpen && (
+          <div className="divide-y divide-slate-100">
+            {weeklySchedule
+              .filter(d => {
+                if (selectedDayFilter === 'all') return true;
+                if (selectedDayFilter === 'active') return d.enabled;
+                return d.short === selectedDayFilter;
+              })
+              .map((dayItem) => {
+                const dayIdx = weeklySchedule.findIndex(d => d.day === dayItem.day);
+                const hasIntervals = dayItem.enabled && dayItem.intervals.length > 0;
+                const validation = dayItem.enabled ? validateDayIntervals(dayItem.intervals) : { valid: true };
 
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <span className={`text-sm font-bold ${dayItem.enabled ? 'text-slate-900' : 'text-slate-400 line-through'}`}>
-                          {dayItem.day}
-                        </span>
-                      </div>
-                      <span className={`text-[10px] font-semibold ${dayItem.enabled ? 'text-emerald-600' : 'text-slate-400'}`}>
-                        {dayItem.enabled ? `${dayItem.intervals.length} shift(s)` : 'Unavailable / Day Off'}
-                      </span>
-                    </div>
-                  </div>
+                return (
+                  <div 
+                    key={dayItem.day}
+                    className={`p-4 sm:p-5 transition-colors ${
+                      dayItem.enabled ? 'bg-white' : 'bg-slate-50/60'
+                    }`}
+                  >
+                    <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+                      
+                      {/* Left: Day Name, Toggle Switch & Status Dropdown */}
+                      <div className="flex items-center gap-3 w-full sm:w-64 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => handleToggleDay(dayIdx)}
+                          className={`w-11 h-6 flex items-center rounded-full px-0.5 cursor-pointer transition-colors duration-200 shrink-0 ${
+                            dayItem.enabled ? 'bg-brand-500' : 'bg-slate-300'
+                          }`}
+                          title={dayItem.enabled ? `Disable ${dayItem.day}` : `Enable ${dayItem.day}`}
+                        >
+                          <div className={`bg-white w-5 h-5 rounded-full shadow-sm transform transition-transform duration-200 ${
+                            dayItem.enabled ? 'translate-x-5' : 'translate-x-0'
+                          }`} />
+                        </button>
 
-                  {/* Middle: Working Time Ranges & Breaks */}
-                  <div className="flex-1 space-y-2.5">
-                    {!dayItem.enabled ? (
-                      <div className="py-2 text-xs text-slate-400 italic">
-                        Not taking bookings on {dayItem.day}s. Click switch to activate working hours.
-                      </div>
-                    ) : (
-                      <div className="space-y-2">
-                        {dayItem.intervals.map((inv, invIdx) => {
-                          const isInvalid = timeToMinutes(inv.start) >= timeToMinutes(inv.end);
-                          
-                          // Calculate break with previous interval if exists
-                          let breakText = '';
-                          if (invIdx > 0) {
-                            const prevEnd = timeToMinutes(dayItem.intervals[invIdx - 1].end);
-                            const thisStart = timeToMinutes(inv.start);
-                            if (thisStart > prevEnd) {
-                              const breakMin = thisStart - prevEnd;
-                              const hrs = Math.floor(breakMin / 60);
-                              const mins = breakMin % 60;
-                              breakText = `Break: ${hrs > 0 ? `${hrs}h ` : ''}${mins > 0 ? `${mins}m` : ''}`;
+                        <div className="min-w-[85px]">
+                          <div className="flex items-center gap-1.5">
+                            <span className={`text-sm font-bold ${dayItem.enabled ? 'text-slate-900' : 'text-slate-500'}`}>
+                              {dayItem.day}
+                            </span>
+                          </div>
+                          <span className={`text-[10px] font-semibold block ${dayItem.enabled ? 'text-emerald-600' : 'text-slate-400'}`}>
+                            {dayItem.enabled ? `${dayItem.intervals.length} shift(s)` : 'Unavailable / Day Off'}
+                          </span>
+                        </div>
+
+                        {/* Status Dropdown Option for this Day */}
+                        <select
+                          value={dayItem.enabled ? 'available' : 'unavailable'}
+                          onChange={(e) => {
+                            const isAvail = e.target.value === 'available';
+                            if (dayItem.enabled !== isAvail) {
+                              handleToggleDay(dayIdx, isAvail);
                             }
-                          }
+                          }}
+                          className={`text-xs font-semibold px-2.5 py-1 rounded-lg border cursor-pointer focus:outline-none transition-colors ${
+                            dayItem.enabled 
+                              ? 'bg-emerald-50 text-emerald-800 border-emerald-300 focus:border-emerald-500' 
+                              : 'bg-white text-slate-600 border-slate-300 focus:border-brand-500 hover:border-slate-400'
+                          }`}
+                          title="Change day availability status"
+                        >
+                          <option value="available">✓ Available</option>
+                          <option value="unavailable">✕ Day Off</option>
+                        </select>
+                      </div>
 
-                          return (
-                            <div key={inv.id} className="space-y-1">
-                              {breakText && (
-                                <div className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md inline-flex items-center gap-1 border border-amber-200/60 my-0.5">
-                                  <span>☕ {breakText}</span>
-                                </div>
-                              )}
-
-                              <div className="flex items-center gap-2 flex-wrap">
-                                {/* Start Time Select */}
-                                <select
-                                  value={inv.start}
-                                  onChange={e => handleUpdateInterval(dayIdx, invIdx, 'start', e.target.value)}
-                                  className={`px-3 py-1.5 rounded-xl border text-xs font-semibold bg-white text-slate-900 focus:outline-none cursor-pointer ${
-                                    isInvalid ? 'border-rose-400 bg-rose-50' : 'border-slate-200 focus:border-brand-500'
-                                  }`}
-                                >
-                                  {TIME_OPTIONS.map(opt => (
-                                    <option key={opt} value={opt}>{opt}</option>
-                                  ))}
-                                </select>
-
-                                <span className="text-xs font-bold text-slate-400">to</span>
-
-                                {/* End Time Select */}
-                                <select
-                                  value={inv.end}
-                                  onChange={e => handleUpdateInterval(dayIdx, invIdx, 'end', e.target.value)}
-                                  className={`px-3 py-1.5 rounded-xl border text-xs font-semibold bg-white text-slate-900 focus:outline-none cursor-pointer ${
-                                    isInvalid ? 'border-rose-400 bg-rose-50' : 'border-slate-200 focus:border-brand-500'
-                                  }`}
-                                >
-                                  {TIME_OPTIONS.map(opt => (
-                                    <option key={opt} value={opt}>{opt}</option>
-                                  ))}
-                                </select>
-
-                                {/* Delete interval */}
-                                <button
-                                  type="button"
-                                  onClick={() => handleRemoveInterval(dayIdx, invIdx)}
-                                  className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
-                                  title="Remove this time interval"
-                                >
-                                  <Trash2 className="w-3.5 h-3.5" />
-                                </button>
-                              </div>
+                      {/* Middle: Working Time Ranges & Breaks */}
+                      <div className="flex-1 space-y-2.5">
+                        {!dayItem.enabled ? (
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-1">
+                            <div className="text-xs text-slate-400 italic">
+                              Not taking bookings on {dayItem.day}s.
                             </div>
-                          );
-                        })}
 
-                        {!validation.valid && (
-                          <p className="text-[11px] text-rose-600 font-semibold pt-0.5">
-                            {validation.error}
-                          </p>
+                            {/* Quick Schedule Dropdown Option to Activate */}
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-xs font-medium text-slate-500">Quick set:</span>
+                              <select
+                                value="none"
+                                onChange={(e) => {
+                                  if (e.target.value !== 'none') {
+                                    handleApplyDayPreset(dayIdx, e.target.value);
+                                  }
+                                }}
+                                className="px-3 py-1.5 rounded-xl border border-slate-300 text-xs font-semibold bg-white text-slate-800 hover:border-brand-500 focus:outline-none focus:border-brand-500 cursor-pointer shadow-xs"
+                              >
+                                <option value="none">Choose Hours Dropdown...</option>
+                                <option value="standard">✓ 09:00 AM – 05:00 PM (Standard)</option>
+                                <option value="midday">✓ 10:00 AM – 06:00 PM (Mid-day)</option>
+                                <option value="afternoon">✓ 02:00 PM – 08:00 PM (Afternoon/Eve)</option>
+                                <option value="evening">✓ 06:00 PM – 10:00 PM (Evening Only)</option>
+                                <option value="split">✓ Split: 10 AM-1 PM & 3 PM-7 PM</option>
+                              </select>
+                              
+                              <button
+                                type="button"
+                                onClick={() => handleToggleDay(dayIdx, true)}
+                                className="px-3 py-1.5 rounded-xl bg-brand-50 hover:bg-brand-100 text-brand-700 text-xs font-bold border border-brand-200 transition-colors flex items-center gap-1 cursor-pointer"
+                              >
+                                <Plus className="w-3.5 h-3.5" />
+                                <span>Enable {dayItem.short}</span>
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="space-y-2">
+                            {dayItem.intervals.map((inv, invIdx) => {
+                              const isInvalid = timeToMinutes(inv.start) >= timeToMinutes(inv.end);
+                              
+                              // Calculate break with previous interval if exists
+                              let breakText = '';
+                              if (invIdx > 0) {
+                                const prevEnd = timeToMinutes(dayItem.intervals[invIdx - 1].end);
+                                const thisStart = timeToMinutes(inv.start);
+                                if (thisStart > prevEnd) {
+                                  const breakMin = thisStart - prevEnd;
+                                  const hrs = Math.floor(breakMin / 60);
+                                  const mins = breakMin % 60;
+                                  breakText = `Break: ${hrs > 0 ? `${hrs}h ` : ''}${mins > 0 ? `${mins}m` : ''}`;
+                                }
+                              }
+
+                              return (
+                                <div key={inv.id} className="space-y-1">
+                                  {breakText && (
+                                    <div className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md inline-flex items-center gap-1 border border-amber-200/60 my-0.5">
+                                      <span>☕ {breakText}</span>
+                                    </div>
+                                  )}
+
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    {/* Start Time Select */}
+                                    <select
+                                      value={inv.start}
+                                      onChange={e => handleUpdateInterval(dayIdx, invIdx, 'start', e.target.value)}
+                                      className={`px-3 py-1.5 rounded-xl border text-xs font-semibold bg-white text-slate-900 focus:outline-none cursor-pointer ${
+                                        isInvalid ? 'border-rose-400 bg-rose-50' : 'border-slate-200 focus:border-brand-500'
+                                      }`}
+                                    >
+                                      {TIME_OPTIONS.map(opt => (
+                                        <option key={opt} value={opt}>{opt}</option>
+                                      ))}
+                                    </select>
+
+                                    <span className="text-xs font-bold text-slate-400">to</span>
+
+                                    {/* End Time Select */}
+                                    <select
+                                      value={inv.end}
+                                      onChange={e => handleUpdateInterval(dayIdx, invIdx, 'end', e.target.value)}
+                                      className={`px-3 py-1.5 rounded-xl border text-xs font-semibold bg-white text-slate-900 focus:outline-none cursor-pointer ${
+                                        isInvalid ? 'border-rose-400 bg-rose-50' : 'border-slate-200 focus:border-brand-500'
+                                      }`}
+                                    >
+                                      {TIME_OPTIONS.map(opt => (
+                                        <option key={opt} value={opt}>{opt}</option>
+                                      ))}
+                                    </select>
+
+                                    {/* Delete interval */}
+                                    <button
+                                      type="button"
+                                      onClick={() => handleRemoveInterval(dayIdx, invIdx)}
+                                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                                      title="Remove this time interval"
+                                    >
+                                      <Trash2 className="w-3.5 h-3.5" />
+                                    </button>
+                                  </div>
+                                </div>
+                              );
+                            })}
+
+                            {!validation.valid && (
+                              <p className="text-[11px] text-rose-600 font-semibold pt-0.5">
+                                {validation.error}
+                              </p>
+                            )}
+                          </div>
                         )}
                       </div>
-                    )}
-                  </div>
 
-                  {/* Right Actions: Add Hours & Copy to Other Days */}
-                  {dayItem.enabled && (
-                    <div className="flex items-center gap-2 self-start lg:self-center shrink-0">
-                      {/* Add Interval / Shift */}
-                      <button
-                        type="button"
-                        onClick={() => handleAddInterval(dayIdx)}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold transition-colors cursor-pointer shadow-2xs"
-                        title="Add another working interval (supports lunch/tea breaks)"
-                      >
-                        <Plus className="w-3.5 h-3.5 text-brand-500" />
-                        <span>Add Hours</span>
-                      </button>
+                      {/* Right Actions: Presets Dropdown, Add Hours & Copy to Other Days */}
+                      {dayItem.enabled && (
+                        <div className="flex items-center gap-2 self-start lg:self-center shrink-0 flex-wrap">
+                          {/* Quick Day Preset Dropdown */}
+                          <select
+                            defaultValue=""
+                            onChange={(e) => {
+                              if (e.target.value) {
+                                handleApplyDayPreset(dayIdx, e.target.value);
+                                e.target.value = '';
+                              }
+                            }}
+                            className="px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold bg-slate-50 hover:bg-white text-slate-700 hover:border-brand-400 focus:outline-none cursor-pointer"
+                            title="Apply quick preset hours to this day"
+                          >
+                            <option value="" disabled>Presets Dropdown...</option>
+                            <option value="standard">09:00 AM – 05:00 PM</option>
+                            <option value="midday">10:00 AM – 06:00 PM</option>
+                            <option value="afternoon">02:00 PM – 08:00 PM</option>
+                            <option value="evening">06:00 PM – 10:00 PM</option>
+                            <option value="split">Split: 10AM-1PM & 3PM-7PM</option>
+                          </select>
 
-                      {/* Copy Hours */}
-                      <button
-                        type="button"
-                        onClick={() => handleOpenCopyModal(dayIdx)}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-bold transition-colors cursor-pointer shadow-2xs"
-                        title={`Copy ${dayItem.day}'s schedule to other weekdays`}
-                      >
-                        <Copy className="w-3.5 h-3.5 text-slate-400" />
-                        <span>Copy</span>
-                      </button>
+                          {/* Add Interval / Shift */}
+                          <button
+                            type="button"
+                            onClick={() => handleAddInterval(dayIdx)}
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold transition-colors cursor-pointer shadow-2xs"
+                            title="Add another working interval (supports lunch/tea breaks)"
+                          >
+                            <Plus className="w-3.5 h-3.5 text-brand-500" />
+                            <span>Add Hours</span>
+                          </button>
+
+                          {/* Copy Hours */}
+                          <button
+                            type="button"
+                            onClick={() => handleOpenCopyModal(dayIdx)}
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-bold transition-colors cursor-pointer shadow-2xs"
+                            title={`Copy ${dayItem.day}'s schedule to other weekdays`}
+                          >
+                            <Copy className="w-3.5 h-3.5 text-slate-400" />
+                            <span>Copy</span>
+                          </button>
+                        </div>
+                      )}
+
                     </div>
-                  )}
-
-                </div>
-              </div>
-            );
-          })}
-        </div>
+                  </div>
+                );
+              })}
+          </div>
+        )}
       </div>
 
       {/* ================= SECTION 2: BOOKING SLOT MANAGEMENT ================= */}
