@@ -814,8 +814,8 @@ export const InfluencerPricingSchedule: React.FC = () => {
                 type="button"
                 onClick={() => setIsTakingBookings(prev => !prev)}
                 className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer border ${isTakingBookings
-                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200 shadow-2xs hover:bg-emerald-100'
-                    : 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100'
+                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200 shadow-2xs hover:bg-emerald-100'
+                  : 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100'
                   }`}
                 title="Click to pause or enable commercial bookings"
               >
@@ -829,9 +829,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
                 <span>Asia/Kolkata (IST, UTC+05:30)</span>
               </span>
             </div>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Commercial scheduling studio: Recurring weekly routine, slot generation, buffer intervals, and blackout dates.
-            </p>
+
           </div>
         </div>
 
@@ -994,20 +992,18 @@ export const InfluencerPricingSchedule: React.FC = () => {
         <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white">
           <div
             onClick={() => setWeeklyHoursOpen(!weeklyHoursOpen)}
-            className="flex items-center gap-3 cursor-pointer select-none flex-1"
+            className="flex items-center gap-3 cursor-pointer select-none shrink-0"
           >
             <div className="w-9 h-9 rounded-xl bg-brand-50 text-brand-600 border border-brand-200/60 flex items-center justify-center shrink-0">
               <Sliders className="w-4 h-4 text-brand-600" />
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-base font-extrabold text-slate-900 tracking-tight">
-                  1. Weekly Working Hours
-                </h2>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                  {weeklySchedule.filter(d => d.enabled).length} of 7 Days Active
-                </span>
-              </div>
+            <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+              <h2 className="text-base font-extrabold text-slate-900 tracking-tight whitespace-nowrap">
+                1. Weekly Working Hours
+              </h2>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap shrink-0">
+                {weeklySchedule.filter(d => d.enabled).length} of 7 Days Active
+              </span>
             </div>
           </div>
 
@@ -1160,8 +1156,8 @@ export const InfluencerPricingSchedule: React.FC = () => {
                             }
                           }}
                           className={`text-xs font-semibold px-2.5 py-1 rounded-lg border cursor-pointer focus:outline-none transition-colors ${dayItem.enabled
-                              ? 'bg-emerald-50 text-emerald-800 border-emerald-300 focus:border-emerald-500'
-                              : 'bg-white text-slate-600 border-slate-300 focus:border-brand-500 hover:border-slate-400'
+                            ? 'bg-emerald-50 text-emerald-800 border-emerald-300 focus:border-emerald-500'
+                            : 'bg-white text-slate-600 border-slate-300 focus:border-brand-500 hover:border-slate-400'
                             }`}
                           title="Change day availability status"
                         >
@@ -1350,10 +1346,10 @@ export const InfluencerPricingSchedule: React.FC = () => {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-extrabold text-slate-900 tracking-tight">
+                <h2 className="text-base font-extrabold text-slate-900 tracking-tight whitespace-nowrap">
                   2. Booking Slot Management
                 </h2>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 whitespace-nowrap shrink-0">
                   Auto-Generated Slots
                 </span>
               </div>
@@ -1371,8 +1367,8 @@ export const InfluencerPricingSchedule: React.FC = () => {
                   type="button"
                   onClick={() => setSlotSelectedDuration(dur)}
                   className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${slotSelectedDuration === dur
-                      ? 'bg-white text-slate-900 shadow-xs'
-                      : 'text-slate-500 hover:text-slate-900'
+                    ? 'bg-white text-slate-900 shadow-xs'
+                    : 'text-slate-500 hover:text-slate-900'
                     }`}
                 >
                   {dur}m
@@ -1417,8 +1413,8 @@ export const InfluencerPricingSchedule: React.FC = () => {
                   type="button"
                   onClick={() => setSlotInspectorDate(dStr)}
                   className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0 border ${isSelected
-                      ? 'bg-brand-500 text-white border-brand-500 shadow-xs'
-                      : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-200'
+                    ? 'bg-brand-500 text-white border-brand-500 shadow-xs'
+                    : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-200'
                     }`}
                 >
                   <span>{isToday ? 'Today' : d.toLocaleDateString('default', { weekday: 'short' })}</span>
@@ -1494,10 +1490,10 @@ export const InfluencerPricingSchedule: React.FC = () => {
                     <div
                       key={slot.id}
                       className={`p-3 rounded-xl border text-center transition-all flex flex-col justify-between ${isBooked
-                          ? 'bg-blue-50/80 border-blue-200 text-blue-900 shadow-2xs'
-                          : isPending
-                            ? 'bg-amber-50 border-amber-200 text-amber-900 shadow-2xs'
-                            : 'bg-emerald-50/60 hover:bg-emerald-50 border-emerald-200/80 text-emerald-900 shadow-2xs'
+                        ? 'bg-blue-50/80 border-blue-200 text-blue-900 shadow-2xs'
+                        : isPending
+                          ? 'bg-amber-50 border-amber-200 text-amber-900 shadow-2xs'
+                          : 'bg-emerald-50/60 hover:bg-emerald-50 border-emerald-200/80 text-emerald-900 shadow-2xs'
                         }`}
                     >
                       <div className="text-xs font-extrabold text-slate-900">
@@ -1506,10 +1502,10 @@ export const InfluencerPricingSchedule: React.FC = () => {
 
                       <div className="mt-1 pt-1 border-t border-slate-200/50 flex items-center justify-between text-[10px]">
                         <span className={`px-1.5 py-0.5 rounded-md font-bold uppercase tracking-wider ${isBooked
-                            ? 'bg-blue-200/80 text-blue-800'
-                            : isPending
-                              ? 'bg-amber-200/80 text-amber-800'
-                              : 'bg-emerald-200/80 text-emerald-800'
+                          ? 'bg-blue-200/80 text-blue-800'
+                          : isPending
+                            ? 'bg-amber-200/80 text-amber-800'
+                            : 'bg-emerald-200/80 text-emerald-800'
                           }`}>
                           {slot.status}
                         </span>
@@ -1543,10 +1539,10 @@ export const InfluencerPricingSchedule: React.FC = () => {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="text-base font-extrabold text-slate-900 tracking-tight">
+                  <h2 className="text-base font-extrabold text-slate-900 tracking-tight whitespace-nowrap">
                     3. Blackout Dates
                   </h2>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 whitespace-nowrap shrink-0">
                     Time-Off Manager
                   </span>
                 </div>
@@ -1617,14 +1613,14 @@ export const InfluencerPricingSchedule: React.FC = () => {
                     type="button"
                     onClick={() => setSelectedBlackoutDate(cell.dateStr)}
                     className={`h-11 sm:h-12 p-1 rounded-lg border text-center transition-all cursor-pointer flex flex-col items-center justify-between relative ${isSelected
-                        ? 'border-2 border-brand-500 bg-brand-50 text-slate-900 font-black shadow-xs ring-2 ring-brand-500/20'
-                        : isBlocked
-                          ? 'bg-rose-50 border-rose-200 text-rose-700 font-bold hover:bg-rose-100'
-                          : isPast
-                            ? 'bg-slate-50/50 border-slate-100 text-slate-300'
-                            : status.isAvailable
-                              ? 'bg-emerald-50/40 hover:bg-emerald-50 border-emerald-200/70 text-slate-800'
-                              : 'bg-slate-50 border-slate-100 text-slate-400'
+                      ? 'border-2 border-brand-500 bg-brand-50 text-slate-900 font-black shadow-xs ring-2 ring-brand-500/20'
+                      : isBlocked
+                        ? 'bg-rose-50 border-rose-200 text-rose-700 font-bold hover:bg-rose-100'
+                        : isPast
+                          ? 'bg-slate-50/50 border-slate-100 text-slate-300'
+                          : status.isAvailable
+                            ? 'bg-emerald-50/40 hover:bg-emerald-50 border-emerald-200/70 text-slate-800'
+                            : 'bg-slate-50 border-slate-100 text-slate-400'
                       } ${!cell.isCurrentMonth ? 'opacity-30' : ''}`}
                   >
                     <div className="w-full flex items-center justify-between text-[11px] leading-none">
@@ -1718,10 +1714,10 @@ export const InfluencerPricingSchedule: React.FC = () => {
               <div className="flex items-center justify-between">
                 <span className="text-slate-500 font-medium">Status:</span>
                 <span className={`px-2 py-0.5 rounded-full font-bold text-[11px] ${blockedDates.includes(selectedBlackoutDate)
-                    ? 'bg-rose-100 text-rose-800 border border-rose-200'
-                    : getDateStatus(selectedBlackoutDate).isAvailable
-                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                      : 'bg-slate-200 text-slate-600'
+                  ? 'bg-rose-100 text-rose-800 border border-rose-200'
+                  : getDateStatus(selectedBlackoutDate).isAvailable
+                    ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                    : 'bg-slate-200 text-slate-600'
                   }`}>
                   {blockedDates.includes(selectedBlackoutDate)
                     ? 'Unavailable / Blocked'
@@ -1953,8 +1949,8 @@ export const InfluencerPricingSchedule: React.FC = () => {
                         setPreferences(prev => ({ ...prev, allowedDurations: updated }));
                       }}
                       className={`px-3.5 py-1.5 rounded-lg text-xs font-bold border transition-all cursor-pointer flex items-center gap-2 ${isChecked
-                          ? 'bg-brand-50 text-brand-700 border-brand-400 shadow-xs'
-                          : 'bg-white text-slate-400 border-slate-200 hover:bg-slate-100'
+                        ? 'bg-brand-50 text-brand-700 border-brand-400 shadow-xs'
+                        : 'bg-white text-slate-400 border-slate-200 hover:bg-slate-100'
                         }`}
                     >
                       <div className={`w-3.5 h-3.5 rounded flex items-center justify-center ${isChecked ? 'bg-brand-500 text-white' : 'border border-slate-300'
@@ -2084,8 +2080,8 @@ export const InfluencerPricingSchedule: React.FC = () => {
                         );
                       }}
                       className={`p-2.5 rounded-xl text-xs font-bold border transition-all cursor-pointer flex items-center justify-between ${isChecked
-                          ? 'bg-brand-50 text-brand-700 border-brand-400'
-                          : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                        ? 'bg-brand-50 text-brand-700 border-brand-400'
+                        : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
                         }`}
                     >
                       <span>{d.day}</span>
@@ -2148,8 +2144,8 @@ export const InfluencerPricingSchedule: React.FC = () => {
                 type="button"
                 onClick={() => setBlackoutFormMode('single')}
                 className={`flex-1 py-1.5 rounded-lg transition-all cursor-pointer ${blackoutFormMode === 'single'
-                    ? 'bg-white text-slate-900 shadow-xs'
-                    : 'text-slate-500 hover:text-slate-900'
+                  ? 'bg-white text-slate-900 shadow-xs'
+                  : 'text-slate-500 hover:text-slate-900'
                   }`}
               >
                 Single Date
@@ -2158,8 +2154,8 @@ export const InfluencerPricingSchedule: React.FC = () => {
                 type="button"
                 onClick={() => setBlackoutFormMode('range')}
                 className={`flex-1 py-1.5 rounded-lg transition-all cursor-pointer ${blackoutFormMode === 'range'
-                    ? 'bg-white text-slate-900 shadow-xs'
-                    : 'text-slate-500 hover:text-slate-900'
+                  ? 'bg-white text-slate-900 shadow-xs'
+                  : 'text-slate-500 hover:text-slate-900'
                   }`}
               >
                 Date Range (Vacation)
