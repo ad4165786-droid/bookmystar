@@ -962,28 +962,6 @@ export const UserProfileSettings: React.FC = () => {
             </div>
           </div>
 
-          {/* Financial Summary Strip */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Lifetime Spending</span>
-              <div className="text-2xl font-black text-slate-900 mt-1">₹{currentUser.totalSpent.toLocaleString('en-IN')}</div>
-              <p className="text-[11px] text-slate-500 mt-1">Processed across {userBookings.length} sessions</p>
-            </div>
-
-            <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Saved Default UPI ID</span>
-              <div className="text-base font-mono font-bold text-slate-900 mt-2 truncate">{upiId}</div>
-              <p className="text-[11px] text-emerald-600 mt-1 flex items-center gap-1 font-semibold">
-                <CheckCircle2 className="w-3 h-3" /> Auto-Verified for Instant Refunds
-              </p>
-            </div>
-
-            <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Invoices Generated</span>
-              <div className="text-2xl font-black text-slate-900 mt-1">{userBookings.length}</div>
-              <p className="text-[11px] text-slate-500 mt-1">Downloadable GST tax receipts</p>
-            </div>
-          </div>
 
           {/* Transactions Table & Controls */}
           <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-5">
