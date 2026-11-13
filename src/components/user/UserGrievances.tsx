@@ -87,12 +87,16 @@ export const UserGrievances: React.FC = () => {
       </div>
 
       {userTickets.length === 0 ? (
-        <div className="p-12 text-center rounded-2xl bg-slate-900/40 border border-slate-800 space-y-3">
-          <LifeBuoy className="w-8 h-8 text-slate-600 mx-auto" />
-          <h3 className="text-sm font-bold text-white">No Support Cases Raised</h3>
-          <p className="text-xs text-slate-400 max-w-sm mx-auto">
-            All your bookings and payment transactions are in good standing. Have questions? Our support team is here.
-          </p>
+        <div className="p-12 sm:p-16 text-center rounded-3xl bg-white border border-slate-200/90 shadow-sm space-y-4">
+          <div className="w-14 h-14 rounded-2xl bg-brand-50 border border-brand-100 text-brand-600 flex items-center justify-center mx-auto shadow-2xs">
+            <LifeBuoy className="w-7 h-7 text-brand-600" />
+          </div>
+          <div className="space-y-1">
+            <h3 className="text-base font-extrabold text-slate-900">No Support Cases Raised</h3>
+            <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
+              All your bookings and payment transactions are in good standing. Have questions? Our support team is here.
+            </p>
+          </div>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
