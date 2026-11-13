@@ -990,7 +990,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
       <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
 
         {/* Section Header with Dropdown / Accordion Toggle */}
-        <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-3 bg-white">
+        <div className={`p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-3 bg-white ${weeklyHoursOpen ? 'border-b border-slate-100' : ''}`}>
           <div
             onClick={() => setWeeklyHoursOpen(!weeklyHoursOpen)}
             className="flex items-center gap-3 cursor-pointer select-none shrink-0"
@@ -1076,21 +1076,6 @@ export const InfluencerPricingSchedule: React.FC = () => {
             </button>
           </div>
         </div>
-
-        {/* Collapsed Compact Summary */}
-        {!weeklyHoursOpen && (
-          <div className="p-4 bg-slate-50/60 flex items-center gap-2 flex-wrap text-xs text-slate-600">
-            <span className="font-bold text-slate-900">Current Routine:</span>
-            {weeklySchedule.filter(d => d.enabled).map(d => (
-              <span key={d.day} className="px-2 py-0.5 rounded-md bg-white border border-slate-200 font-semibold text-slate-700">
-                {d.short}: {d.intervals.map(i => `${i.start} - ${i.end}`).join(', ')}
-              </span>
-            ))}
-            {weeklySchedule.filter(d => d.enabled).length === 0 && (
-              <span className="text-rose-600 font-medium italic">No days currently taking bookings</span>
-            )}
-          </div>
-        )}
 
         {/* 7-Day Interactive Weekly Schedule Rows (when open) */}
         {weeklyHoursOpen && (
