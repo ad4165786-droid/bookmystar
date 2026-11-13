@@ -208,14 +208,14 @@ export const UserProfileSettings: React.FC = () => {
 
       {/* 1. Header Banner & Profile Hero */}
       <div className="relative rounded-3xl overflow-hidden border border-slate-200/90 bg-white shadow-soft-sm">
-        
+
         {/* Cover Background Graphic */}
         <div className="h-44 sm:h-52 w-full bg-gradient-to-r from-slate-900 via-brand-950 to-brand-900 relative overflow-hidden">
           {/* Subtle Ambient Shapes */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(249,115,22,0.22),transparent_60%)]" />
           <div className="absolute right-0 bottom-0 top-0 w-1/2 bg-[radial-gradient(ellipse_at_top_right,rgba(217,119,6,0.18),transparent_70%)]" />
           <div className="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:32px_32px]" />
-          
+
           {/* Top Brand Badges */}
           <div className="absolute top-4 right-4 sm:top-6 sm:right-6 flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-white/10 backdrop-blur-md text-white border border-white/20 shadow-xs">
@@ -232,7 +232,7 @@ export const UserProfileSettings: React.FC = () => {
         {/* Profile Identity Bar */}
         <div className="px-6 sm:px-8 pb-6 pt-0">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-5 -mt-16 sm:-mt-20 relative z-10">
-            
+
             {/* Avatar & Basic Info */}
             <div className="flex flex-col sm:flex-row items-center sm:items-end gap-5 text-center sm:text-left">
               <div className="relative group">
@@ -339,15 +339,14 @@ export const UserProfileSettings: React.FC = () => {
 
       {/* 2. Navigation Tabs */}
       <div className="flex items-center gap-1.5 p-1.5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs overflow-x-auto scrollbar-none">
-        
+
         <button
           type="button"
           onClick={() => setActiveTab('personal')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
-            activeTab === 'personal'
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'personal'
               ? 'bg-brand-500 text-white shadow-md shadow-brand-500/25'
               : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-          }`}
+            }`}
         >
           <User className="w-4 h-4" />
           <span>Personal Details</span>
@@ -356,11 +355,10 @@ export const UserProfileSettings: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('security')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
-            activeTab === 'security'
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'security'
               ? 'bg-brand-500 text-white shadow-md shadow-brand-500/25'
               : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-          }`}
+            }`}
         >
           <ShieldCheck className="w-4 h-4" />
           <span>Security & Privacy</span>
@@ -369,11 +367,10 @@ export const UserProfileSettings: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('notifications')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
-            activeTab === 'notifications'
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'notifications'
               ? 'bg-brand-500 text-white shadow-md shadow-brand-500/25'
               : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-          }`}
+            }`}
         >
           <Bell className="w-4 h-4" />
           <span>Notifications & Alerts</span>
@@ -382,17 +379,15 @@ export const UserProfileSettings: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('billing')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
-            activeTab === 'billing'
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'billing'
               ? 'bg-brand-500 text-white shadow-md shadow-brand-500/25'
               : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-          }`}
+            }`}
         >
           <CreditCard className="w-4 h-4" />
           <span>Billing, Escrow & Invoices</span>
-          <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-            activeTab === 'billing' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
-          }`}>
+          <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${activeTab === 'billing' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
+            }`}>
             {userBookings.length}
           </span>
         </button>
@@ -400,17 +395,15 @@ export const UserProfileSettings: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('favorites')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
-            activeTab === 'favorites'
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'favorites'
               ? 'bg-brand-500 text-white shadow-md shadow-brand-500/25'
               : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-          }`}
+            }`}
         >
           <Heart className="w-4 h-4" />
           <span>My Favorite Creators</span>
-          <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-            activeTab === 'favorites' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
-          }`}>
+          <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${activeTab === 'favorites' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
+            }`}>
             {bookedCreators.length}
           </span>
         </button>
@@ -423,7 +416,7 @@ export const UserProfileSettings: React.FC = () => {
       {activeTab === 'personal' && (
         <div className="space-y-6">
           <form onSubmit={handleSavePersonal} className="space-y-6">
-            
+
             {/* Identity & Legal Information */}
             <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-6">
               <div className="flex items-center justify-between pb-4 border-b border-slate-100">
@@ -437,10 +430,10 @@ export const UserProfileSettings: React.FC = () => {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-xs">
-                
-                {/* Full Legal Name */}
+
+                {/* Full Name */}
                 <div>
-                  <label className="block text-slate-700 font-bold mb-1.5">Full Legal Name</label>
+                  <label className="block text-slate-700 font-bold mb-1.5">Full Name</label>
                   <div className="relative">
                     <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                     <input
@@ -479,7 +472,7 @@ export const UserProfileSettings: React.FC = () => {
                 {/* Phone Number */}
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
-                    <label className="text-slate-700 font-bold">Phone Number (India +91)</label>
+                    <label className="text-slate-700 font-bold">Phone Number</label>
                     <span className="text-[10px] font-bold text-emerald-600 flex items-center gap-1">
                       <CheckCircle2 className="w-3 h-3" /> SMS Verified
                     </span>
@@ -487,11 +480,11 @@ export const UserProfileSettings: React.FC = () => {
                   <div className="relative">
                     <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                     <input
-                      type="text"
+                      type="tel"
                       value={phone}
                       onChange={e => setPhone(e.target.value)}
                       required
-                      placeholder="+91 98201 44810"
+                      placeholder="Enter phone number"
                       className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white focus:ring-2 focus:ring-brand-500/10 text-xs font-semibold transition-all"
                     />
                   </div>
@@ -614,7 +607,7 @@ export const UserProfileSettings: React.FC = () => {
       {/* TAB 2: Security & Privacy */}
       {activeTab === 'security' && (
         <div className="space-y-6">
-          
+
           {/* Change Password */}
           <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-6">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
@@ -710,14 +703,12 @@ export const UserProfileSettings: React.FC = () => {
               <button
                 type="button"
                 onClick={handleToggle2FA}
-                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                  twoFactor ? 'bg-emerald-600' : 'bg-slate-200'
-                }`}
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${twoFactor ? 'bg-emerald-600' : 'bg-slate-200'
+                  }`}
               >
                 <span
-                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                    twoFactor ? 'translate-x-5' : 'translate-x-0'
-                  }`}
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${twoFactor ? 'translate-x-5' : 'translate-x-0'
+                    }`}
                 />
               </button>
             </div>
@@ -749,7 +740,7 @@ export const UserProfileSettings: React.FC = () => {
             </div>
 
             <div className="space-y-3 text-xs">
-              
+
               <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80">
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-xl bg-white border border-slate-200 text-slate-700 shadow-2xs">
@@ -832,7 +823,7 @@ export const UserProfileSettings: React.FC = () => {
       {activeTab === 'notifications' && (
         <div className="space-y-6">
           <form onSubmit={handleSaveNotifications} className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-6">
-            
+
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
               <div className="flex items-center gap-3">
                 <div className="p-2.5 rounded-xl bg-brand-50 text-brand-600">
@@ -846,7 +837,7 @@ export const UserProfileSettings: React.FC = () => {
             </div>
 
             <div className="space-y-3 text-xs">
-              
+
               <label className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 hover:bg-slate-100/70 border border-slate-200/80 cursor-pointer transition-colors">
                 <div className="pr-4">
                   <div className="font-bold text-slate-900 flex items-center gap-2">
@@ -946,7 +937,7 @@ export const UserProfileSettings: React.FC = () => {
       {/* TAB 4: Billing, Escrow & Invoices */}
       {activeTab === 'billing' && (
         <div className="space-y-6">
-          
+
           {/* Escrow Guarantee Banner */}
           <div className="p-6 rounded-3xl bg-gradient-to-r from-emerald-950 via-slate-900 to-slate-900 text-white border border-emerald-500/30 shadow-sm relative overflow-hidden">
             <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.25),transparent_70%)]" />
@@ -996,7 +987,7 @@ export const UserProfileSettings: React.FC = () => {
 
           {/* Transactions Table & Controls */}
           <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-5">
-            
+
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
               <div>
                 <h3 className="text-base font-extrabold text-slate-900">Payment & Escrow Transaction Ledger</h3>
@@ -1008,36 +999,32 @@ export const UserProfileSettings: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setTxnStatusFilter('all')}
-                  className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
-                    txnStatusFilter === 'all' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-500 hover:text-slate-900'
-                  }`}
+                  className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${txnStatusFilter === 'all' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-500 hover:text-slate-900'
+                    }`}
                 >
                   All ({userBookings.length})
                 </button>
                 <button
                   type="button"
                   onClick={() => setTxnStatusFilter('success')}
-                  className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
-                    txnStatusFilter === 'success' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-500 hover:text-slate-900'
-                  }`}
+                  className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${txnStatusFilter === 'success' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-500 hover:text-slate-900'
+                    }`}
                 >
                   Success
                 </button>
                 <button
                   type="button"
                   onClick={() => setTxnStatusFilter('pending')}
-                  className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
-                    txnStatusFilter === 'pending' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-500 hover:text-slate-900'
-                  }`}
+                  className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${txnStatusFilter === 'pending' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-500 hover:text-slate-900'
+                    }`}
                 >
                   In Escrow / Pending
                 </button>
                 <button
                   type="button"
                   onClick={() => setTxnStatusFilter('refunded')}
-                  className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
-                    txnStatusFilter === 'refunded' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-500 hover:text-slate-900'
-                  }`}
+                  className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${txnStatusFilter === 'refunded' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-500 hover:text-slate-900'
+                    }`}
                 >
                   Refunded
                 </button>
@@ -1266,9 +1253,8 @@ export const UserProfileSettings: React.FC = () => {
                       setShowAvatarModal(false);
                       showToast('Avatar selected. Click Save to persist.');
                     }}
-                    className={`relative rounded-2xl overflow-hidden p-0.5 border-2 transition-all cursor-pointer ${
-                      avatar === url ? 'border-brand-500 ring-2 ring-brand-500/20' : 'border-transparent hover:border-slate-300'
-                    }`}
+                    className={`relative rounded-2xl overflow-hidden p-0.5 border-2 transition-all cursor-pointer ${avatar === url ? 'border-brand-500 ring-2 ring-brand-500/20' : 'border-transparent hover:border-slate-300'
+                      }`}
                   >
                     <img src={url} alt={`Preset ${idx}`} className="w-full h-20 rounded-xl object-cover" />
                   </button>
