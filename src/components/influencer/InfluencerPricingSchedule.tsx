@@ -989,7 +989,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
       <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
 
         {/* Section Header with Dropdown / Accordion Toggle */}
-        <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white">
+        <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-3 bg-white">
           <div
             onClick={() => setWeeklyHoursOpen(!weeklyHoursOpen)}
             className="flex items-center gap-3 cursor-pointer select-none shrink-0"
@@ -1008,10 +1008,10 @@ export const InfluencerPricingSchedule: React.FC = () => {
           </div>
 
           {/* Header Controls: Routine Template Dropdown, Day Filter & Accordion Toggle */}
-          <div className="flex items-center gap-2.5 flex-wrap">
+          <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap shrink-0">
             {/* Quick Template Dropdown */}
             <div className="flex items-center gap-1.5">
-              <span className="text-xs font-semibold text-slate-500 whitespace-nowrap hidden lg:inline">
+              <span className="text-xs font-semibold text-slate-500 whitespace-nowrap hidden xl:inline">
                 Template:
               </span>
               <select
@@ -1022,10 +1022,10 @@ export const InfluencerPricingSchedule: React.FC = () => {
                   }
                 }}
                 defaultValue=""
-                className="px-3 py-1.5 rounded-xl border border-slate-300 text-xs font-bold bg-white text-slate-800 hover:border-brand-500 focus:outline-none focus:border-brand-500 cursor-pointer shadow-xs transition-colors"
+                className="px-3 py-1.5 rounded-xl border border-slate-300 text-xs font-bold bg-white text-slate-800 hover:border-brand-500 focus:outline-none focus:border-brand-500 cursor-pointer shadow-xs transition-colors max-w-[190px] sm:max-w-[210px] truncate"
                 title="Quick schedule templates"
               >
-                <option value="" disabled>⚡ Routine Template Dropdown...</option>
+                <option value="" disabled>⚡ Routine Templates...</option>
                 <option value="weekdays-9-5">Weekdays (Mon–Fri, 09:00 AM – 05:00 PM)</option>
                 <option value="weekdays-10-6">Weekdays (Mon–Fri, 10:00 AM – 06:00 PM)</option>
                 <option value="weekdays-split">Weekdays Split (10 AM–1 PM, 3 PM–7 PM)</option>
@@ -1038,13 +1038,13 @@ export const InfluencerPricingSchedule: React.FC = () => {
 
             {/* View / Filter By Day Dropdown */}
             <div className="flex items-center gap-1.5">
-              <span className="text-xs font-semibold text-slate-500 whitespace-nowrap hidden lg:inline">
+              <span className="text-xs font-semibold text-slate-500 whitespace-nowrap hidden xl:inline">
                 Filter:
               </span>
               <select
                 value={selectedDayFilter}
                 onChange={(e) => setSelectedDayFilter(e.target.value)}
-                className="px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold bg-slate-50 hover:bg-white text-slate-700 hover:border-brand-400 focus:outline-none cursor-pointer"
+                className="px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold bg-slate-50 hover:bg-white text-slate-700 hover:border-brand-400 focus:outline-none cursor-pointer max-w-[145px]"
                 title="Filter which days to display"
               >
                 <option value="all">View: All 7 Days</option>
@@ -1063,7 +1063,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
             <button
               type="button"
               onClick={() => setWeeklyHoursOpen(!weeklyHoursOpen)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200/80 text-slate-700 text-xs font-bold transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200/80 text-slate-700 text-xs font-bold transition-colors cursor-pointer shrink-0"
               title={weeklyHoursOpen ? "Collapse Weekly Working Hours" : "Expand Weekly Working Hours"}
             >
               <span>{weeklyHoursOpen ? 'Collapse' : 'Expand'}</span>
