@@ -95,15 +95,22 @@ export const UserDashboardLayout: React.FC = () => {
           </div>
 
           {/* User Profile Mini Badge */}
-          <div className="p-4 mx-4 my-4 rounded-2xl bg-gradient-to-br from-slate-50 to-orange-50/50 border border-slate-200/80">
+          <div 
+            onClick={() => {
+              navigate('/fan/profile');
+              setMobileMenuOpen(false);
+            }}
+            className="p-4 mx-4 my-4 rounded-2xl bg-gradient-to-br from-slate-50 to-orange-50/50 border border-slate-200/80 cursor-pointer hover:border-brand-500/40 hover:shadow-xs transition-all group"
+            title="Open Profile Settings"
+          >
             <div className="flex items-center gap-3">
               <img
                 src={currentUser?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80'}
                 alt={currentUser?.name || 'User'}
-                className="w-11 h-11 rounded-xl object-cover ring-2 ring-brand-500/30"
+                className="w-11 h-11 rounded-xl object-cover ring-2 ring-brand-500/30 group-hover:ring-brand-500 transition-all"
               />
               <div className="min-w-0 flex-1">
-                <h4 className="text-sm font-bold text-slate-900 truncate">{currentUser?.name}</h4>
+                <h4 className="text-sm font-bold text-slate-900 truncate group-hover:text-brand-600 transition-colors">{currentUser?.name}</h4>
                 <p className="text-[11px] text-slate-500 truncate">{currentUser?.email}</p>
               </div>
             </div>
@@ -225,6 +232,22 @@ export const UserDashboardLayout: React.FC = () => {
                 </div>
               )}
             </div>
+
+            {/* Quick Profile Avatar Shortcut */}
+            <button
+              onClick={() => navigate('/fan/profile')}
+              className="flex items-center gap-2 p-1 pl-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 transition-colors cursor-pointer"
+              title="View Profile Settings"
+            >
+              <span className="text-xs font-bold text-slate-800 hidden md:inline">
+                {currentUser?.name.split(' ')[0]}
+              </span>
+              <img
+                src={currentUser?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80'}
+                alt={currentUser?.name || 'User'}
+                className="w-7 h-7 rounded-lg object-cover ring-1 ring-brand-500/40"
+              />
+            </button>
           </div>
         </header>
 

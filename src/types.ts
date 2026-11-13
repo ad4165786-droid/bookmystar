@@ -21,6 +21,23 @@ export interface UserProfile {
   createdAt: string;
   totalSpent: number;
   totalBookings: number;
+  bio?: string;
+  city?: string;
+  state?: string;
+  dob?: string;
+  gender?: string;
+  language?: string;
+  timezone?: string;
+  twoFactorEnabled?: boolean;
+  notificationPreferences?: {
+    email: boolean;
+    sms: boolean;
+    whatsapp: boolean;
+    creatorAvailability: boolean;
+    promotional: boolean;
+  };
+  preferredPaymentMethod?: 'upi' | 'card' | 'netbanking';
+  upiId?: string;
 }
 
 export interface InfluencerGalleryItem {

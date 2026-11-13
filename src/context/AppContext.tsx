@@ -101,6 +101,9 @@ interface AppContextType {
   cancelBooking: (bookingId: string, reason: string) => void;
   refundBooking: (bookingId: string, reason: string) => void;
 
+  // User Actions
+  updateUserProfile: (id: string, updates: Partial<UserProfile>) => void;
+
   // Influencer actions
   updateInfluencerProfile: (id: string, updates: Partial<InfluencerProfile>) => void;
   updateInfluencerRates: (id: string, rates: InfluencerProfile['rates'], voiceEnabled: boolean, videoEnabled: boolean) => void;
@@ -794,6 +797,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast(`Refund of ₹${booking.amount} processed.`);
   };
 
+  const updateUserProfile = (id: string, updates: Partial<UserProfile>) => {
+    setUsers(prev => prev.map(u => {
+      if (u.id === id) {
+        const updated = { ...u, ...updates };
+        return updated;
+      }
+      return u;
+    }));
+
+    if (currentUser?.id === id) {
+      setCurrentUser(prev => prev ? { ...prev, ...updates } : null);
+    }
+    showToast('Fan profile updated successfully.');
+  };
+
   const updateInfluencerProfile = (id: string, updates: Partial<InfluencerProfile>) => {
     // Authenticated creator access check: creator can only update their own profile unless admin
     if (currentInfluencer && currentInfluencer.id !== id && currentRole !== 'admin') {
@@ -1215,6 +1233,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         createBooking,
         cancelBooking,
         refundBooking,
+        updateUserProfile,
         updateInfluencerProfile,
         updateInfluencerRates,
         updateInfluencerAvailability,
