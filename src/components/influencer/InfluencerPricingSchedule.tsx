@@ -1,40 +1,40 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
-import { 
-  DayScheduleItem, 
-  TimeIntervalItem, 
-  BookingPreferencesConfig, 
+import {
+  DayScheduleItem,
+  TimeIntervalItem,
+  BookingPreferencesConfig,
   CustomDateOverrideConfig,
-  Booking 
+  Booking
 } from '../../types';
-import { 
-  Calendar as CalendarIcon, 
-  Clock, 
-  Save, 
-  Trash2, 
-  Plus, 
-  CheckCircle2, 
-  AlertCircle, 
-  Eye, 
-  RotateCcw, 
-  ChevronLeft, 
-  ChevronRight, 
-  ChevronDown, 
-  ChevronUp, 
-  Copy, 
-  Check, 
-  X, 
-  ShieldCheck, 
-  CalendarDays, 
-  Sliders, 
-  Ban, 
-  PhoneCall, 
-  Video, 
-  Info, 
-  AlertTriangle, 
-  Globe, 
-  Lock, 
-  User, 
+import {
+  Calendar as CalendarIcon,
+  Clock,
+  Save,
+  Trash2,
+  Plus,
+  CheckCircle2,
+  AlertCircle,
+  Eye,
+  RotateCcw,
+  ChevronLeft,
+  ChevronRight,
+  ChevronDown,
+  ChevronUp,
+  Copy,
+  Check,
+  X,
+  ShieldCheck,
+  CalendarDays,
+  Sliders,
+  Ban,
+  PhoneCall,
+  Video,
+  Info,
+  AlertTriangle,
+  Globe,
+  Lock,
+  User,
   Layers,
   Sparkles,
   ArrowRight
@@ -156,9 +156,9 @@ function validateDayIntervals(intervals: TimeIntervalItem[]): { valid: boolean; 
     const startM = timeToMinutes(intervals[i].start);
     const endM = timeToMinutes(intervals[i].end);
     if (startM >= endM) {
-      return { 
-        valid: false, 
-        error: `End time (${intervals[i].end}) must be strictly after start time (${intervals[i].start}).` 
+      return {
+        valid: false,
+        error: `End time (${intervals[i].end}) must be strictly after start time (${intervals[i].start}).`
       };
     }
   }
@@ -170,9 +170,9 @@ function validateDayIntervals(intervals: TimeIntervalItem[]): { valid: boolean; 
       const bStart = timeToMinutes(intervals[j].start);
       const bEnd = timeToMinutes(intervals[j].end);
       if (aStart < bEnd && aEnd > bStart) {
-        return { 
-          valid: false, 
-          error: `Time interval ${intervals[i].start}–${intervals[i].end} overlaps with ${intervals[j].start}–${intervals[j].end}.` 
+        return {
+          valid: false,
+          error: `Time interval ${intervals[i].start}–${intervals[i].end} overlaps with ${intervals[j].start}–${intervals[j].end}.`
         };
       }
     }
@@ -182,10 +182,10 @@ function validateDayIntervals(intervals: TimeIntervalItem[]): { valid: boolean; 
 }
 
 export const InfluencerPricingSchedule: React.FC = () => {
-  const { 
-    currentInfluencer, 
-    updateInfluencerAvailability, 
-    bookings, 
+  const {
+    currentInfluencer,
+    updateInfluencerAvailability,
+    bookings,
     showToast,
     setActiveView,
     setSelectedInfluencerId
@@ -202,7 +202,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
     const hasLegacyDays = Array.isArray(currentInfluencer.availability?.days) && currentInfluencer.availability.days.length > 0;
 
     return ALL_DAYS.map(d => {
-      const isEnabled = hasLegacyDays 
+      const isEnabled = hasLegacyDays
         ? currentInfluencer.availability!.days.includes(d.short)
         : d.short !== 'Sun';
       return {
@@ -227,7 +227,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
   const [isTakingBookings, setIsTakingBookings] = useState<boolean>(
     currentInfluencer.availability?.isTakingBookings !== false
   );
-  
+
   // Booking Preferences
   const [preferencesOpen, setPreferencesOpen] = useState(false);
   const [preferences, setPreferences] = useState<BookingPreferencesConfig>(
@@ -300,11 +300,11 @@ export const InfluencerPricingSchedule: React.FC = () => {
     const origOverrides = JSON.stringify(currentInfluencer.availability?.customDateOverrides || {});
     const currOverrides = JSON.stringify(customOverrides);
 
-    return origSchedule !== currSchedule || 
-           origBlocked !== currBlocked || 
-           origStatus !== isTakingBookings || 
-           origPref !== currPref ||
-           origOverrides !== currOverrides;
+    return origSchedule !== currSchedule ||
+      origBlocked !== currBlocked ||
+      origStatus !== isTakingBookings ||
+      origPref !== currPref ||
+      origOverrides !== currOverrides;
   }, [weeklySchedule, blockedDates, isTakingBookings, preferences, customOverrides, initialWeeklySchedule, currentInfluencer.availability]);
 
   // Month days for Blackout Calendar
@@ -645,7 +645,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
     setBlackoutEndTime('06:00 PM');
     setBlackoutReasonPreset(BLACKOUT_REASON_PRESETS[0]);
     setBlackoutCustomReason('');
-    
+
     // Check clash
     const clashes = getBookingsForDate(target);
     if (clashes.length > 0) {
@@ -752,7 +752,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
     setIsSaving(true);
 
     const activeDaysShort = weeklySchedule.filter(d => d.enabled).map(d => d.short);
-    
+
     // Sample slot times for backward compatibility
     const sampleSlots: string[] = [];
     weeklySchedule.forEach(d => {
@@ -798,7 +798,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
 
       {/* ================= HEADER CONTROL BAR ================= */}
       <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-        
+
         <div className="flex items-center gap-3.5">
           <div className="w-11 h-11 rounded-xl bg-brand-50 text-brand-600 border border-brand-200/70 flex items-center justify-center shrink-0">
             <Clock className="w-5 h-5 text-brand-600 stroke-[2.2]" />
@@ -808,16 +808,15 @@ export const InfluencerPricingSchedule: React.FC = () => {
               <h1 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
                 Availability & Slot Management
               </h1>
-              
+
               {/* Taking Bookings Switch */}
               <button
                 type="button"
                 onClick={() => setIsTakingBookings(prev => !prev)}
-                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer border ${
-                  isTakingBookings
+                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer border ${isTakingBookings
                     ? 'bg-emerald-50 text-emerald-700 border-emerald-200 shadow-2xs hover:bg-emerald-100'
                     : 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100'
-                }`}
+                  }`}
                 title="Click to pause or enable commercial bookings"
               >
                 <span className={`w-2 h-2 rounded-full ${isTakingBookings ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
@@ -908,7 +907,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
 
       {/* ================= SUMMARY KPI STRIP ================= */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-        
+
         {/* Metric 1: Active Routine Days */}
         <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs flex items-center justify-between">
           <div className="space-y-0.5">
@@ -990,10 +989,10 @@ export const InfluencerPricingSchedule: React.FC = () => {
 
       {/* ================= SECTION 1: WEEKLY WORKING HOURS ================= */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-        
+
         {/* Section Header with Dropdown / Accordion Toggle */}
         <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white">
-          <div 
+          <div
             onClick={() => setWeeklyHoursOpen(!weeklyHoursOpen)}
             className="flex items-center gap-3 cursor-pointer select-none flex-1"
           >
@@ -1009,9 +1008,6 @@ export const InfluencerPricingSchedule: React.FC = () => {
                   {weeklySchedule.filter(d => d.enabled).length} of 7 Days Active
                 </span>
               </div>
-              <p className="text-xs text-slate-500">
-                Set recurring working hours and breaks for each weekday. Fans can only book during these open windows.
-              </p>
             </div>
           </div>
 
@@ -1123,27 +1119,24 @@ export const InfluencerPricingSchedule: React.FC = () => {
                 const validation = dayItem.enabled ? validateDayIntervals(dayItem.intervals) : { valid: true };
 
                 return (
-                  <div 
+                  <div
                     key={dayItem.day}
-                    className={`p-4 sm:p-5 transition-colors ${
-                      dayItem.enabled ? 'bg-white' : 'bg-slate-50/60'
-                    }`}
+                    className={`p-4 sm:p-5 transition-colors ${dayItem.enabled ? 'bg-white' : 'bg-slate-50/60'
+                      }`}
                   >
                     <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
-                      
+
                       {/* Left: Day Name, Toggle Switch & Status Dropdown */}
                       <div className="flex items-center gap-3 w-full sm:w-64 shrink-0">
                         <button
                           type="button"
                           onClick={() => handleToggleDay(dayIdx)}
-                          className={`w-11 h-6 flex items-center rounded-full px-0.5 cursor-pointer transition-colors duration-200 shrink-0 ${
-                            dayItem.enabled ? 'bg-brand-500' : 'bg-slate-300'
-                          }`}
+                          className={`w-11 h-6 flex items-center rounded-full px-0.5 cursor-pointer transition-colors duration-200 shrink-0 ${dayItem.enabled ? 'bg-brand-500' : 'bg-slate-300'
+                            }`}
                           title={dayItem.enabled ? `Disable ${dayItem.day}` : `Enable ${dayItem.day}`}
                         >
-                          <div className={`bg-white w-5 h-5 rounded-full shadow-sm transform transition-transform duration-200 ${
-                            dayItem.enabled ? 'translate-x-5' : 'translate-x-0'
-                          }`} />
+                          <div className={`bg-white w-5 h-5 rounded-full shadow-sm transform transition-transform duration-200 ${dayItem.enabled ? 'translate-x-5' : 'translate-x-0'
+                            }`} />
                         </button>
 
                         <div className="min-w-[85px]">
@@ -1166,11 +1159,10 @@ export const InfluencerPricingSchedule: React.FC = () => {
                               handleToggleDay(dayIdx, isAvail);
                             }
                           }}
-                          className={`text-xs font-semibold px-2.5 py-1 rounded-lg border cursor-pointer focus:outline-none transition-colors ${
-                            dayItem.enabled 
-                              ? 'bg-emerald-50 text-emerald-800 border-emerald-300 focus:border-emerald-500' 
+                          className={`text-xs font-semibold px-2.5 py-1 rounded-lg border cursor-pointer focus:outline-none transition-colors ${dayItem.enabled
+                              ? 'bg-emerald-50 text-emerald-800 border-emerald-300 focus:border-emerald-500'
                               : 'bg-white text-slate-600 border-slate-300 focus:border-brand-500 hover:border-slate-400'
-                          }`}
+                            }`}
                           title="Change day availability status"
                         >
                           <option value="available">✓ Available</option>
@@ -1205,7 +1197,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
                                 <option value="evening">✓ 06:00 PM – 10:00 PM (Evening Only)</option>
                                 <option value="split">✓ Split: 10 AM-1 PM & 3 PM-7 PM</option>
                               </select>
-                              
+
                               <button
                                 type="button"
                                 onClick={() => handleToggleDay(dayIdx, true)}
@@ -1220,7 +1212,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
                           <div className="space-y-2">
                             {dayItem.intervals.map((inv, invIdx) => {
                               const isInvalid = timeToMinutes(inv.start) >= timeToMinutes(inv.end);
-                              
+
                               // Calculate break with previous interval if exists
                               let breakText = '';
                               if (invIdx > 0) {
@@ -1247,9 +1239,8 @@ export const InfluencerPricingSchedule: React.FC = () => {
                                     <select
                                       value={inv.start}
                                       onChange={e => handleUpdateInterval(dayIdx, invIdx, 'start', e.target.value)}
-                                      className={`px-3 py-1.5 rounded-xl border text-xs font-semibold bg-white text-slate-900 focus:outline-none cursor-pointer ${
-                                        isInvalid ? 'border-rose-400 bg-rose-50' : 'border-slate-200 focus:border-brand-500'
-                                      }`}
+                                      className={`px-3 py-1.5 rounded-xl border text-xs font-semibold bg-white text-slate-900 focus:outline-none cursor-pointer ${isInvalid ? 'border-rose-400 bg-rose-50' : 'border-slate-200 focus:border-brand-500'
+                                        }`}
                                     >
                                       {TIME_OPTIONS.map(opt => (
                                         <option key={opt} value={opt}>{opt}</option>
@@ -1262,9 +1253,8 @@ export const InfluencerPricingSchedule: React.FC = () => {
                                     <select
                                       value={inv.end}
                                       onChange={e => handleUpdateInterval(dayIdx, invIdx, 'end', e.target.value)}
-                                      className={`px-3 py-1.5 rounded-xl border text-xs font-semibold bg-white text-slate-900 focus:outline-none cursor-pointer ${
-                                        isInvalid ? 'border-rose-400 bg-rose-50' : 'border-slate-200 focus:border-brand-500'
-                                      }`}
+                                      className={`px-3 py-1.5 rounded-xl border text-xs font-semibold bg-white text-slate-900 focus:outline-none cursor-pointer ${isInvalid ? 'border-rose-400 bg-rose-50' : 'border-slate-200 focus:border-brand-500'
+                                        }`}
                                     >
                                       {TIME_OPTIONS.map(opt => (
                                         <option key={opt} value={opt}>{opt}</option>
@@ -1351,7 +1341,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
 
       {/* ================= SECTION 2: BOOKING SLOT MANAGEMENT ================= */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-        
+
         {/* Section Header */}
         <div className="p-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
@@ -1367,9 +1357,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
                   Auto-Generated Slots
                 </span>
               </div>
-              <p className="text-xs text-slate-500">
-                Inspect real-time appointment slots generated from working hours and existing confirmed fan sessions.
-              </p>
+
             </div>
           </div>
 
@@ -1382,11 +1370,10 @@ export const InfluencerPricingSchedule: React.FC = () => {
                   key={dur}
                   type="button"
                   onClick={() => setSlotSelectedDuration(dur)}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    slotSelectedDuration === dur
+                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${slotSelectedDuration === dur
                       ? 'bg-white text-slate-900 shadow-xs'
                       : 'text-slate-500 hover:text-slate-900'
-                  }`}
+                    }`}
                 >
                   {dur}m
                 </button>
@@ -1415,7 +1402,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
         <div className="p-4 bg-slate-50/70 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
             <span className="text-xs font-bold text-slate-600 shrink-0 mr-1">Inspect Date:</span>
-            
+
             {/* Quick 7-Day Picker */}
             {Array.from({ length: 7 }).map((_, i) => {
               const d = new Date();
@@ -1429,11 +1416,10 @@ export const InfluencerPricingSchedule: React.FC = () => {
                   key={dStr}
                   type="button"
                   onClick={() => setSlotInspectorDate(dStr)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0 border ${
-                    isSelected
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0 border ${isSelected
                       ? 'bg-brand-500 text-white border-brand-500 shadow-xs'
                       : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-200'
-                  }`}
+                    }`}
                 >
                   <span>{isToday ? 'Today' : d.toLocaleDateString('default', { weekday: 'short' })}</span>
                   <span className="ml-1 opacity-80">{d.getDate()}</span>
@@ -1507,26 +1493,24 @@ export const InfluencerPricingSchedule: React.FC = () => {
                   return (
                     <div
                       key={slot.id}
-                      className={`p-3 rounded-xl border text-center transition-all flex flex-col justify-between ${
-                        isBooked
+                      className={`p-3 rounded-xl border text-center transition-all flex flex-col justify-between ${isBooked
                           ? 'bg-blue-50/80 border-blue-200 text-blue-900 shadow-2xs'
                           : isPending
-                          ? 'bg-amber-50 border-amber-200 text-amber-900 shadow-2xs'
-                          : 'bg-emerald-50/60 hover:bg-emerald-50 border-emerald-200/80 text-emerald-900 shadow-2xs'
-                      }`}
+                            ? 'bg-amber-50 border-amber-200 text-amber-900 shadow-2xs'
+                            : 'bg-emerald-50/60 hover:bg-emerald-50 border-emerald-200/80 text-emerald-900 shadow-2xs'
+                        }`}
                     >
                       <div className="text-xs font-extrabold text-slate-900">
                         {slot.timeLabel.split(' – ')[0]}
                       </div>
-                      
+
                       <div className="mt-1 pt-1 border-t border-slate-200/50 flex items-center justify-between text-[10px]">
-                        <span className={`px-1.5 py-0.5 rounded-md font-bold uppercase tracking-wider ${
-                          isBooked 
-                            ? 'bg-blue-200/80 text-blue-800' 
-                            : isPending 
-                            ? 'bg-amber-200/80 text-amber-800' 
-                            : 'bg-emerald-200/80 text-emerald-800'
-                        }`}>
+                        <span className={`px-1.5 py-0.5 rounded-md font-bold uppercase tracking-wider ${isBooked
+                            ? 'bg-blue-200/80 text-blue-800'
+                            : isPending
+                              ? 'bg-amber-200/80 text-amber-800'
+                              : 'bg-emerald-200/80 text-emerald-800'
+                          }`}>
                           {slot.status}
                         </span>
 
@@ -1548,10 +1532,10 @@ export const InfluencerPricingSchedule: React.FC = () => {
 
       {/* ================= SECTION 3: BLACKOUT DATES ================= */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-        
+
         {/* Left: Interactive Monthly Blackout Calendar (7 cols) */}
         <div className="lg:col-span-7 bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4">
-          
+
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl bg-rose-50 text-rose-600 border border-rose-200/60 flex items-center justify-center shrink-0">
@@ -1632,17 +1616,16 @@ export const InfluencerPricingSchedule: React.FC = () => {
                     key={cell.dateStr}
                     type="button"
                     onClick={() => setSelectedBlackoutDate(cell.dateStr)}
-                    className={`h-11 sm:h-12 p-1 rounded-lg border text-center transition-all cursor-pointer flex flex-col items-center justify-between relative ${
-                      isSelected
+                    className={`h-11 sm:h-12 p-1 rounded-lg border text-center transition-all cursor-pointer flex flex-col items-center justify-between relative ${isSelected
                         ? 'border-2 border-brand-500 bg-brand-50 text-slate-900 font-black shadow-xs ring-2 ring-brand-500/20'
                         : isBlocked
-                        ? 'bg-rose-50 border-rose-200 text-rose-700 font-bold hover:bg-rose-100'
-                        : isPast
-                        ? 'bg-slate-50/50 border-slate-100 text-slate-300'
-                        : status.isAvailable
-                        ? 'bg-emerald-50/40 hover:bg-emerald-50 border-emerald-200/70 text-slate-800'
-                        : 'bg-slate-50 border-slate-100 text-slate-400'
-                    } ${!cell.isCurrentMonth ? 'opacity-30' : ''}`}
+                          ? 'bg-rose-50 border-rose-200 text-rose-700 font-bold hover:bg-rose-100'
+                          : isPast
+                            ? 'bg-slate-50/50 border-slate-100 text-slate-300'
+                            : status.isAvailable
+                              ? 'bg-emerald-50/40 hover:bg-emerald-50 border-emerald-200/70 text-slate-800'
+                              : 'bg-slate-50 border-slate-100 text-slate-400'
+                      } ${!cell.isCurrentMonth ? 'opacity-30' : ''}`}
                   >
                     <div className="w-full flex items-center justify-between text-[11px] leading-none">
                       <span className={isSelected ? 'font-black text-brand-600' : ''}>
@@ -1703,7 +1686,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
 
         {/* Right: Blackout Action Panel & Active Dates Ledger (5 cols) */}
         <div className="lg:col-span-5 bg-white rounded-2xl p-5 border border-slate-200 shadow-xs flex flex-col justify-between space-y-4">
-          
+
           <div className="space-y-3.5">
             {/* Header & Quick Add */}
             <div className="pb-3 border-b border-slate-100 flex items-center justify-between">
@@ -1734,13 +1717,12 @@ export const InfluencerPricingSchedule: React.FC = () => {
             <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-slate-500 font-medium">Status:</span>
-                <span className={`px-2 py-0.5 rounded-full font-bold text-[11px] ${
-                  blockedDates.includes(selectedBlackoutDate)
+                <span className={`px-2 py-0.5 rounded-full font-bold text-[11px] ${blockedDates.includes(selectedBlackoutDate)
                     ? 'bg-rose-100 text-rose-800 border border-rose-200'
                     : getDateStatus(selectedBlackoutDate).isAvailable
-                    ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                    : 'bg-slate-200 text-slate-600'
-                }`}>
+                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                      : 'bg-slate-200 text-slate-600'
+                  }`}>
                   {blockedDates.includes(selectedBlackoutDate)
                     ? 'Unavailable / Blocked'
                     : getDateStatus(selectedBlackoutDate).label}
@@ -1780,7 +1762,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
                     const dObj = new Date(dateStr + 'T00:00:00');
 
                     return (
-                      <div 
+                      <div
                         key={dateStr}
                         className="p-2.5 rounded-xl bg-white border border-slate-200 flex items-center justify-between text-xs shadow-2xs hover:border-slate-300 transition-colors"
                       >
@@ -1822,7 +1804,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
 
       {/* ================= ADDITIONAL SETTINGS (BOOKING RULES & LIMITS) ================= */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-        
+
         {/* Accordion Trigger */}
         <button
           type="button"
@@ -1863,7 +1845,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
         {/* Accordion Body */}
         {preferencesOpen && (
           <div className="p-5 pt-0 border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-4 animate-fadeIn">
-            
+
             {/* Setting 1: Minimum Advance Booking Time */}
             <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
               <label className="block text-xs font-bold text-slate-900">
@@ -1970,15 +1952,13 @@ export const InfluencerPricingSchedule: React.FC = () => {
                         const updated = isChecked ? current.filter(d => d !== duration) : [...current, duration];
                         setPreferences(prev => ({ ...prev, allowedDurations: updated }));
                       }}
-                      className={`px-3.5 py-1.5 rounded-lg text-xs font-bold border transition-all cursor-pointer flex items-center gap-2 ${
-                        isChecked
+                      className={`px-3.5 py-1.5 rounded-lg text-xs font-bold border transition-all cursor-pointer flex items-center gap-2 ${isChecked
                           ? 'bg-brand-50 text-brand-700 border-brand-400 shadow-xs'
                           : 'bg-white text-slate-400 border-slate-200 hover:bg-slate-100'
-                      }`}
+                        }`}
                     >
-                      <div className={`w-3.5 h-3.5 rounded flex items-center justify-center ${
-                        isChecked ? 'bg-brand-500 text-white' : 'border border-slate-300'
-                      }`}>
+                      <div className={`w-3.5 h-3.5 rounded flex items-center justify-center ${isChecked ? 'bg-brand-500 text-white' : 'border border-slate-300'
+                        }`}>
                         {isChecked && <Check className="w-2.5 h-2.5 stroke-[3]" />}
                       </div>
                       <span>{duration} Minutes Session</span>
@@ -2048,7 +2028,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
       {copyModalDayIndex !== null && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
           <div className="w-full max-w-md bg-white rounded-2xl border border-slate-200 shadow-2xl p-6 space-y-4">
-            
+
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <Copy className="w-4 h-4 text-brand-500" />
@@ -2068,7 +2048,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
             <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs">
               <span className="text-slate-500 font-medium">Source Working Hours:</span>
               <div className="font-bold text-slate-900 mt-0.5">
-                {weeklySchedule[copyModalDayIndex]?.enabled 
+                {weeklySchedule[copyModalDayIndex]?.enabled
                   ? weeklySchedule[copyModalDayIndex].intervals.map(inv => `${inv.start} – ${inv.end}`).join(', ')
                   : 'Unavailable'}
               </div>
@@ -2099,20 +2079,18 @@ export const InfluencerPricingSchedule: React.FC = () => {
                       key={d.day}
                       type="button"
                       onClick={() => {
-                        setCopyTargetDays(prev => 
+                        setCopyTargetDays(prev =>
                           prev.includes(idx) ? prev.filter(i => i !== idx) : [...prev, idx]
                         );
                       }}
-                      className={`p-2.5 rounded-xl text-xs font-bold border transition-all cursor-pointer flex items-center justify-between ${
-                        isChecked
+                      className={`p-2.5 rounded-xl text-xs font-bold border transition-all cursor-pointer flex items-center justify-between ${isChecked
                           ? 'bg-brand-50 text-brand-700 border-brand-400'
                           : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
-                      }`}
+                        }`}
                     >
                       <span>{d.day}</span>
-                      <div className={`w-4 h-4 rounded flex items-center justify-center ${
-                        isChecked ? 'bg-brand-500 text-white' : 'border border-slate-300'
-                      }`}>
+                      <div className={`w-4 h-4 rounded flex items-center justify-center ${isChecked ? 'bg-brand-500 text-white' : 'border border-slate-300'
+                        }`}>
                         {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
                       </div>
                     </button>
@@ -2147,7 +2125,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
       {showAddBlackoutModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
           <div className="w-full max-w-lg bg-white rounded-2xl border border-slate-200 shadow-2xl p-6 space-y-4">
-            
+
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <Ban className="w-4 h-4 text-rose-600" />
@@ -2169,22 +2147,20 @@ export const InfluencerPricingSchedule: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setBlackoutFormMode('single')}
-                className={`flex-1 py-1.5 rounded-lg transition-all cursor-pointer ${
-                  blackoutFormMode === 'single'
+                className={`flex-1 py-1.5 rounded-lg transition-all cursor-pointer ${blackoutFormMode === 'single'
                     ? 'bg-white text-slate-900 shadow-xs'
                     : 'text-slate-500 hover:text-slate-900'
-                }`}
+                  }`}
               >
                 Single Date
               </button>
               <button
                 type="button"
                 onClick={() => setBlackoutFormMode('range')}
-                className={`flex-1 py-1.5 rounded-lg transition-all cursor-pointer ${
-                  blackoutFormMode === 'range'
+                className={`flex-1 py-1.5 rounded-lg transition-all cursor-pointer ${blackoutFormMode === 'range'
                     ? 'bg-white text-slate-900 shadow-xs'
                     : 'text-slate-500 hover:text-slate-900'
-                }`}
+                  }`}
               >
                 Date Range (Vacation)
               </button>
@@ -2331,7 +2307,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
       {showClashConfirmModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-fadeIn">
           <div className="w-full max-w-md bg-white rounded-2xl border border-amber-200 shadow-2xl p-6 space-y-4">
-            
+
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
                 <AlertTriangle className="w-5 h-5 text-amber-600" />
