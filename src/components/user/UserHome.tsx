@@ -8,14 +8,8 @@ import {
   CheckCircle2, 
   Video, 
   PhoneCall, 
-  ShieldCheck, 
   SlidersHorizontal, 
-  ArrowRight,
-  TrendingUp,
-  Zap,
-  Clock,
-  Heart,
-  Lock
+  ArrowRight
 } from 'lucide-react';
 
 const CATEGORIES: ('All' | Category)[] = [
@@ -316,44 +310,7 @@ export const UserHome: React.FC = () => {
 
       </section>
 
-      {/* Trust & Guarantee Commercial Footer Section */}
-      <section className="rounded-3xl bg-white border border-slate-200/90 p-6 sm:p-8 shadow-sm">
-        <h3 className="text-center text-xs font-black uppercase tracking-wider text-slate-400 mb-6">
-          Why Fans & Creators Trust BookMyStar
-        </h3>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
-            <div className="w-10 h-10 rounded-xl bg-brand-50 text-brand-600 border border-brand-200/80 flex items-center justify-center mx-auto">
-              <ShieldCheck className="w-5 h-5 text-brand-600" />
-            </div>
-            <h4 className="text-xs font-extrabold text-slate-900">100% Money-Back Escrow</h4>
-            <p className="text-[11px] text-slate-500 leading-relaxed">
-              Funds are held securely by the server and disbursed to creators only after successful call completion.
-            </p>
-          </div>
 
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
-            <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 border border-amber-200/80 flex items-center justify-center mx-auto">
-              <Clock className="w-5 h-5 text-amber-600" />
-            </div>
-            <h4 className="text-xs font-extrabold text-slate-900">Anti-Collision Slot Locking</h4>
-            <p className="text-[11px] text-slate-500 leading-relaxed">
-              When booking begins, time slots are automatically locked across users to strictly prevent double-booking.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200/80 flex items-center justify-center mx-auto">
-              <Lock className="w-5 h-5 text-emerald-600" />
-            </div>
-            <h4 className="text-xs font-extrabold text-slate-900">Strict Participant Privacy</h4>
-            <p className="text-[11px] text-slate-500 leading-relaxed">
-              Live rooms are authenticated with private single-use tokens. Administrators cannot listen or record calls.
-            </p>
-          </div>
-        </div>
-      </section>
 
     </div>
   );
