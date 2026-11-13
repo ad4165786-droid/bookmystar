@@ -830,6 +830,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
               </span>
             </div>
 
+
           </div>
         </div>
 
@@ -1078,25 +1079,16 @@ export const InfluencerPricingSchedule: React.FC = () => {
 
         {/* Collapsed Compact Summary */}
         {!weeklyHoursOpen && (
-          <div className="p-4 bg-slate-50/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-600">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-bold text-slate-900">Current Routine:</span>
-              {weeklySchedule.filter(d => d.enabled).map(d => (
-                <span key={d.day} className="px-2 py-0.5 rounded-md bg-white border border-slate-200 font-semibold text-slate-700">
-                  {d.short}: {d.intervals.map(i => `${i.start} - ${i.end}`).join(', ')}
-                </span>
-              ))}
-              {weeklySchedule.filter(d => d.enabled).length === 0 && (
-                <span className="text-rose-600 font-medium italic">No days currently taking bookings</span>
-              )}
-            </div>
-            <button
-              type="button"
-              onClick={() => setWeeklyHoursOpen(true)}
-              className="text-brand-600 hover:text-brand-700 font-bold underline cursor-pointer shrink-0"
-            >
-              Expand Working Hours
-            </button>
+          <div className="p-4 bg-slate-50/60 flex items-center gap-2 flex-wrap text-xs text-slate-600">
+            <span className="font-bold text-slate-900">Current Routine:</span>
+            {weeklySchedule.filter(d => d.enabled).map(d => (
+              <span key={d.day} className="px-2 py-0.5 rounded-md bg-white border border-slate-200 font-semibold text-slate-700">
+                {d.short}: {d.intervals.map(i => `${i.start} - ${i.end}`).join(', ')}
+              </span>
+            ))}
+            {weeklySchedule.filter(d => d.enabled).length === 0 && (
+              <span className="text-rose-600 font-medium italic">No days currently taking bookings</span>
+            )}
           </div>
         )}
 
