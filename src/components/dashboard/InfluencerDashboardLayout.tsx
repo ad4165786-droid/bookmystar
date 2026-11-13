@@ -15,7 +15,8 @@ import {
   AlertCircle,
   ChevronRight,
   Star,
-  User
+  User,
+  FileText
 } from 'lucide-react';
 
 // Child views
@@ -25,6 +26,7 @@ import { InfluencerPricingSchedule } from '../influencer/InfluencerPricingSchedu
 import { InfluencerBookings } from '../influencer/InfluencerBookings';
 import { InfluencerEarningsPayouts } from '../influencer/InfluencerEarningsPayouts';
 import { InfluencerReviewsGrievances } from '../influencer/InfluencerReviewsGrievances';
+import { InfluencerTermsConditions } from '../influencer/InfluencerTermsConditions';
 
 export const InfluencerDashboardLayout: React.FC = () => {
   const {
@@ -52,6 +54,7 @@ export const InfluencerDashboardLayout: React.FC = () => {
     { path: '/influencer/bookings', id: 'bookings', label: 'Fan Bookings', icon: Calendar },
     { path: '/influencer/earnings', id: 'payouts', label: 'Earnings & Payouts', icon: Wallet },
     { path: '/influencer/reviews', id: 'reviews', label: 'Reviews & Grievances', icon: Star },
+    { path: '/influencer/terms-conditions', id: 'terms-conditions', label: 'Terms & Conditions', icon: FileText },
   ];
 
   return (
@@ -245,7 +248,15 @@ export const InfluencerDashboardLayout: React.FC = () => {
           {currentPath === '/influencer/bookings' && <InfluencerBookings />}
           {currentPath === '/influencer/earnings' && <InfluencerEarningsPayouts />}
           {currentPath === '/influencer/reviews' && <InfluencerReviewsGrievances />}
-          {(currentPath === '/influencer/dashboard' || (currentPath !== '/influencer/profile' && currentPath !== '/influencer/availability' && currentPath !== '/influencer/bookings' && currentPath !== '/influencer/earnings' && currentPath !== '/influencer/reviews')) && (
+          {currentPath === '/influencer/terms-conditions' && <InfluencerTermsConditions />}
+          {(currentPath === '/influencer/dashboard' || (
+            currentPath !== '/influencer/profile' &&
+            currentPath !== '/influencer/availability' &&
+            currentPath !== '/influencer/bookings' &&
+            currentPath !== '/influencer/earnings' &&
+            currentPath !== '/influencer/reviews' &&
+            currentPath !== '/influencer/terms-conditions'
+          )) && (
             <InfluencerDashboard />
           )}
         </main>

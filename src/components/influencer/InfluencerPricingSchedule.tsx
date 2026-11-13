@@ -1487,179 +1487,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
 
 
 
-      {/* ================= ADDITIONAL SETTINGS (BOOKING RULES & LIMITS) ================= */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
 
-        {/* Accordion Trigger */}
-        <button
-          type="button"
-          onClick={() => setPreferencesOpen(prev => !prev)}
-          className="w-full p-5 flex items-center justify-between text-left cursor-pointer hover:bg-slate-50/50 transition-colors"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 border border-purple-200/60 flex items-center justify-center shrink-0">
-              <ShieldCheck className="w-4 h-4 text-purple-600" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <h2 className="text-base font-extrabold text-slate-900 tracking-tight">
-                  Booking Rules, Buffers & Policies
-                </h2>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200">
-                  Settings
-                </span>
-              </div>
-              <p className="text-xs text-slate-500">
-                Minimum notice, advance booking window, daily call limits, and supported session durations.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-slate-500 hidden sm:inline">
-              {preferencesOpen ? 'Collapse' : 'Configure'}
-            </span>
-            {preferencesOpen ? (
-              <ChevronUp className="w-4 h-4 text-slate-400" />
-            ) : (
-              <ChevronDown className="w-4 h-4 text-slate-400" />
-            )}
-          </div>
-        </button>
-
-        {/* Accordion Body */}
-        {preferencesOpen && (
-          <div className="p-5 pt-0 border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-4 animate-fadeIn">
-
-            {/* Setting 1: Minimum Advance Booking Time */}
-            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
-              <label className="block text-xs font-bold text-slate-900">
-                Minimum Advance Notice
-              </label>
-              <select
-                value={preferences.minNoticeHours}
-                onChange={e => setPreferences(prev => ({ ...prev, minNoticeHours: parseInt(e.target.value, 10) }))}
-                className="w-full px-3 py-2 rounded-lg bg-white border border-slate-200 text-xs font-semibold text-slate-900 focus:outline-none focus:border-brand-500"
-              >
-                <option value={1}>1 hour notice</option>
-                <option value={2}>2 hours notice (Recommended)</option>
-                <option value={4}>4 hours notice</option>
-                <option value={12}>12 hours notice</option>
-                <option value={24}>24 hours notice (1 full day)</option>
-                <option value={48}>48 hours notice (2 full days)</option>
-              </select>
-              <p className="text-[10px] text-slate-500">
-                Prevents last-minute surprise bookings so you can prepare.
-              </p>
-            </div>
-
-            {/* Setting 2: Maximum Advance Booking Window */}
-            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
-              <label className="block text-xs font-bold text-slate-900">
-                Maximum Advance Booking Window
-              </label>
-              <select
-                value={preferences.maxAdvanceDays}
-                onChange={e => setPreferences(prev => ({ ...prev, maxAdvanceDays: parseInt(e.target.value, 10) }))}
-                className="w-full px-3 py-2 rounded-lg bg-white border border-slate-200 text-xs font-semibold text-slate-900 focus:outline-none focus:border-brand-500"
-              >
-                <option value={7}>Up to 7 days ahead</option>
-                <option value={14}>Up to 14 days ahead</option>
-                <option value={30}>Up to 30 days ahead (Recommended)</option>
-                <option value={60}>Up to 60 days ahead</option>
-                <option value={90}>Up to 90 days ahead</option>
-              </select>
-              <p className="text-[10px] text-slate-500">
-                Controls how far into the future fans can schedule booking slots.
-              </p>
-            </div>
-
-            {/* Setting 3: Buffer Time Between Calls */}
-            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
-              <label className="block text-xs font-bold text-slate-900">
-                Buffer Time Between Calls
-              </label>
-              <select
-                value={preferences.bufferMinutes}
-                onChange={e => setPreferences(prev => ({ ...prev, bufferMinutes: parseInt(e.target.value, 10) }))}
-                className="w-full px-3 py-2 rounded-lg bg-white border border-slate-200 text-xs font-semibold text-slate-900 focus:outline-none focus:border-brand-500"
-              >
-                <option value={0}>0 minutes (Back-to-back)</option>
-                <option value={5}>5 minutes break</option>
-                <option value={10}>10 minutes break (Recommended)</option>
-                <option value={15}>15 minutes break</option>
-                <option value={30}>30 minutes break</option>
-              </select>
-              <p className="text-[10px] text-slate-500">
-                Automatic cooldown added after each session to prevent schedule overrun.
-              </p>
-            </div>
-
-            {/* Setting 4: Maximum Bookings per Day */}
-            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
-              <label className="block text-xs font-bold text-slate-900">
-                Maximum Bookings per Day
-              </label>
-              <select
-                value={preferences.maxBookingsPerDay}
-                onChange={e => setPreferences(prev => ({ ...prev, maxBookingsPerDay: parseInt(e.target.value, 10) }))}
-                className="w-full px-3 py-2 rounded-lg bg-white border border-slate-200 text-xs font-semibold text-slate-900 focus:outline-none focus:border-brand-500"
-              >
-                <option value={3}>Max 3 calls / day</option>
-                <option value={5}>Max 5 calls / day</option>
-                <option value={8}>Max 8 calls / day (Recommended)</option>
-                <option value={10}>Max 10 calls / day</option>
-                <option value={999}>Unlimited capacity</option>
-              </select>
-              <p className="text-[10px] text-slate-500">
-                Prevents creator fatigue by capping the total daily booking volume.
-              </p>
-            </div>
-
-            {/* Setting 5: Call Duration Compatibility */}
-            <div className="md:col-span-2 p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-              <label className="block text-xs font-bold text-slate-900">
-                Supported Call Durations for Fans
-              </label>
-              <div className="flex flex-wrap gap-2.5">
-                {[15, 30, 45, 60].map(duration => {
-                  const isChecked = preferences.allowedDurations?.includes(duration);
-                  return (
-                    <button
-                      key={duration}
-                      type="button"
-                      onClick={() => {
-                        const current = preferences.allowedDurations || [15, 30, 45, 60];
-                        if (isChecked && current.length === 1) {
-                          showToast('At least one duration must remain active.');
-                          return;
-                        }
-                        const updated = isChecked ? current.filter(d => d !== duration) : [...current, duration];
-                        setPreferences(prev => ({ ...prev, allowedDurations: updated }));
-                      }}
-                      className={`px-3.5 py-1.5 rounded-lg text-xs font-bold border transition-all cursor-pointer flex items-center gap-2 ${isChecked
-                        ? 'bg-brand-50 text-brand-700 border-brand-400 shadow-xs'
-                        : 'bg-white text-slate-400 border-slate-200 hover:bg-slate-100'
-                        }`}
-                    >
-                      <div className={`w-3.5 h-3.5 rounded flex items-center justify-center ${isChecked ? 'bg-brand-500 text-white' : 'border border-slate-300'
-                        }`}>
-                        {isChecked && <Check className="w-2.5 h-2.5 stroke-[3]" />}
-                      </div>
-                      <span>{duration} Minutes Session</span>
-                    </button>
-                  );
-                })}
-              </div>
-              <p className="text-[10px] text-slate-500">
-                Only enabled durations can be booked by fans on your marketplace profile.
-              </p>
-            </div>
-
-          </div>
-        )}
-
-      </div>
 
       {/* ================= FOOTER PERSISTENCE ACTIONS ================= */}
       <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
@@ -1667,12 +1495,12 @@ export const InfluencerPricingSchedule: React.FC = () => {
           {isDirty ? (
             <span className="text-amber-600 font-bold flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
-              You have unsaved changes in your availability schedule or blackout dates
+              You have unsaved changes in your availability schedule
             </span>
           ) : (
             <span className="text-slate-400 flex items-center gap-1">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-              All schedule settings and booking rules are synchronized
+              All schedule settings are synchronized with BookMyStar
             </span>
           )}
         </div>

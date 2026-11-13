@@ -16,6 +16,7 @@ const VALID_FAN_ROUTES = [
   '/fan/bookings',
   '/fan/grievances',
   '/fan/profile',
+  '/fan/terms-conditions',
 ];
 
 const VALID_INFLUENCER_ROUTES = [
@@ -25,6 +26,8 @@ const VALID_INFLUENCER_ROUTES = [
   '/influencer/bookings',
   '/influencer/earnings',
   '/influencer/reviews',
+  '/influencer/terms-conditions',
+  '/influencer/terms-policies',
 ];
 
 const VALID_ADMIN_ROUTES = [
