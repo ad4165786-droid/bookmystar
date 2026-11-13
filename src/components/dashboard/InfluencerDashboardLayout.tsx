@@ -109,11 +109,6 @@ export const InfluencerDashboardLayout: React.FC = () => {
                   )}
                 </div>
                 <p className="text-[11px] text-brand-600 font-medium truncate">{currentInfluencer?.handle}</p>
-                <div className="mt-1 flex items-center gap-1.5 text-[10px] text-slate-500">
-                  <span>Bal: ₹{currentInfluencer?.pendingBalance.toLocaleString('en-IN')}</span>
-                  <span>•</span>
-                  <span>{currentInfluencer?.completedCallsCount} Calls</span>
-                </div>
               </div>
             </div>
           </div>
