@@ -75,7 +75,7 @@ export const UserHome: React.FC = () => {
   }, [influencers, selectedCategory, callTypeFilter, searchQuery, maxPrice, onlyVerified, settings]);
 
   return (
-    <div className="space-y-8 pb-16">
+    <div className="space-y-8 pb-6">
 
       {/* Discovery Filters & Search */}
       <section className="space-y-4">

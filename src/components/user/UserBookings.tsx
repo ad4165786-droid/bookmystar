@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { BookingStatus, Booking } from '../../types';
-import { 
-  Calendar, 
-  Clock, 
-  Video, 
-  PhoneCall, 
-  CheckCircle2, 
-  XCircle, 
-  RotateCcw, 
-  FileText, 
-  Star, 
+import {
+  Calendar,
+  Clock,
+  Video,
+  PhoneCall,
+  CheckCircle2,
+  XCircle,
+  RotateCcw,
+  FileText,
+  Star,
   AlertCircle,
   Radio,
   ArrowRight
@@ -18,16 +18,16 @@ import {
 import { InvoiceModal } from '../modals/InvoiceModal';
 
 export const UserBookings: React.FC = () => {
-  const { 
-    bookings, 
-    currentUser, 
-    startCall, 
-    cancelBooking, 
+  const {
+    bookings,
+    currentUser,
+    startCall,
+    cancelBooking,
     refundBooking,
     setActiveView,
     navigate,
     setSelectedInfluencerId,
-    showToast 
+    showToast
   } = useApp();
 
   const [activeTab, setActiveTab] = useState<'all' | BookingStatus>('upcoming');
@@ -59,13 +59,12 @@ export const UserBookings: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 pb-16">
-      
+    <div className="space-y-6 pb-6">
+
       {/* Page Title & Summary Metrics */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-white">My Call Bookings</h1>
-          <p className="text-xs text-slate-400 mt-0.5">Manage your upcoming and past 1-on-1 sessions</p>
+          <h1 className="text-2xl font-black text-slate-900">My Call Bookings</h1>
         </div>
 
         <div className="flex items-center gap-3">
@@ -86,11 +85,10 @@ export const UserBookings: React.FC = () => {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`capitalize px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
-              activeTab === tab
+            className={`capitalize px-4 py-2 rounded-xl text-xs font-semibold transition-all ${activeTab === tab
                 ? 'bg-gradient-to-r from-brand-600 to-brand-500 text-white shadow-glow'
                 : 'bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800'
-            }`}
+              }`}
           >
             {tab} ({tab === 'all' ? userBookings.length : userBookings.filter(b => b.bookingStatus === tab).length})
           </button>
@@ -120,7 +118,7 @@ export const UserBookings: React.FC = () => {
               key={booking.id}
               className="rounded-2xl bg-slate-900/70 border border-slate-800/90 p-5 sm:p-6 shadow-md hover:border-slate-700 transition-all space-y-4"
             >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-800/80">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
                 <div className="flex items-center gap-3.5">
                   <img
                     src={booking.influencerAvatar}

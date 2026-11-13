@@ -283,7 +283,7 @@ export const InfluencerTermsConditions: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 pb-16 max-w-5xl mx-auto font-sans">
+    <div className="space-y-6 pb-6 max-w-5xl mx-auto font-sans">
 
       {/* Header Banner */}
       <div className="bg-white rounded-2xl p-6 sm:p-7 border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-5">

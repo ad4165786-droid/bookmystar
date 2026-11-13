@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { GrievanceTicket } from '../../types';
-import { 
-  LifeBuoy, 
-  PlusCircle, 
-  Clock, 
-  CheckCircle2, 
-  AlertCircle, 
-  Send, 
+import {
+  LifeBuoy,
+  PlusCircle,
+  Clock,
+  CheckCircle2,
+  AlertCircle,
+  Send,
   MessageSquare,
   ShieldAlert,
   ChevronRight,
@@ -15,13 +15,13 @@ import {
 } from 'lucide-react';
 
 export const UserGrievances: React.FC = () => {
-  const { 
-    grievances, 
-    currentUser, 
-    submitGrievance, 
+  const {
+    grievances,
+    currentUser,
+    submitGrievance,
     replyToGrievance,
     bookings,
-    showToast 
+    showToast
   } = useApp();
 
   const [showNewModal, setShowNewModal] = useState(false);
@@ -69,13 +69,12 @@ export const UserGrievances: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 pb-16">
-      
+    <div className="space-y-6 pb-6">
+
       {/* Title & Action */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-white">Grievance & Support Desk</h1>
-          <p className="text-xs text-slate-400 mt-0.5">Submit complaints regarding calls, payments, or creator conduct</p>
+          <h1 className="text-2xl font-black text-slate-900">Grievance & Support Desk</h1>
         </div>
 
         <button
@@ -97,28 +96,26 @@ export const UserGrievances: React.FC = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          
+
           {/* Ticket List (5 cols) */}
           <div className="lg:col-span-5 space-y-3">
             {userTickets.map(ticket => (
               <div
                 key={ticket.id}
                 onClick={() => setSelectedTicketId(ticket.id)}
-                className={`p-4 rounded-xl border text-xs cursor-pointer transition-all ${
-                  selectedTicket?.id === ticket.id
+                className={`p-4 rounded-xl border text-xs cursor-pointer transition-all ${selectedTicket?.id === ticket.id
                     ? 'bg-slate-900 border-brand-500 shadow-glow'
                     : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
-                }`}
+                  }`}
               >
                 <div className="flex items-center justify-between mb-1.5">
                   <span className="font-mono text-brand-300 font-bold">{ticket.ticketRef}</span>
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${
-                    ticket.status === 'resolved'
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${ticket.status === 'resolved'
                       ? 'bg-emerald-950/70 text-emerald-300 border border-emerald-500/30'
                       : ticket.status === 'in_progress'
-                      ? 'bg-amber-950/70 text-amber-300 border border-amber-500/30'
-                      : 'bg-slate-800 text-slate-300'
-                  }`}>
+                        ? 'bg-amber-950/70 text-amber-300 border border-amber-500/30'
+                        : 'bg-slate-800 text-slate-300'
+                    }`}>
                     {ticket.status.replace('_', ' ')}
                   </span>
                 </div>
@@ -140,7 +137,7 @@ export const UserGrievances: React.FC = () => {
           <div className="lg:col-span-7">
             {selectedTicket ? (
               <div className="rounded-2xl bg-slate-900 border border-slate-800 flex flex-col h-[580px] overflow-hidden shadow-xl">
-                
+
                 {/* Header */}
                 <div className="p-4 border-b border-slate-800 bg-slate-950/60">
                   <div className="flex items-center justify-between">
@@ -166,11 +163,10 @@ export const UserGrievances: React.FC = () => {
                     return (
                       <div
                         key={resp.id}
-                        className={`p-3.5 rounded-xl border leading-relaxed ${
-                          isAdmin
+                        className={`p-3.5 rounded-xl border leading-relaxed ${isAdmin
                             ? 'bg-brand-950/40 border-brand-500/30 text-brand-100 ml-4'
                             : 'bg-slate-800/80 border-slate-700/60 text-slate-200 mr-4'
-                        }`}
+                          }`}
                       >
                         <div className="flex items-center justify-between pb-1 mb-1 border-b border-white/5 text-[10px]">
                           <span className={`font-bold ${isAdmin ? 'text-brand-300' : 'text-slate-300'}`}>

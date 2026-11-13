@@ -79,7 +79,7 @@ export const InfluencerDetailView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 pb-16">
+    <div className="space-y-8 pb-6">
       
       {/* Back Navigation Bar */}
       <div className="flex items-center justify-between">
@@ -298,7 +298,7 @@ export const InfluencerDetailView: React.FC = () => {
 
           {/* Reviews & Ratings Section */}
           <section className="p-6 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-5">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div className="flex items-center justify-between pb-3">
               <div>
                 <h3 className="text-sm font-bold uppercase tracking-wider text-slate-300">Fan Ratings & Feedback</h3>
                 <p className="text-xs text-slate-400 mt-0.5">Verified attendees after completed sessions</p>
@@ -347,7 +347,7 @@ export const InfluencerDetailView: React.FC = () => {
         <div className="lg:col-span-5">
           <div className="sticky top-24 rounded-3xl bg-slate-900 border border-brand-500/30 p-6 sm:p-7 shadow-2xl space-y-6">
             
-            <div className="pb-4 border-b border-slate-800">
+            <div className="pb-3">
               <span className="text-[10px] font-bold uppercase tracking-wider text-brand-400">Interactive Booking Console</span>
               <h3 className="text-xl font-black text-white mt-0.5">Select Session & Lock Slot</h3>
               <p className="text-xs text-slate-400 mt-1">Direct 1-on-1 private connection with {influencer.name}</p>

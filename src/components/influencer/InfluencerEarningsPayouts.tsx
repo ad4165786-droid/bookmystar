@@ -73,7 +73,7 @@ export const InfluencerEarningsPayouts: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 pb-16 max-w-5xl">
+    <div className="space-y-8 pb-6 max-w-5xl">
 
       {/* Title */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

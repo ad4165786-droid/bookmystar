@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { 
-  User, 
-  Mail, 
-  Phone, 
-  ShieldCheck, 
-  Bell, 
-  Lock, 
-  CreditCard, 
-  CheckCircle2, 
+import {
+  User,
+  Mail,
+  Phone,
+  ShieldCheck,
+  Bell,
+  Lock,
+  CreditCard,
+  CheckCircle2,
   Clock,
   Save
 } from 'lucide-react';
@@ -19,7 +19,7 @@ export const UserProfileSettings: React.FC = () => {
   const [name, setName] = useState(currentUser.name);
   const [email, setEmail] = useState(currentUser.email);
   const [phone, setPhone] = useState(currentUser.phone);
-  
+
   const [emailNotif, setEmailNotif] = useState(true);
   const [smsNotif, setSmsNotif] = useState(true);
   const [whatsappNotif, setWhatsappNotif] = useState(true);
@@ -35,11 +35,10 @@ export const UserProfileSettings: React.FC = () => {
   const userTransactions = bookings.filter(b => b.userId === currentUser.id);
 
   return (
-    <div className="space-y-8 pb-16 max-w-4xl">
-      
-      <div className="pb-2 border-b border-slate-800">
-        <h1 className="text-2xl font-black text-white">Account Settings & Profile</h1>
-        <p className="text-xs text-slate-400 mt-0.5">Manage your personal credentials, contact numbers, and security</p>
+    <div className="space-y-8 pb-6 max-w-4xl">
+
+      <div>
+        <h1 className="text-2xl font-black text-slate-900">Account Settings & Profile</h1>
       </div>
 
       {/* Profile Info Form */}

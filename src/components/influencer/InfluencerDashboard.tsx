@@ -150,7 +150,7 @@ export const InfluencerDashboard: React.FC = () => {
   const activePoint = activeDataIndex !== null ? chartDataset[activeDataIndex] : chartDataset[chartDataset.length - 1];
 
   return (
-    <div className="space-y-8 pb-16 font-sans">
+    <div className="space-y-8 pb-6 font-sans">
 
       {/* ================= 1. WELCOME BANNER ================= */}
       <div className="relative rounded-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white p-6 sm:p-8 overflow-hidden shadow-xl border border-slate-700/80">
