@@ -46,8 +46,8 @@ export const UserDashboardLayout: React.FC = () => {
   const navItems = [
     { path: '/fan/dashboard', id: 'explore', label: 'Explore Creators', icon: Compass },
     { path: '/fan/bookings', id: 'bookings', label: 'My Call Bookings', icon: Calendar },
-    { path: '/fan/grievances', id: 'grievances', label: 'Help & Grievances', icon: LifeBuoy },
     { path: '/fan/profile', id: 'settings', label: 'Profile & Settings', icon: User },
+    { path: '/fan/grievances', id: 'grievances', label: 'Help & Grievances', icon: LifeBuoy },
   ];
 
   return (
