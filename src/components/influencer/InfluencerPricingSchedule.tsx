@@ -1484,9 +1484,6 @@ export const InfluencerPricingSchedule: React.FC = () => {
                 <span>
                   Generated {generatedSlotsForDate.totalCount} Slots for {new Date(slotInspectorDate + 'T00:00:00').toLocaleDateString('default', { weekday: 'long', month: 'short', day: 'numeric' })}
                 </span>
-                <span className="text-[11px] font-normal text-slate-500">
-                  {slotSelectedDuration}-min slots • {preferences.bufferMinutes}m buffer
-                </span>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5">
