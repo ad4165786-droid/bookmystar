@@ -347,10 +347,10 @@ export const InfluencerDashboard: React.FC = () => {
         </div>
 
         {/* Dynamic Chart Display Box */}
-        <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-b from-slate-50/80 to-white border border-slate-200/90 shadow-2xs space-y-4">
+        <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-b from-slate-50/80 to-white border border-slate-200/90 shadow-sm space-y-4">
 
           {/* Active Data Point Inspection Card (Hovered / Selected) */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-white border border-slate-200/90 shadow-2xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl bg-white border border-slate-200/90 shadow-sm ring-1 ring-slate-900/5">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-200/80 flex items-center justify-center font-bold text-xs shadow-xs">
                 {activePoint.label.slice(0, 3)}
@@ -508,7 +508,7 @@ export const InfluencerDashboard: React.FC = () => {
         ) : (
           <div className="space-y-2.5">
             {creatorBookings.slice(0, 5).map(b => (
-              <div key={b.id} className="p-3.5 rounded-2xl bg-slate-50/80 border border-slate-200/80 hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center justify-between gap-4 shadow-2xs">
+              <div key={b.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-200/90 hover:bg-white hover:border-slate-300 hover:shadow-md transition-all flex items-center justify-between gap-4 shadow-xs">
                 <div className="flex items-center gap-3">
                   <img
                     src={b.userAvatar}

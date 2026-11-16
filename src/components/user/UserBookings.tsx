@@ -98,7 +98,7 @@ export const UserBookings: React.FC = () => {
 
       {/* Booking List Cards */}
       {filteredBookings.length === 0 ? (
-        <div className="p-12 sm:p-16 text-center rounded-3xl bg-white border border-slate-200/90 shadow-sm space-y-4">
+        <div className="p-12 sm:p-16 text-center rounded-3xl bg-white border border-slate-200/90 shadow-md ring-1 ring-slate-900/5 space-y-4">
           <div className="w-14 h-14 rounded-2xl bg-orange-50 border border-orange-100 text-brand-600 flex items-center justify-center mx-auto shadow-2xs">
             <Calendar className="w-7 h-7 text-brand-600" />
           </div>
@@ -123,7 +123,7 @@ export const UserBookings: React.FC = () => {
           {filteredBookings.map(booking => (
             <div
               key={booking.id}
-              className="rounded-3xl bg-white border border-slate-200/90 p-5 sm:p-6 shadow-sm hover:shadow-md transition-all space-y-4 text-slate-900"
+              className="rounded-3xl bg-white border border-slate-200/90 p-5 sm:p-6 shadow-md ring-1 ring-slate-900/5 hover:shadow-lg transition-all space-y-4 text-slate-900"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
                 <div className="flex items-center gap-3.5">

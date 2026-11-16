@@ -840,7 +840,7 @@ export const CoreCreatorDetails: React.FC = () => {
     <div className="space-y-8 pb-24 max-w-6xl mx-auto font-sans">
 
       {/* ================= 1. PROFILE HEADER ================= */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-soft">
+      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-md ring-1 ring-slate-900/5">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
 
           {/* Left: Avatar + Title & Meta */}
@@ -991,7 +991,7 @@ export const CoreCreatorDetails: React.FC = () => {
       <form onSubmit={handleSave} className="space-y-8">
 
         {/* ================= 2. PERSONAL INFORMATION (2-Column Grid) ================= */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-soft space-y-6">
+        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-md ring-1 ring-slate-900/5 space-y-6 hover:shadow-lg transition-all">
           <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
             <div className="w-9 h-9 rounded-xl bg-brand-50 text-brand-600 border border-brand-200/60 flex items-center justify-center">
               <User className="w-4 h-4" />
@@ -1189,7 +1189,7 @@ export const CoreCreatorDetails: React.FC = () => {
         </div>
 
         {/* ================= 3. CREATOR INFORMATION (2-Column Grid) ================= */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-soft space-y-6">
+        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-md ring-1 ring-slate-900/5 space-y-6 hover:shadow-lg transition-all">
           <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
             <div className="w-9 h-9 rounded-xl bg-navy-50 text-navy-600 border border-navy-200/60 flex items-center justify-center">
               <Sparkles className="w-4 h-4 text-navy-600" />
@@ -1338,7 +1338,7 @@ export const CoreCreatorDetails: React.FC = () => {
         </div>
 
         {/* ================= 4. CONNECTED SOCIAL MEDIA DETAILS ================= */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-soft space-y-5">
+        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-md ring-1 ring-slate-900/5 space-y-5 hover:shadow-lg transition-all">
           <div className="flex items-center justify-between pb-4 border-b border-slate-100">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 border border-purple-200/60 flex items-center justify-center">
@@ -1642,7 +1642,7 @@ export const CoreCreatorDetails: React.FC = () => {
         </div>
 
         {/* ================= 5. CREATOR CONTENT & PROFILE MEDIA ================= */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-6">
+        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-md ring-1 ring-slate-900/5 space-y-6 hover:shadow-lg transition-all">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl bg-[#EFF6FF] text-[#1D4ED8] border border-[#DBEAFE] flex items-center justify-center">
@@ -1825,7 +1825,7 @@ export const CoreCreatorDetails: React.FC = () => {
         </div>
 
         {/* ================= 6. FOOTER ACTIONS ================= */}
-        <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-md ring-1 ring-slate-900/5 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-xs text-[#64748B]">
             {isDirty ? (
               <span className="text-amber-600 font-bold flex items-center gap-1.5">

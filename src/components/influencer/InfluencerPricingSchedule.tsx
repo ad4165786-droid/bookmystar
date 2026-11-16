@@ -823,7 +823,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
     <div className="space-y-6 pb-20 max-w-7xl mx-auto font-sans">
 
       {/* ================= HEADER CONTROL BAR ================= */}
-      <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-md ring-1 ring-slate-900/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
 
         <div className="flex items-start sm:items-center gap-4">
           <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-brand-50 text-brand-600 border border-brand-200/70 flex items-center justify-center shrink-0">
@@ -936,7 +936,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
 
         {/* Metric 1: Active Routine Days */}
-        <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs flex items-center justify-between">
+        <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/90 shadow-sm ring-1 ring-slate-900/5 flex items-center justify-between hover:shadow-md transition-all">
           <div className="space-y-0.5">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
               Active Routine
@@ -954,7 +954,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
         </div>
 
         {/* Metric 2: Standard Day Working Hours */}
-        <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs flex items-center justify-between">
+        <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/90 shadow-sm ring-1 ring-slate-900/5 flex items-center justify-between hover:shadow-md transition-all">
           <div className="space-y-0.5">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
               Standard Shift
@@ -977,7 +977,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
         </div>
 
         {/* Metric 3: Booked Fan Sessions */}
-        <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs flex items-center justify-between">
+        <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/90 shadow-sm ring-1 ring-slate-900/5 flex items-center justify-between hover:shadow-md transition-all">
           <div className="space-y-0.5">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
               Confirmed Calls
@@ -997,7 +997,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
       </div>
 
       {/* ================= SECTION 1: WEEKLY WORKING HOURS ================= */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-md ring-1 ring-slate-900/5 overflow-hidden transition-all">
 
         {/* Section Header with Dropdown / Accordion Toggle */}
         <div className={`p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-3 bg-white ${weeklyHoursOpen ? 'border-b border-slate-100' : ''}`}>
@@ -1323,7 +1323,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
       </div>
 
       {/* ================= SECTION 2: BOOKING SLOT MANAGEMENT ================= */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-md ring-1 ring-slate-900/5 overflow-hidden transition-all">
 
         {/* Section Header */}
         <div className="p-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-3">
@@ -1537,7 +1537,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
 
 
       {/* ================= FOOTER PERSISTENCE ACTIONS ================= */}
-      <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-md ring-1 ring-slate-900/5 flex flex-col sm:flex-row items-center justify-between gap-3">
         <div className="text-xs text-slate-500">
           {isDirty ? (
             <span className="text-amber-600 font-bold flex items-center gap-1.5">

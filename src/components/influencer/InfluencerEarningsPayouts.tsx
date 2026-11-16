@@ -114,7 +114,7 @@ export const InfluencerEarningsPayouts: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
 
         {/* Available for Withdrawal */}
-        <div className="p-6 rounded-3xl bg-white border border-slate-200/80 space-y-3 shadow-sm hover:shadow-md transition-shadow">
+        <div className="p-6 rounded-3xl bg-white border border-slate-200/90 space-y-3 shadow-md ring-1 ring-slate-900/5 hover:shadow-lg transition-all">
           <div className="flex items-center justify-between text-xs text-slate-700 font-bold">
             <span>Available for Withdrawal</span>
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -128,7 +128,7 @@ export const InfluencerEarningsPayouts: React.FC = () => {
         </div>
 
         {/* Total Paid Out */}
-        <div className="p-6 rounded-3xl bg-white border border-slate-200/80 space-y-3 shadow-sm hover:shadow-md transition-shadow">
+        <div className="p-6 rounded-3xl bg-white border border-slate-200/90 space-y-3 shadow-md ring-1 ring-slate-900/5 hover:shadow-lg transition-all">
           <div className="flex items-center justify-between text-xs text-slate-500 font-bold">
             <span>Total Paid Out to Bank</span>
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
@@ -142,7 +142,7 @@ export const InfluencerEarningsPayouts: React.FC = () => {
         </div>
 
         {/* Lifetime Net Earnings */}
-        <div className="p-6 rounded-3xl bg-white border border-slate-200/80 space-y-3 shadow-sm hover:shadow-md transition-shadow">
+        <div className="p-6 rounded-3xl bg-white border border-slate-200/90 space-y-3 shadow-md ring-1 ring-slate-900/5 hover:shadow-lg transition-all">
           <div className="flex items-center justify-between text-xs text-slate-500 font-bold">
             <span>Lifetime Creator Earnings</span>
             <TrendingUp className="w-4 h-4 text-brand-500" />
@@ -161,7 +161,7 @@ export const InfluencerEarningsPayouts: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
         {/* Commission Transparency Ledger */}
-        <div className="p-6 rounded-3xl bg-white border border-slate-200/80 space-y-4 shadow-sm">
+        <div className="p-6 rounded-3xl bg-white border border-slate-200/90 space-y-4 shadow-md ring-1 ring-slate-900/5 hover:shadow-lg transition-all">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Revenue & Fee Transparency</h3>
             <span className="text-xs font-mono font-bold text-brand-600">{settings.commissionRate}% Standard Fee</span>
@@ -186,7 +186,7 @@ export const InfluencerEarningsPayouts: React.FC = () => {
         </div>
 
         {/* Video vs Voice Revenue Share */}
-        <div className="p-6 rounded-3xl bg-white border border-slate-200/80 space-y-4 shadow-sm">
+        <div className="p-6 rounded-3xl bg-white border border-slate-200/90 space-y-4 shadow-md ring-1 ring-slate-900/5 hover:shadow-lg transition-all">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Channel Revenue Breakdown</h3>
             <span className="text-xs text-slate-500 font-semibold">Performance</span>
@@ -230,7 +230,7 @@ export const InfluencerEarningsPayouts: React.FC = () => {
       </div>
 
       {/* Payout History Ledger */}
-      <div className="p-6 rounded-3xl bg-white border border-slate-200/80 space-y-4 shadow-sm">
+      <div className="p-6 rounded-3xl bg-white border border-slate-200/90 space-y-4 shadow-md ring-1 ring-slate-900/5 hover:shadow-lg transition-all">
         <div className="flex items-center justify-between pb-3 border-b border-slate-100">
           <div>
             <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Disbursal Withdrawal Ledger</h3>

@@ -82,7 +82,7 @@ export const InfluencerBookings: React.FC = () => {
           {filteredBookings.map(b => (
             <div
               key={b.id}
-              className="rounded-3xl bg-white border border-slate-200/80 p-5 sm:p-6 shadow-sm hover:shadow-md transition-all space-y-4"
+              className="rounded-3xl bg-white border border-slate-200/90 p-5 sm:p-6 shadow-md ring-1 ring-slate-900/5 hover:shadow-lg transition-all space-y-4"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-100">
                 <div className="flex items-center gap-3.5">
