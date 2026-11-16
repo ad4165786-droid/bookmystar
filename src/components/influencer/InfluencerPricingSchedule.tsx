@@ -192,6 +192,11 @@ export const InfluencerPricingSchedule: React.FC = () => {
   } = useApp();
 
   const todayStr = useMemo(() => new Date().toISOString().split('T')[0], []);
+  const yesterdayStr = useMemo(() => {
+    const y = new Date();
+    y.setDate(y.getDate() - 1);
+    return y.toISOString().split('T')[0];
+  }, []);
 
   // --- Initial Schedule Generator ---
   const initialWeeklySchedule: DayScheduleItem[] = useMemo(() => {
@@ -1381,37 +1386,59 @@ export const InfluencerPricingSchedule: React.FC = () => {
           <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
             <span className="text-xs font-bold text-slate-600 shrink-0 mr-1">Inspect Date:</span>
 
-            {/* Quick 7-Day Picker */}
-            {Array.from({ length: 7 }).map((_, i) => {
-              const d = new Date();
-              d.setDate(d.getDate() + i);
-              const dStr = d.toISOString().split('T')[0];
-              const isSelected = slotInspectorDate === dStr;
-              const isToday = i === 0;
+            {/* Option 1: Today */}
+            <button
+              type="button"
+              onClick={() => setSlotInspectorDate(todayStr)}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0 border ${slotInspectorDate === todayStr
+                ? 'bg-brand-500 text-white border-brand-500 shadow-xs'
+                : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-200'
+                }`}
+            >
+              Today
+            </button>
 
-              return (
-                <button
-                  key={dStr}
-                  type="button"
-                  onClick={() => setSlotInspectorDate(dStr)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0 border ${isSelected
-                    ? 'bg-brand-500 text-white border-brand-500 shadow-xs'
-                    : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-200'
-                    }`}
-                >
-                  <span>{isToday ? 'Today' : d.toLocaleDateString('default', { weekday: 'short' })}</span>
-                  <span className="ml-1 opacity-80">{d.getDate()}</span>
-                </button>
-              );
-            })}
+            {/* Option 2: Yesterday */}
+            <button
+              type="button"
+              onClick={() => setSlotInspectorDate(yesterdayStr)}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0 border ${slotInspectorDate === yesterdayStr
+                ? 'bg-brand-500 text-white border-brand-500 shadow-xs'
+                : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-200'
+                }`}
+            >
+              Yesterday
+            </button>
 
-            {/* Custom Date Input */}
-            <input
-              type="date"
-              value={slotInspectorDate}
-              onChange={e => e.target.value && setSlotInspectorDate(e.target.value)}
-              className="px-2.5 py-1 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 focus:outline-none cursor-pointer"
-            />
+            {/* Option 3: Calendar */}
+            <div className="relative inline-flex items-center shrink-0">
+              <div
+                className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${slotInspectorDate !== todayStr && slotInspectorDate !== yesterdayStr
+                  ? 'bg-brand-500 text-white border-brand-500 shadow-xs'
+                  : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-200'
+                  }`}
+              >
+                <CalendarIcon className={`w-3.5 h-3.5 ${slotInspectorDate !== todayStr && slotInspectorDate !== yesterdayStr ? 'text-white' : 'text-slate-500'
+                  }`} />
+                <span>
+                  {slotInspectorDate !== todayStr && slotInspectorDate !== yesterdayStr
+                    ? new Date(slotInspectorDate + 'T00:00:00').toLocaleDateString('default', { month: 'short', day: 'numeric', year: 'numeric' })
+                    : 'Calendar'}
+                </span>
+              </div>
+              <input
+                type="date"
+                value={slotInspectorDate}
+                onChange={e => e.target.value && setSlotInspectorDate(e.target.value)}
+                onClick={e => {
+                  try {
+                    (e.currentTarget as any).showPicker?.();
+                  } catch { }
+                }}
+                className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                title="Select custom date from calendar"
+              />
+            </div>
           </div>
 
           {/* Color Legend for Slots */}
