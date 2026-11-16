@@ -305,7 +305,7 @@ export const UserProfileSettings: React.FC = () => {
                 </button>
               </div>
 
-              <div className="space-y-1 sm:translate-y-1">
+              <div className="space-y-1 sm:translate-y-4">
                 <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
                   <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                     {name || currentUser.name}

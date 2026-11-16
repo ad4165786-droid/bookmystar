@@ -1,14 +1,14 @@
 import React, { useState, useMemo } from 'react';
 import { useApp } from '../../context/AppContext';
 import { Category, CallType } from '../../types';
-import { 
-  Search, 
-  Sparkles, 
-  Star, 
-  CheckCircle2, 
-  Video, 
-  PhoneCall, 
-  SlidersHorizontal, 
+import {
+  Search,
+  Sparkles,
+  Star,
+  CheckCircle2,
+  Video,
+  PhoneCall,
+  SlidersHorizontal,
   ArrowRight
 } from 'lucide-react';
 
@@ -73,7 +73,7 @@ export const UserHome: React.FC = () => {
 
       {/* Discovery Filters & Search */}
       <section className="p-6 sm:p-7 rounded-3xl bg-white border border-slate-200/90 shadow-md ring-1 ring-slate-900/5 space-y-5 transition-all">
-        
+
         {/* Section Header */}
         <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
           <div className="w-9 h-9 rounded-xl bg-brand-50 border border-brand-200/60 text-brand-600 flex items-center justify-center shrink-0 shadow-2xs">
@@ -89,7 +89,7 @@ export const UserHome: React.FC = () => {
 
         {/* Search Bar + Controls */}
         <div className="flex flex-col md:flex-row gap-3 items-center justify-between">
-          
+
           <div className="relative w-full md:w-96">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
@@ -103,36 +103,33 @@ export const UserHome: React.FC = () => {
 
           {/* Secondary Controls (Call Type, Price, Verified) */}
           <div className="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
-            
+
             {/* Call Type Pill */}
             <div className="flex items-center bg-white p-1 rounded-xl border border-slate-200 text-xs shadow-2xs">
               <button
                 onClick={() => setCallTypeFilter('all')}
-                className={`px-3 py-1 rounded-lg font-bold transition-all cursor-pointer ${
-                  callTypeFilter === 'all'
+                className={`px-3 py-1 rounded-lg font-bold transition-all cursor-pointer ${callTypeFilter === 'all'
                     ? 'bg-slate-100 text-slate-900 shadow-2xs'
                     : 'text-slate-500 hover:text-slate-900'
-                }`}
+                  }`}
               >
                 All Calls
               </button>
               <button
                 onClick={() => setCallTypeFilter('video')}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-bold transition-all cursor-pointer ${
-                  callTypeFilter === 'video'
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-bold transition-all cursor-pointer ${callTypeFilter === 'video'
                     ? 'bg-purple-50 text-purple-700 shadow-2xs border border-purple-200'
                     : 'text-slate-500 hover:text-slate-900'
-                }`}
+                  }`}
               >
                 <Video className="w-3 h-3 text-purple-600" /> Video
               </button>
               <button
                 onClick={() => setCallTypeFilter('voice')}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-bold transition-all cursor-pointer ${
-                  callTypeFilter === 'voice'
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-bold transition-all cursor-pointer ${callTypeFilter === 'voice'
                     ? 'bg-emerald-50 text-emerald-700 shadow-2xs border border-emerald-200'
                     : 'text-slate-500 hover:text-slate-900'
-                }`}
+                  }`}
               >
                 <PhoneCall className="w-3 h-3 text-emerald-600" /> Voice
               </button>
@@ -163,11 +160,10 @@ export const UserHome: React.FC = () => {
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                selectedCategory === cat
+              className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${selectedCategory === cat
                   ? 'bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-md shadow-brand-500/25'
                   : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-slate-200/90 shadow-2xs'
-              }`}
+                }`}
             >
               {cat}
             </button>
@@ -185,7 +181,6 @@ export const UserHome: React.FC = () => {
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-black text-slate-900 tracking-tight">Available Influencers & Stars</h2>
-              <p className="text-[11px] text-slate-500 font-medium">Real-time availability • Direct 1-on-1 private video & voice consultations</p>
             </div>
           </div>
 
@@ -232,7 +227,7 @@ export const UserHome: React.FC = () => {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20" />
-                    
+
                     {/* Category Tag */}
                     <div className="absolute top-3 left-3">
                       <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-white/95 backdrop-blur-md text-brand-700 border border-white/60 shadow-2xs">
@@ -252,7 +247,7 @@ export const UserHome: React.FC = () => {
 
                   {/* Body Content */}
                   <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-                    
+
                     {/* Avatar & Title Row */}
                     <div className="flex items-start gap-3.5 -mt-10 relative z-10">
                       <img
