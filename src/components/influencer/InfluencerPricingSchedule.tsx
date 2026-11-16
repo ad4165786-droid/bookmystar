@@ -1587,7 +1587,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
       {/* ================= MODAL 1: COPY SCHEDULE TO OTHER DAYS ================= */}
       {copyModalDayIndex !== null && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn"
           onClick={(e) => {
             if (e.target === e.currentTarget) setCopyModalDayIndex(null);
           }}

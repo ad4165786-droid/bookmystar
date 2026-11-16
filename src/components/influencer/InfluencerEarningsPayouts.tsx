@@ -291,7 +291,7 @@ export const InfluencerEarningsPayouts: React.FC = () => {
       {/* Withdrawal Modal */}
       {showWithdrawModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fadeIn"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn"
           onClick={(e) => {
             if (e.target === e.currentTarget) setShowWithdrawModal(false);
           }}

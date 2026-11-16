@@ -1039,7 +1039,7 @@ export const CommercialLandingPage: React.FC = () => {
 
       {/* 11. AUTHENTICATION MODAL (With Role Switch: User Sign In vs Influencer Sign In) */}
       {isAuthModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-fadeIn">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn">
           <div className="w-full max-w-lg bg-white rounded-3xl border border-slate-200/90 shadow-2xl p-7 sm:p-8 relative overflow-hidden transition-all max-h-[92vh] overflow-y-auto">
             
             {/* Close Button */}
@@ -1439,7 +1439,7 @@ export const CommercialLandingPage: React.FC = () => {
 
       {/* 12. FORGOT PASSWORD MODAL */}
       {showForgotModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn">
           <div className="w-full max-w-md bg-white rounded-3xl border border-slate-200 p-6 sm:p-7 space-y-4 shadow-soft-lg">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">

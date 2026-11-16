@@ -218,7 +218,7 @@ export const UserGrievances: React.FC = () => {
       {/* New Ticket Modal */}
       {showNewModal && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-xs animate-fadeIn"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn"
           onClick={(e) => {
             if (e.target === e.currentTarget) setShowNewModal(false);
           }}

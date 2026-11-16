@@ -263,7 +263,7 @@ export const InfluencerReviewsGrievances: React.FC = () => {
       {/* Flag Review Modal */}
       {flaggingReviewId && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-xs animate-fadeIn"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn"
           onClick={(e) => {
             if (e.target === e.currentTarget) setFlaggingReviewId(null);
           }}
@@ -307,7 +307,7 @@ export const InfluencerReviewsGrievances: React.FC = () => {
       {/* Report Misconduct Modal */}
       {showGrievanceModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-xs animate-fadeIn"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn"
           onClick={(e) => {
             if (e.target === e.currentTarget) setShowGrievanceModal(false);
           }}

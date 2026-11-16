@@ -66,7 +66,7 @@ export const CheckoutModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn">
       <div className="relative w-full max-w-xl rounded-2xl bg-[#121927] border border-slate-700/80 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
         
         {/* Header */}

@@ -232,7 +232,7 @@ export const AdminPayments: React.FC = () => {
 
       {/* Reject Payout Reason Modal */}
       {rejectingPayoutId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn">
           <div className="w-full max-w-md rounded-2xl bg-slate-900 border border-slate-800 p-6 space-y-4 shadow-2xl">
             <h3 className="text-base font-bold text-white">Reject Creator Payout Request</h3>
 

@@ -1876,7 +1876,7 @@ export const CoreCreatorDetails: React.FC = () => {
       {/* ================= DIRECT IMAGE URL MODAL ================= */}
       {showUrlModal && (
         <div
-          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn"
           onClick={(e) => {
             if (e.target === e.currentTarget) {
               setShowUrlModal(false);
@@ -2064,7 +2064,7 @@ export const CoreCreatorDetails: React.FC = () => {
       {/* ================= MEDIA PREVIEW MODAL ================= */}
       {mediaPreviewModal && (
         <div
-          className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn"
           onClick={(e) => {
             if (e.target === e.currentTarget) setMediaPreviewModal(null);
           }}

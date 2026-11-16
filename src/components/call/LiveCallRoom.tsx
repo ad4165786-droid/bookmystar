@@ -386,7 +386,7 @@ export const LiveCallRoom: React.FC = () => {
 
       {/* Post-Call Review Modal (For User) */}
       {showReviewModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn">
           <div className="w-full max-w-md rounded-2xl bg-slate-900 border border-slate-800 p-6 space-y-5 shadow-2xl">
             <div className="text-center space-y-2">
               <img src={booking.influencerAvatar} alt={booking.influencerName} className="w-16 h-16 rounded-full mx-auto object-cover ring-2 ring-brand-500 shadow-glow" />
@@ -442,7 +442,7 @@ export const LiveCallRoom: React.FC = () => {
 
       {/* Report Issue / Grievance Modal */}
       {showReportModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn">
           <div className="w-full max-w-md rounded-2xl bg-slate-900 border border-slate-800 p-6 space-y-4 shadow-2xl">
             <div className="flex items-center justify-between pb-2 border-b border-slate-800">
               <div className="flex items-center gap-2 text-rose-400">

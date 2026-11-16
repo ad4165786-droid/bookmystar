@@ -307,7 +307,7 @@ export const InfluencerContentProfile: React.FC = () => {
       {/* Media Upload Modal */}
       {showUploadModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-xs animate-fadeIn"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn"
           onClick={(e) => {
             if (e.target === e.currentTarget) setShowUploadModal(false);
           }}

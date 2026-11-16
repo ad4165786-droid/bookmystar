@@ -190,7 +190,6 @@ export const UserDashboardLayout: React.FC = () => {
 
             {/* Currency Pill */}
             <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-emerald-700">
-              <span>₹ INR</span>
             </div>
 
             {/* Notifications Dropdown */}
