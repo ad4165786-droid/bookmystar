@@ -1,33 +1,35 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { CallType } from '../../types';
-import { 
-  ArrowLeft, 
-  CheckCircle2, 
-  Star, 
-  Video, 
-  PhoneCall, 
-  Calendar, 
-  Clock, 
-  ShieldCheck, 
-  Share2, 
-  Heart, 
+import {
+  ArrowLeft,
+  CheckCircle2,
+  Star,
+  Video,
+  PhoneCall,
+  Calendar,
+  Clock,
+  ShieldCheck,
+  Share2,
+  Heart,
   ExternalLink,
   MessageCircle,
   Play,
   Lock,
-  ChevronRight
+  ChevronRight,
+  User,
+  Sparkles
 } from 'lucide-react';
 
 export const InfluencerDetailView: React.FC = () => {
-  const { 
-    selectedInfluencerId, 
-    influencers, 
-    reviews, 
-    setActiveView, 
+  const {
+    selectedInfluencerId,
+    influencers,
+    reviews,
+    setActiveView,
     navigate,
     openCheckout,
-    showToast 
+    showToast
   } = useApp();
 
   const influencer = influencers.find(i => i.id === selectedInfluencerId) || influencers[0];
@@ -37,7 +39,7 @@ export const InfluencerDetailView: React.FC = () => {
     influencer.videoCallEnabled ? 'video' : 'voice'
   );
   const [selectedDuration, setSelectedDuration] = useState<10 | 15 | 30>(10);
-  
+
   // Available dates (Next 5 days)
   const availableDates = [
     { label: 'Today', date: '2026-11-11' },
@@ -80,7 +82,7 @@ export const InfluencerDetailView: React.FC = () => {
 
   return (
     <div className="space-y-8 pb-6">
-      
+
       {/* Back Navigation Bar */}
       <div className="flex items-center justify-between">
         <button
@@ -122,7 +124,7 @@ export const InfluencerDetailView: React.FC = () => {
 
         {/* Profile Details Header */}
         <div className="relative px-6 sm:px-10 pb-8 -mt-20 z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-          
+
           <div className="flex flex-col sm:flex-row items-start sm:items-end gap-5">
             <img
               src={influencer.avatar}
@@ -237,21 +239,33 @@ export const InfluencerDetailView: React.FC = () => {
 
       {/* Main Two-Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
+
         {/* Left Column: Bio, Gallery, Reviews (7 cols) */}
         <div className="lg:col-span-7 space-y-8">
-          
+
           {/* About Bio Section */}
-          <section className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-3">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900">About the Creator</h3>
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+          <section className="p-6 sm:p-7 rounded-3xl bg-white border border-slate-200/90 shadow-md ring-1 ring-slate-900/5 space-y-4 transition-all hover:shadow-lg">
+            <div className="flex items-center gap-3 pb-3 border-b border-slate-100">
+              <div className="w-9 h-9 rounded-xl bg-brand-50 border border-brand-200/60 text-brand-600 flex items-center justify-center shrink-0 shadow-2xs">
+                <User className="w-4 h-4 text-brand-600 stroke-[2.2]" />
+              </div>
+              <div>
+                <h3 className="text-sm sm:text-base font-extrabold uppercase tracking-wide text-slate-900">
+                  About the Creator
+                </h3>
+                <p className="text-[11px] text-slate-500 font-medium">Background, experience & consultation focus</p>
+              </div>
+            </div>
+
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
               {influencer.bio}
             </p>
+
             {influencer.languages && influencer.languages.length > 0 && (
-              <div className="pt-2 flex items-center gap-2 flex-wrap border-t border-slate-100">
-                <span className="text-xs text-slate-500 font-medium">Spoken Languages:</span>
+              <div className="pt-3 flex items-center gap-2 flex-wrap border-t border-slate-100">
+                <span className="text-xs text-slate-500 font-semibold">Spoken Languages:</span>
                 {influencer.languages.map(l => (
-                  <span key={l} className="text-xs font-semibold px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200">
+                  <span key={l} className="text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 border border-slate-200 shadow-2xs">
                     {l}
                   </span>
                 ))}
@@ -260,30 +274,42 @@ export const InfluencerDetailView: React.FC = () => {
           </section>
 
           {/* Media Showcase / Content Portfolio */}
-          <section className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900">
-                Creator Showcase & Portfolio ({influencer.gallery.length})
-              </h3>
-              <span className="text-xs text-slate-500 font-medium">Verified Uploads</span>
+          <section className="p-6 sm:p-7 rounded-3xl bg-white border border-slate-200/90 shadow-md ring-1 ring-slate-900/5 space-y-5 transition-all hover:shadow-lg">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 flex-wrap gap-2">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-purple-50 border border-purple-200/60 text-purple-600 flex items-center justify-center shrink-0 shadow-2xs">
+                  <Sparkles className="w-4 h-4 text-purple-600 stroke-[2.2]" />
+                </div>
+                <div>
+                  <h3 className="text-sm sm:text-base font-extrabold uppercase tracking-wide text-slate-900">
+                    Creator Showcase & Portfolio
+                  </h3>
+                  <p className="text-[11px] text-slate-500 font-medium">Highlights, past work & video moments</p>
+                </div>
+              </div>
+              <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-2xs">
+                {influencer.gallery.length} Verified Uploads
+              </span>
             </div>
 
             {influencer.gallery.length === 0 ? (
-              <p className="text-xs text-slate-500 italic">No media uploaded yet.</p>
+              <div className="text-center py-8 rounded-2xl bg-slate-50 border border-dashed border-slate-200">
+                <p className="text-xs text-slate-400 font-medium italic">No media uploaded yet.</p>
+              </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {influencer.gallery.filter(g => g.isVisible).map(item => (
-                  <div key={item.id} className="group relative rounded-xl overflow-hidden bg-slate-800 border border-slate-700/80 shadow-md">
+                  <div key={item.id} className="group relative rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 shadow-sm hover:shadow-md transition-all">
                     <img
                       src={item.url}
                       alt={item.title}
                       className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-3.5">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent flex flex-col justify-end p-3.5">
                       <div className="flex items-center justify-between">
                         <h4 className="text-xs font-bold text-white truncate">{item.title}</h4>
                         {item.type === 'video' && (
-                          <span className="p-1 rounded-full bg-brand-500/80 text-white">
+                          <span className="p-1 rounded-full bg-brand-500 text-white shadow-xs">
                             <Play className="w-3 h-3 fill-white" />
                           </span>
                         )}
@@ -297,28 +323,36 @@ export const InfluencerDetailView: React.FC = () => {
           </section>
 
           {/* Reviews & Ratings Section */}
-          <section className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-5">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <div>
-                <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900">Fan Ratings & Feedback</h3>
-                <p className="text-xs text-slate-500 mt-0.5">Verified attendees after completed sessions</p>
+          <section className="p-6 sm:p-7 rounded-3xl bg-white border border-slate-200/90 shadow-md ring-1 ring-slate-900/5 space-y-5 transition-all hover:shadow-lg">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 flex-wrap gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-amber-50 border border-amber-200/60 text-amber-600 flex items-center justify-center shrink-0 shadow-2xs">
+                  <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
+                </div>
+                <div>
+                  <h3 className="text-sm sm:text-base font-extrabold uppercase tracking-wide text-slate-900">
+                    Fan Ratings & Feedback
+                  </h3>
+                </div>
               </div>
 
-              <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 font-bold text-sm shadow-2xs">
+              <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 font-extrabold text-sm shadow-2xs">
                 <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
                 <span>{influencer.rating > 0 ? influencer.rating : '5.0'} / 5.0</span>
               </div>
             </div>
 
             {creatorReviews.length === 0 ? (
-              <p className="text-xs text-slate-400 text-center py-4">No reviews yet. Be the first to book a session!</p>
+              <div className="text-center py-8 rounded-2xl bg-slate-50 border border-dashed border-slate-200">
+                <p className="text-xs text-slate-400 font-medium">No reviews yet. Be the first to book a session!</p>
+              </div>
             ) : (
               <div className="space-y-3.5">
                 {creatorReviews.map(rev => (
-                  <div key={rev.id} className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2 text-xs">
+                  <div key={rev.id} className="p-4 rounded-2xl bg-slate-50/90 border border-slate-200/80 space-y-2 text-xs shadow-2xs">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2.5">
-                        <img src={rev.userAvatar} alt={rev.userName} className="w-7 h-7 rounded-full object-cover ring-1 ring-slate-200" />
+                        <img src={rev.userAvatar} alt={rev.userName} className="w-7 h-7 rounded-full object-cover ring-2 ring-white shadow-2xs" />
                         <div>
                           <div className="font-bold text-slate-900">{rev.userName}</div>
                           <div className="text-[10px] text-slate-500">{rev.callType === 'video' ? 'Video Session' : 'Voice Session'} • {rev.createdAt.split(' ')[0]}</div>
@@ -345,28 +379,27 @@ export const InfluencerDetailView: React.FC = () => {
 
         {/* Right Column: Interactive Booking Widget (5 cols) */}
         <div className="lg:col-span-5">
-          <div className="sticky top-24 rounded-3xl bg-slate-900 border border-brand-500/30 p-6 sm:p-7 shadow-2xl space-y-6">
-            
-            <div className="pb-3">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-brand-400">Interactive Booking Console</span>
+          <div className="sticky top-24 rounded-3xl bg-slate-900 border-2 border-brand-500/40 p-6 sm:p-7 shadow-2xl space-y-5 ring-4 ring-brand-500/10">
+
+            <div className="pb-4 border-b border-slate-800">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-brand-400 bg-brand-500/15 px-2.5 py-1 rounded-md border border-brand-500/30 inline-block mb-1.5">Interactive Booking Console</span>
               <h3 className="text-xl font-black text-white mt-0.5">Select Session & Lock Slot</h3>
               <p className="text-xs text-slate-400 mt-1">Direct 1-on-1 private connection with {influencer.name}</p>
             </div>
 
-            {/* 1. Call Type Selector */}
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-300">1. Choose Call Mode</label>
+            {/* 1. Call Type Selector Box */}
+            <div className="p-4 rounded-2xl bg-slate-800/60 border border-slate-700/80 space-y-2.5 shadow-xs">
+              <label className="text-xs font-bold text-slate-200">1. Choose Call Mode</label>
               <div className="grid grid-cols-2 gap-2.5">
-                
+
                 {influencer.videoCallEnabled && (
                   <button
                     type="button"
                     onClick={() => setSelectedCallType('video')}
-                    className={`flex items-center justify-center gap-2 p-3 rounded-xl border text-xs font-bold transition-all ${
-                      selectedCallType === 'video'
-                        ? 'bg-purple-900/50 border-purple-500 text-white shadow-glow'
-                        : 'bg-slate-800/60 border-slate-700 text-slate-400 hover:text-white'
-                    }`}
+                    className={`flex items-center justify-center gap-2 p-3 rounded-xl border text-xs font-bold transition-all ${selectedCallType === 'video'
+                        ? 'bg-purple-900/60 border-purple-500 text-white shadow-glow'
+                        : 'bg-slate-800/80 border-slate-700 text-slate-400 hover:text-white'
+                      }`}
                   >
                     <Video className="w-4 h-4 text-purple-400" />
                     <span>1-on-1 Video</span>
@@ -377,11 +410,10 @@ export const InfluencerDetailView: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setSelectedCallType('voice')}
-                    className={`flex items-center justify-center gap-2 p-3 rounded-xl border text-xs font-bold transition-all ${
-                      selectedCallType === 'voice'
-                        ? 'bg-emerald-900/50 border-emerald-500 text-white shadow-glow'
-                        : 'bg-slate-800/60 border-slate-700 text-slate-400 hover:text-white'
-                    }`}
+                    className={`flex items-center justify-center gap-2 p-3 rounded-xl border text-xs font-bold transition-all ${selectedCallType === 'voice'
+                        ? 'bg-emerald-900/60 border-emerald-500 text-white shadow-glow'
+                        : 'bg-slate-800/80 border-slate-700 text-slate-400 hover:text-white'
+                      }`}
                   >
                     <PhoneCall className="w-4 h-4 text-emerald-400" />
                     <span>1-on-1 Voice</span>
@@ -391,9 +423,9 @@ export const InfluencerDetailView: React.FC = () => {
               </div>
             </div>
 
-            {/* 2. Duration Selector */}
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-300">2. Select Duration</label>
+            {/* 2. Duration Selector Box */}
+            <div className="p-4 rounded-2xl bg-slate-800/60 border border-slate-700/80 space-y-2.5 shadow-xs">
+              <label className="text-xs font-bold text-slate-200">2. Select Duration</label>
               <div className="grid grid-cols-3 gap-2">
                 {[10, 15, 30].map(dur => {
                   let priceForDur = 0;
@@ -408,11 +440,10 @@ export const InfluencerDetailView: React.FC = () => {
                       key={dur}
                       type="button"
                       onClick={() => setSelectedDuration(dur as any)}
-                      className={`p-2.5 rounded-xl border text-center transition-all ${
-                        selectedDuration === dur
-                          ? 'bg-brand-900/50 border-brand-500 text-white shadow-glow'
-                          : 'bg-slate-800/60 border-slate-700 text-slate-400 hover:text-white'
-                      }`}
+                      className={`p-2.5 rounded-xl border text-center transition-all ${selectedDuration === dur
+                          ? 'bg-brand-900/60 border-brand-500 text-white shadow-glow'
+                          : 'bg-slate-800/80 border-slate-700 text-slate-400 hover:text-white'
+                        }`}
                     >
                       <div className="text-xs font-bold">{dur} mins</div>
                       <div className="text-[11px] text-emerald-400 font-extrabold mt-0.5">₹{priceForDur}</div>
@@ -422,11 +453,11 @@ export const InfluencerDetailView: React.FC = () => {
               </div>
             </div>
 
-            {/* 3. Date Selector */}
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-300 flex items-center justify-between">
+            {/* 3. Date Selector Box */}
+            <div className="p-4 rounded-2xl bg-slate-800/60 border border-slate-700/80 space-y-2.5 shadow-xs">
+              <label className="text-xs font-bold text-slate-200 flex items-center justify-between">
                 <span>3. Select Date</span>
-                <span className="text-[10px] text-brand-400 font-medium">IST (Indian Standard Time)</span>
+                <span className="text-[10px] text-brand-400 font-semibold">IST (Indian Standard Time)</span>
               </label>
               <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
                 {availableDates.map(d => (
@@ -434,11 +465,10 @@ export const InfluencerDetailView: React.FC = () => {
                     key={d.date}
                     type="button"
                     onClick={() => setSelectedDate(d.date)}
-                    className={`whitespace-nowrap px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
-                      selectedDate === d.date
-                        ? 'bg-slate-100 text-slate-900 border-white shadow-md'
-                        : 'bg-slate-800/60 border-slate-700 text-slate-300 hover:text-white'
-                    }`}
+                    className={`whitespace-nowrap px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${selectedDate === d.date
+                        ? 'bg-white text-slate-900 border-white font-bold shadow-md'
+                        : 'bg-slate-800/80 border-slate-700 text-slate-300 hover:text-white'
+                      }`}
                   >
                     {d.label}
                   </button>
@@ -446,20 +476,19 @@ export const InfluencerDetailView: React.FC = () => {
               </div>
             </div>
 
-            {/* 4. Time Slot Grid */}
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-300">4. Select Available Time Slot</label>
+            {/* 4. Time Slot Grid Box */}
+            <div className="p-4 rounded-2xl bg-slate-800/60 border border-slate-700/80 space-y-2.5 shadow-xs">
+              <label className="text-xs font-bold text-slate-200">4. Select Available Time Slot</label>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {influencer.availability.timeSlots.map(slot => (
                   <button
                     key={slot}
                     type="button"
                     onClick={() => setSelectedSlot(slot)}
-                    className={`py-2 px-2.5 rounded-xl border text-xs font-medium transition-all ${
-                      selectedSlot === slot
+                    className={`py-2 px-2.5 rounded-xl border text-xs font-medium transition-all ${selectedSlot === slot
                         ? 'bg-brand-600 border-brand-400 text-white font-bold shadow-md'
-                        : 'bg-slate-800/60 border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white'
-                    }`}
+                        : 'bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white'
+                      }`}
                   >
                     {slot}
                   </button>
@@ -467,8 +496,8 @@ export const InfluencerDetailView: React.FC = () => {
               </div>
             </div>
 
-            {/* Price Total & CTA */}
-            <div className="pt-4 border-t border-slate-800 space-y-3">
+            {/* Price Total & CTA Box */}
+            <div className="p-4 rounded-2xl bg-slate-950/90 border border-slate-800 space-y-3 shadow-md">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-xs text-slate-400 font-medium">Total Payable (Excl. Tax)</div>
