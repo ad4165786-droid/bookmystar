@@ -32,7 +32,6 @@ import {
   Video,
   Info,
   AlertTriangle,
-  Globe,
   Lock,
   User,
   Layers,
@@ -848,16 +847,6 @@ export const InfluencerPricingSchedule: React.FC = () => {
                 <span className={`w-2 h-2 rounded-full ${isTakingBookings ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
                 <span>{isTakingBookings ? 'Bookings Active' : 'Bookings Paused'}</span>
               </button>
-            </div>
-
-            {/* Subtitle & Timezone */}
-            <div className="flex items-center gap-2 text-xs text-slate-500 flex-wrap pt-0.5">
-              <span className="inline-flex items-center gap-1 font-semibold text-slate-600">
-                <Globe className="w-3.5 h-3.5 text-slate-400" />
-                <span>Asia/Kolkata (IST, UTC+05:30)</span>
-              </span>
-              <span className="text-slate-300">•</span>
-              <span>Weekly routine & calendar booking slots</span>
             </div>
           </div>
         </div>
