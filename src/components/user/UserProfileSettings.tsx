@@ -392,12 +392,12 @@ export const UserProfileSettings: React.FC = () => {
       </div>
 
       {/* 2. Navigation Tabs */}
-      <div className="flex items-center gap-1.5 p-1.5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs overflow-x-auto scrollbar-none">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-1.5 p-1.5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
 
         <button
           type="button"
           onClick={() => setActiveTab('personal')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'personal'
+          className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'personal'
             ? 'bg-brand-500 text-white shadow-md shadow-brand-500/25'
             : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
             }`}
@@ -409,7 +409,7 @@ export const UserProfileSettings: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('security')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'security'
+          className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'security'
             ? 'bg-brand-500 text-white shadow-md shadow-brand-500/25'
             : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
             }`}
@@ -421,7 +421,7 @@ export const UserProfileSettings: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('notifications')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'notifications'
+          className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'notifications'
             ? 'bg-brand-500 text-white shadow-md shadow-brand-500/25'
             : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
             }`}
@@ -433,13 +433,13 @@ export const UserProfileSettings: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('billing')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'billing'
+          className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'billing'
             ? 'bg-brand-500 text-white shadow-md shadow-brand-500/25'
             : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
             }`}
         >
           <CreditCard className="w-4 h-4" />
-          <span>Billing, Escrow & Invoices</span>
+          <span>Billing & Invoices</span>
           <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${activeTab === 'billing' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
             }`}>
             {userBookings.length}
@@ -449,13 +449,13 @@ export const UserProfileSettings: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('favorites')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'favorites'
+          className={`col-span-2 sm:col-span-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'favorites'
             ? 'bg-brand-500 text-white shadow-md shadow-brand-500/25'
             : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
             }`}
         >
           <Heart className="w-4 h-4" />
-          <span>My Favorite Creators</span>
+          <span>Favorite Creators</span>
           <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${activeTab === 'favorites' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
             }`}>
             {bookedCreators.length}
