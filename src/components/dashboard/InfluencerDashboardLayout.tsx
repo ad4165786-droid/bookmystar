@@ -182,12 +182,9 @@ export const InfluencerDashboardLayout: React.FC = () => {
             </button>
 
             <div>
-              <h2 className="text-sm sm:text-base font-extrabold text-[#172554]">
-                Creator Studio • {currentInfluencer?.name}
+              <h2 className="text-sm sm:text-base font-extrabold text-slate-900">
+                Creator Studio
               </h2>
-              <p className="text-[11px] text-[#64748B] hidden sm:block">
-                Manage rates, upcoming fan calls, live rooms, and payout balance.
-              </p>
             </div>
           </div>
 
