@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Booking } from '../../types';
 import { X, Printer, Download, Sparkles, CheckCircle2 } from 'lucide-react';
 
@@ -12,11 +12,28 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({ booking, onClose }) 
     window.print();
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose]);
+
   const gstAmount = Math.round(booking.amount * 0.1525); // ~18% reverse tax approx
   const baseAmount = booking.amount - gstAmount;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <div className="relative w-full max-w-2xl rounded-2xl bg-white text-slate-900 border border-slate-200 shadow-2xl overflow-hidden p-8">
         
         {/* Header Controls */}

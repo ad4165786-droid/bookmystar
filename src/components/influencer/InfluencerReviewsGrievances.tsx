@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { GrievanceTicket } from '../../types';
 import {
@@ -34,6 +34,26 @@ export const InfluencerReviewsGrievances: React.FC = () => {
   // Flag review modal
   const [flaggingReviewId, setFlaggingReviewId] = useState<string | null>(null);
   const [flagReason, setFlagReason] = useState('');
+
+  // ESC key and body scroll lock for modals
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (flaggingReviewId) setFlaggingReviewId(null);
+        if (showGrievanceModal) setShowGrievanceModal(false);
+      }
+    };
+    if (flaggingReviewId || showGrievanceModal) {
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('keydown', handleKeyDown);
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [flaggingReviewId, showGrievanceModal]);
 
   // Reviews for this creator
   const creatorReviews = reviews.filter(r => r.influencerId === currentInfluencer.id);
@@ -242,7 +262,12 @@ export const InfluencerReviewsGrievances: React.FC = () => {
 
       {/* Flag Review Modal */}
       {flaggingReviewId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setFlaggingReviewId(null);
+          }}
+        >
           <div className="w-full max-w-md rounded-2xl bg-slate-900 border border-slate-800 p-6 space-y-4 shadow-2xl">
             <h3 className="text-base font-bold text-white">Report Inappropriate Fan Feedback</h3>
 
@@ -281,7 +306,12 @@ export const InfluencerReviewsGrievances: React.FC = () => {
 
       {/* Report Misconduct Modal */}
       {showGrievanceModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowGrievanceModal(false);
+          }}
+        >
           <div className="w-full max-w-md rounded-2xl bg-slate-900 border border-slate-800 p-6 space-y-4 shadow-2xl">
             <h3 className="text-base font-bold text-white">Report Inappropriate User Conduct</h3>
 

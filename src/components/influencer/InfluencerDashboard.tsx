@@ -259,9 +259,6 @@ export const InfluencerDashboard: React.FC = () => {
                 <span>+18.4% Growth</span>
               </span>
             </div>
-            <p className="text-xs text-slate-500">
-              Interactive timeline of completed sessions, booking velocity, and earnings breakdown.
-            </p>
           </div>
 
           {/* Timeframe Filter Buttons */}
@@ -484,7 +481,6 @@ export const InfluencerDashboard: React.FC = () => {
         <div className="flex items-center justify-between pb-3 border-b border-slate-100">
           <div>
             <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Recent Booking Inquiries</h3>
-            <p className="text-xs text-slate-500">Fans who booked voice or video calls with you</p>
           </div>
 
           <button

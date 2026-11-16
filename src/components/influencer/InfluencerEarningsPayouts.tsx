@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import {
   Wallet,
@@ -34,6 +34,25 @@ export const InfluencerEarningsPayouts: React.FC = () => {
   const [bankAccNumber, setBankAccNumber] = useState(currentInfluencer.payoutDetails?.accountNumber || '5010049281920');
   const [bankIfsc, setBankIfsc] = useState(currentInfluencer.payoutDetails?.ifsc || 'HDFC0001244');
   const [bankName, setBankName] = useState(currentInfluencer.payoutDetails?.bankName || 'HDFC Bank');
+
+  // ESC key and body scroll lock for withdrawal modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && showWithdrawModal) {
+        setShowWithdrawModal(false);
+      }
+    };
+    if (showWithdrawModal) {
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('keydown', handleKeyDown);
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [showWithdrawModal]);
 
   // Bookings and payouts for this influencer
   const creatorBookings = bookings.filter(b => b.influencerId === currentInfluencer.id);
@@ -215,7 +234,6 @@ export const InfluencerEarningsPayouts: React.FC = () => {
         <div className="flex items-center justify-between pb-3 border-b border-slate-100">
           <div>
             <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Disbursal Withdrawal Ledger</h3>
-            <p className="text-xs text-slate-500">History of requested and settled payouts to your accounts</p>
           </div>
 
           <div className="flex items-center gap-2">
@@ -251,10 +269,10 @@ export const InfluencerEarningsPayouts: React.FC = () => {
                     </td>
                     <td className="py-3.5 px-3">
                       <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${p.status === 'paid'
-                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                          : p.status === 'rejected'
-                            ? 'bg-rose-50 text-rose-700 border border-rose-200'
-                            : 'bg-amber-50 text-amber-700 border border-amber-200'
+                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                        : p.status === 'rejected'
+                          ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                          : 'bg-amber-50 text-amber-700 border border-amber-200'
                         }`}>
                         {p.status}
                       </span>
@@ -272,7 +290,12 @@ export const InfluencerEarningsPayouts: React.FC = () => {
 
       {/* Withdrawal Modal */}
       {showWithdrawModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fadeIn">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fadeIn"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowWithdrawModal(false);
+          }}
+        >
           <div className="w-full max-w-md rounded-3xl bg-white border border-slate-200 p-6 space-y-4 shadow-2xl">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">

@@ -213,6 +213,15 @@ export const extractInitialSocialLinks = (inf: InfluencerProfile): SavedSocialLi
   return list;
 };
 
+const PRESET_AVATARS = [
+  'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=300&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=300&auto=format&fit=crop&q=80'
+];
+
 interface FormErrors {
   fullName?: string;
   name?: string;
@@ -315,6 +324,8 @@ export const CoreCreatorDetails: React.FC = () => {
   const [photoUploadSuccess, setPhotoUploadSuccess] = useState<string | null>(null);
   const [showUrlModal, setShowUrlModal] = useState(false);
   const [customUrlInput, setCustomUrlInput] = useState('');
+  const [urlError, setUrlError] = useState<string | null>(null);
+  const [previewError, setPreviewError] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // --- 5. Creator Content / Media State ---
@@ -324,6 +335,31 @@ export const CoreCreatorDetails: React.FC = () => {
   const [mediaUrl, setMediaUrl] = useState('');
   const [mediaType, setMediaType] = useState<'image' | 'video'>('image');
   const [mediaPreviewModal, setMediaPreviewModal] = useState<InfluencerGalleryItem | null>(null);
+
+  // ESC key and body scroll lock for modals in CoreCreatorDetails
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (showUrlModal) {
+          setShowUrlModal(false);
+          setUrlError(null);
+        }
+        if (mediaPreviewModal) {
+          setMediaPreviewModal(null);
+        }
+      }
+    };
+    if (showUrlModal || mediaPreviewModal) {
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('keydown', handleKeyDown);
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [showUrlModal, mediaPreviewModal]);
 
   // --- 6. Form Saving & Validation State ---
   const [isSaving, setIsSaving] = useState(false);
@@ -525,10 +561,20 @@ export const CoreCreatorDetails: React.FC = () => {
     setTimeout(() => setPhotoUploadSuccess(null), 3000);
   };
 
-  const handleApplyCustomUrl = () => {
-    if (!customUrlInput.trim()) return;
-    setAvatar(customUrlInput.trim());
-    setAvatarPreview(customUrlInput.trim());
+  const handleApplyCustomUrl = (urlToApply?: string) => {
+    const raw = (urlToApply !== undefined ? urlToApply : customUrlInput).trim();
+    if (!raw) {
+      setUrlError('Please enter or select a valid image URL.');
+      return;
+    }
+    let targetUrl = raw;
+    if (!/^https?:\/\//i.test(targetUrl) && !targetUrl.startsWith('data:image/')) {
+      targetUrl = `https://${targetUrl}`;
+    }
+    setUrlError(null);
+    setPreviewError(false);
+    setAvatar(targetUrl);
+    setAvatarPreview(targetUrl);
     setShowUrlModal(false);
     setCustomUrlInput('');
     setPhotoUploadSuccess('Profile photo URL applied!');
@@ -1606,9 +1652,6 @@ export const CoreCreatorDetails: React.FC = () => {
                 <h2 className="text-base font-extrabold text-[#172554] tracking-tight">
                   Creator Content & Profile Media
                 </h2>
-                <p className="text-xs text-[#64748B]">
-                  Upload showcase photos, tournament trophies, event pictures, or video clips for fans.
-                </p>
               </div>
             </div>
 
@@ -1832,43 +1875,187 @@ export const CoreCreatorDetails: React.FC = () => {
 
       {/* ================= DIRECT IMAGE URL MODAL ================= */}
       {showUrlModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 border border-slate-200/90 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <h4 className="text-sm font-bold text-[#172554]">Direct Profile Picture URL</h4>
+        <div
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowUrlModal(false);
+              setUrlError(null);
+            }
+          }}
+        >
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 border border-slate-200/90 shadow-2xl space-y-5 animate-scaleUp">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between pb-3.5 border-b border-slate-100">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-brand-50 text-brand-600 border border-brand-200/80 flex items-center justify-center shrink-0">
+                  <LinkIcon className="w-4 h-4 text-brand-600" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-extrabold text-[#172554]">Direct Image URL</h4>
+                  <p className="text-[11px] text-[#64748B]">Set your profile photo via direct link or presets</p>
+                </div>
+              </div>
               <button
                 type="button"
-                onClick={() => setShowUrlModal(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-700 cursor-pointer"
+                onClick={() => {
+                  setShowUrlModal(false);
+                  setUrlError(null);
+                }}
+                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+                title="Close (Esc)"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
-            <p className="text-xs text-[#64748B]">
-              Enter a direct web image link (Unsplash, Cloudinary, AWS S3, etc.) for your creator profile photo:
-            </p>
-            <input
-              type="url"
-              value={customUrlInput}
-              onChange={e => setCustomUrlInput(e.target.value)}
-              placeholder="https://images.unsplash.com/..."
-              className="w-full px-4 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-200 text-xs text-[#172554] placeholder-[#94A3B8] focus:outline-none focus:border-brand-500 focus:bg-white transition-all"
-            />
-            <div className="flex justify-end gap-2 pt-2">
+
+            {/* Live Preview Card */}
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center gap-4">
+              <div className="relative w-16 h-16 rounded-2xl overflow-hidden border-2 border-white shadow-sm bg-slate-200 shrink-0">
+                <img
+                  src={customUrlInput.trim() || avatarPreview}
+                  alt="Preview"
+                  className="w-full h-full object-cover"
+                  onError={() => setPreviewError(true)}
+                  onLoad={() => setPreviewError(false)}
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <span className="text-[11px] font-bold text-slate-800 block">
+                  {customUrlInput.trim() ? 'Live URL Preview' : 'Current Profile Photo'}
+                </span>
+                {customUrlInput.trim() ? (
+                  previewError ? (
+                    <span className="text-[10px] text-rose-600 font-semibold flex items-center gap-1 mt-0.5">
+                      <AlertCircle className="w-3 h-3 shrink-0" />
+                      Unable to load image. Check the URL link.
+                    </span>
+                  ) : (
+                    <span className="text-[10px] text-emerald-600 font-semibold flex items-center gap-1 mt-0.5">
+                      <CheckCircle2 className="w-3 h-3 shrink-0" />
+                      Image loaded successfully!
+                    </span>
+                  )
+                ) : (
+                  <span className="text-[10px] text-slate-500 block truncate mt-0.5">
+                    Paste an image link below or choose a preset.
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* URL Input */}
+            <div className="space-y-1.5">
+              <label className="block text-xs font-bold text-[#172554]">
+                Web Image URL (HTTPS)
+              </label>
+              <div className="relative">
+                <input
+                  type="url"
+                  value={customUrlInput}
+                  onChange={e => {
+                    setCustomUrlInput(e.target.value);
+                    if (urlError) setUrlError(null);
+                    setPreviewError(false);
+                  }}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleApplyCustomUrl();
+                    }
+                  }}
+                  placeholder="https://images.unsplash.com/photo-..."
+                  className={`w-full pl-3.5 pr-9 py-2.5 rounded-xl bg-[#F8FAFC] border text-xs text-[#172554] placeholder-[#94A3B8] transition-all focus:outline-none focus:bg-white ${
+                    urlError ? 'border-rose-400 ring-2 ring-rose-500/10' : 'border-slate-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20'
+                  }`}
+                  autoFocus
+                />
+                {customUrlInput && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCustomUrlInput('');
+                      setUrlError(null);
+                    }}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 cursor-pointer"
+                    title="Clear"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+              {urlError && (
+                <p className="text-[11px] text-rose-600 font-medium">{urlError}</p>
+              )}
+            </div>
+
+            {/* Curated Presets Selection */}
+            <div className="space-y-2 pt-1">
+              <span className="text-[11px] font-bold text-[#172554] block">
+                Or choose from high-res creator presets:
+              </span>
+              <div className="grid grid-cols-6 gap-2">
+                {PRESET_AVATARS.map((url, idx) => {
+                  const isSelected = customUrlInput.trim() === url || (!customUrlInput.trim() && avatar === url);
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => {
+                        setCustomUrlInput(url);
+                        setUrlError(null);
+                        setPreviewError(false);
+                      }}
+                      className={`relative rounded-xl overflow-hidden aspect-square border-2 transition-all cursor-pointer group ${
+                        isSelected ? 'border-brand-500 ring-2 ring-brand-500/20 shadow-sm' : 'border-slate-200 hover:border-slate-400'
+                      }`}
+                      title={`Preset ${idx + 1}`}
+                    >
+                      <img src={url} alt={`Preset ${idx + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                      {isSelected && (
+                        <div className="absolute inset-0 bg-brand-500/20 flex items-center justify-center">
+                          <Check className="w-3.5 h-3.5 text-white stroke-[3]" />
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="flex items-center justify-between pt-2 border-t border-slate-100">
               <button
                 type="button"
-                onClick={() => setShowUrlModal(false)}
-                className="px-4 py-2 rounded-xl bg-[#F8FAFC] hover:bg-slate-100 text-[#64748B] hover:text-[#172554] border border-slate-200 text-xs font-bold cursor-pointer"
+                onClick={() => {
+                  handleRemovePhoto();
+                  setShowUrlModal(false);
+                  setUrlError(null);
+                }}
+                className="text-[11px] font-bold text-rose-600 hover:text-rose-700 hover:underline cursor-pointer"
               >
-                Cancel
+                Reset to initials
               </button>
-              <button
-                type="button"
-                onClick={handleApplyCustomUrl}
-                className="px-5 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold shadow-sm shadow-brand-500/25 cursor-pointer"
-              >
-                Apply Image
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowUrlModal(false);
+                    setUrlError(null);
+                  }}
+                  className="px-4 py-2 rounded-xl bg-[#F8FAFC] hover:bg-slate-100 text-[#64748B] hover:text-[#172554] border border-slate-200 text-xs font-bold cursor-pointer transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleApplyCustomUrl()}
+                  className="px-5 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 active:scale-[0.98] text-white text-xs font-bold shadow-sm shadow-brand-500/25 cursor-pointer transition-all flex items-center gap-1.5"
+                >
+                  <Check className="w-3.5 h-3.5 stroke-[2.5]" />
+                  <span>Apply Image</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -1876,24 +2063,61 @@ export const CoreCreatorDetails: React.FC = () => {
 
       {/* ================= MEDIA PREVIEW MODAL ================= */}
       {mediaPreviewModal && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-white rounded-3xl max-w-xl w-full overflow-hidden shadow-2xl border border-slate-200/90">
+        <div
+          className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setMediaPreviewModal(null);
+          }}
+        >
+          <div className="bg-white rounded-3xl max-w-xl w-full overflow-hidden shadow-2xl border border-slate-200/90 animate-scaleUp">
             <div className="p-4 border-b border-slate-100 flex items-center justify-between">
-              <h4 className="text-xs font-bold text-[#172554] truncate">{mediaPreviewModal.title}</h4>
-              <button
-                type="button"
-                onClick={() => setMediaPreviewModal(null)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-700 cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
+              <div className="flex items-center gap-2 min-w-0 pr-2">
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shrink-0 ${
+                  mediaPreviewModal.type === 'video' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'
+                }`}>
+                  {mediaPreviewModal.type === 'video' ? 'Video' : 'Photo'}
+                </span>
+                <h4 className="text-xs font-bold text-[#172554] truncate">{mediaPreviewModal.title}</h4>
+              </div>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <a
+                  href={mediaPreviewModal.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                  title="Open Original Link"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+                <button
+                  type="button"
+                  onClick={() => setMediaPreviewModal(null)}
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+                  title="Close (Esc)"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
             </div>
-            <div className="aspect-video bg-black flex items-center justify-center">
-              <img src={mediaPreviewModal.url} alt={mediaPreviewModal.title} className="max-h-full max-w-full object-contain" />
+            <div className="aspect-video bg-black flex items-center justify-center overflow-hidden">
+              {mediaPreviewModal.type === 'video' ? (
+                <video
+                  src={mediaPreviewModal.url}
+                  controls
+                  autoPlay
+                  className="max-h-full max-w-full"
+                />
+              ) : (
+                <img
+                  src={mediaPreviewModal.url}
+                  alt={mediaPreviewModal.title}
+                  className="max-h-full max-w-full object-contain"
+                />
+              )}
             </div>
-            <div className="p-4 space-y-1">
+            <div className="p-4 space-y-1 bg-slate-50/50">
               <p className="text-xs text-[#64748B]">{mediaPreviewModal.description}</p>
-              <span className="text-[10px] text-[#64748B]/70">Uploaded {mediaPreviewModal.uploadedAt}</span>
+              <span className="text-[10px] text-[#64748B]/70 block">Uploaded {mediaPreviewModal.uploadedAt}</span>
             </div>
           </div>
         </div>

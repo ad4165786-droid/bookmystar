@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { CoreCreatorDetails } from './CoreCreatorDetails';
 import { 
@@ -33,6 +33,25 @@ export const InfluencerContentProfile: React.FC = () => {
   const [mediaDesc, setMediaDesc] = useState('');
   const [mediaUrl, setMediaUrl] = useState('');
   const [mediaType, setMediaType] = useState<'image' | 'video'>('image');
+
+  // ESC key and body scroll lock for upload modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && showUploadModal) {
+        setShowUploadModal(false);
+      }
+    };
+    if (showUploadModal) {
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('keydown', handleKeyDown);
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [showUploadModal]);
 
   const handleUploadMedia = (e: React.FormEvent) => {
     e.preventDefault();
@@ -287,7 +306,12 @@ export const InfluencerContentProfile: React.FC = () => {
 
       {/* Media Upload Modal */}
       {showUploadModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-xs animate-fadeIn">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-xs animate-fadeIn"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowUploadModal(false);
+          }}
+        >
           <div className="w-full max-w-md rounded-3xl bg-white border border-slate-200/90 p-6 space-y-4 shadow-2xl">
             <h3 className="text-base font-extrabold text-[#172554]">Add Showcase Item to Portfolio</h3>
 

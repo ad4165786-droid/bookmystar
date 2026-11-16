@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { Booking } from '../../types';
 import {
@@ -90,6 +90,25 @@ export const UserProfileSettings: React.FC = () => {
   // Avatar Modal State
   const [showAvatarModal, setShowAvatarModal] = useState(false);
   const [customAvatarUrl, setCustomAvatarUrl] = useState('');
+
+  // ESC key and body scroll lock for avatar modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && showAvatarModal) {
+        setShowAvatarModal(false);
+      }
+    };
+    if (showAvatarModal) {
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('keydown', handleKeyDown);
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [showAvatarModal]);
 
   // Password & Security State
   const [currentPassword, setCurrentPassword] = useState('');
@@ -1177,7 +1196,12 @@ export const UserProfileSettings: React.FC = () => {
 
       {/* 4. Avatar Selection Modal */}
       {showAvatarModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowAvatarModal(false);
+          }}
+        >
           <div className="relative w-full max-w-md rounded-3xl bg-white border border-slate-200 shadow-2xl p-6 space-y-5">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <h3 className="text-base font-extrabold text-slate-900">Choose Profile Avatar</h3>
