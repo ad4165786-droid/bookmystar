@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { Booking } from '../../types';
 import {
@@ -38,8 +38,8 @@ import {
   Award,
   Video,
   PhoneCall,
-  Upload,
-  Image as ImageIcon
+  Pencil,
+  X
 } from 'lucide-react';
 import { InvoiceModal } from '../modals/InvoiceModal';
 
@@ -53,12 +53,12 @@ const PRESET_AVATARS = [
 ];
 
 const PRESET_BANNERS = [
-  'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1200&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&auto=format&fit=crop&q=80',
   'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1200&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=1200&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1200&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1200&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200&auto=format&fit=crop&q=80',
   'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1200&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1200&auto=format&fit=crop&q=80'
 ];
 
 export const UserProfileSettings: React.FC = () => {
@@ -99,43 +99,21 @@ export const UserProfileSettings: React.FC = () => {
   const [gender, setGender] = useState(currentUser.gender || 'Male');
   const [upiId, setUpiId] = useState(currentUser.upiId || 'aarav.sharma@oksbi');
 
-  // Avatar Modal State
+  // Avatar & Banner Modal State
   const [showAvatarModal, setShowAvatarModal] = useState(false);
   const [customAvatarUrl, setCustomAvatarUrl] = useState('');
-
-  // Banner Cover Modal State & File Ref
-  const [showCoverModal, setShowCoverModal] = useState(false);
-  const [customCoverUrl, setCustomCoverUrl] = useState('');
-  const coverFileInputRef = useRef<HTMLInputElement>(null);
-
-  // File Upload Handler for Banner Photo
-  const handleCoverFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        showToast('Image size must be less than 5MB');
-        return;
-      }
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result as string;
-        setCoverImage(result);
-        setShowCoverModal(false);
-        showToast('Banner photo updated. Click Save to persist.');
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  const [showBannerModal, setShowBannerModal] = useState(false);
+  const [customBannerUrl, setCustomBannerUrl] = useState('');
 
   // ESC key and body scroll lock for modals
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         if (showAvatarModal) setShowAvatarModal(false);
-        if (showCoverModal) setShowCoverModal(false);
+        if (showBannerModal) setShowBannerModal(false);
       }
     };
-    if (showAvatarModal || showCoverModal) {
+    if (showAvatarModal || showBannerModal) {
       document.body.style.overflow = 'hidden';
       window.addEventListener('keydown', handleKeyDown);
     } else {
@@ -145,7 +123,7 @@ export const UserProfileSettings: React.FC = () => {
       document.body.style.overflow = '';
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [showAvatarModal, showCoverModal]);
+  }, [showAvatarModal, showBannerModal]);
 
   // Password & Security State
   const [currentPassword, setCurrentPassword] = useState('');
@@ -211,7 +189,7 @@ export const UserProfileSettings: React.FC = () => {
       email: email.trim(),
       phone: phone.trim(),
       avatar,
-      coverImage,
+      coverImage: coverImage.trim() || undefined,
       bio: bio.trim(),
       city: city.trim(),
       state: state.trim(),
@@ -268,22 +246,33 @@ export const UserProfileSettings: React.FC = () => {
 
         {/* Cover Background Graphic */}
         <div className="h-44 sm:h-52 w-full bg-gradient-to-r from-slate-900 via-brand-950 to-brand-900 relative overflow-hidden group">
-          {coverImage && (
-            <img
-              src={coverImage}
-              alt="Profile Banner"
-              className="w-full h-full object-cover transition-opacity duration-300"
-            />
+          {coverImage ? (
+            <>
+              <img src={coverImage} alt="Cover Banner" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/30 to-black/20" />
+            </>
+          ) : (
+            <>
+              {/* Subtle Ambient Shapes */}
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(249,115,22,0.22),transparent_60%)]" />
+              <div className="absolute right-0 bottom-0 top-0 w-1/2 bg-[radial-gradient(ellipse_at_top_right,rgba(217,119,6,0.18),transparent_70%)]" />
+              <div className="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:32px_32px]" />
+            </>
           )}
 
-          {/* Subtle Ambient Shapes */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(249,115,22,0.22),transparent_60%)] pointer-events-none" />
-          <div className="absolute right-0 bottom-0 top-0 w-1/2 bg-[radial-gradient(ellipse_at_top_right,rgba(217,119,6,0.18),transparent_70%)] pointer-events-none" />
-          <div className="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-black/20 pointer-events-none" />
+          {/* Edit Banner Button */}
+          <button
+            type="button"
+            onClick={() => setShowBannerModal(true)}
+            className="absolute top-4 left-4 sm:top-6 sm:left-6 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900/60 hover:bg-slate-900/80 text-white text-xs font-bold backdrop-blur-md border border-white/20 shadow-md transition-all cursor-pointer ring-1 ring-white/10"
+            title="Edit profile banner"
+          >
+            <Camera className="w-3.5 h-3.5 text-white/90" />
+            <span>Edit Banner</span>
+          </button>
 
           {/* Top Brand Badges */}
-          <div className="absolute top-4 right-4 sm:top-6 sm:right-6 flex items-center gap-2 z-10">
+          <div className="absolute top-4 right-4 sm:top-6 sm:right-6 flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-white/10 backdrop-blur-md text-white border border-white/20 shadow-xs">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
               <span>Escrow Protected Fan</span>
@@ -293,27 +282,6 @@ export const UserProfileSettings: React.FC = () => {
               <span>Gold Tier</span>
             </span>
           </div>
-
-          {/* Edit Photo Button on Banner */}
-          <div className="absolute bottom-4 right-4 sm:bottom-4 sm:right-6 z-10">
-            <button
-              type="button"
-              onClick={() => setShowCoverModal(true)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900/80 hover:bg-brand-600 text-white backdrop-blur-md border border-white/20 shadow-md transition-all cursor-pointer hover:scale-105 active:scale-95"
-              title="Edit Banner Photo"
-            >
-              <Camera className="w-3.5 h-3.5 text-brand-400" />
-              <span>Edit Photo</span>
-            </button>
-          </div>
-
-          <input
-            ref={coverFileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleCoverFileChange}
-            className="hidden"
-          />
         </div>
 
         {/* Profile Identity Bar */}
@@ -370,6 +338,19 @@ export const UserProfileSettings: React.FC = () => {
 
             {/* Quick Summary Pill Badges */}
             <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTab('personal');
+                  const el = document.getElementById('personal-details-section');
+                  el?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold text-xs transition-all cursor-pointer border border-slate-200 shadow-2xs"
+              >
+                <Pencil className="w-3.5 h-3.5 text-slate-600" />
+                <span>Edit Profile</span>
+              </button>
+
               <button
                 type="button"
                 onClick={() => {
@@ -505,7 +486,7 @@ export const UserProfileSettings: React.FC = () => {
           <form onSubmit={handleSavePersonal} className="space-y-6">
 
             {/* Identity & Legal Information */}
-            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-6">
+            <div id="personal-details-section" className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-6">
               <div className="flex items-center justify-between pb-4 border-b border-slate-100">
                 <div>
                   <h3 className="text-base font-extrabold text-slate-900">Personal & Contact Information</h3>
@@ -1332,104 +1313,89 @@ export const UserProfileSettings: React.FC = () => {
         </div>
       )}
 
-      {/* 5. Banner Cover Photo Selection Modal */}
-      {showCoverModal && (
+      {/* 4b. Banner Customization Modal */}
+      {showBannerModal && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
           onClick={(e) => {
-            if (e.target === e.currentTarget) setShowCoverModal(false);
+            if (e.target === e.currentTarget) setShowBannerModal(false);
           }}
         >
-          <div className="relative w-full max-w-lg rounded-3xl bg-white border border-slate-200 shadow-2xl p-6 space-y-5">
+          <div className="relative w-full max-w-lg rounded-3xl bg-white border border-slate-200 shadow-2xl p-6 space-y-5 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-brand-50 border border-brand-200 flex items-center justify-center text-brand-600">
-                  <Camera className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="text-base font-extrabold text-slate-900">Edit Banner Photo</h3>
-                  <p className="text-[11px] text-slate-500">Personalize your fan profile cover banner</p>
-                </div>
+              <div>
+                <h3 className="text-base font-extrabold text-slate-900">Customize Profile Banner</h3>
+                <p className="text-xs text-slate-500 mt-0.5">Select a curated banner or paste an image link.</p>
               </div>
               <button
                 type="button"
-                onClick={() => setShowCoverModal(false)}
-                className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+                onClick={() => setShowBannerModal(false)}
+                className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            {/* Quick Upload Action */}
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={() => coverFileInputRef.current?.click()}
-                className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-brand-50 hover:bg-brand-100 border border-brand-200 text-brand-700 font-bold text-xs transition-all cursor-pointer shadow-2xs"
-              >
-                <Upload className="w-4 h-4" />
-                <span>Upload From Computer</span>
-              </button>
-              {coverImage && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setCoverImage('');
-                    setShowCoverModal(false);
-                    showToast('Banner reset to default gradient. Click Save to persist.');
-                  }}
-                  className="px-3 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs transition-all cursor-pointer"
-                  title="Remove image and use default gradient"
-                >
-                  Reset Default
-                </button>
-              )}
-            </div>
-
-            {/* Preset Banners */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-2">Preset Banner Photos</label>
-              <div className="grid grid-cols-3 gap-2.5">
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-xs font-bold text-slate-700">Curated Banners</label>
+                {coverImage && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCoverImage('');
+                      setShowBannerModal(false);
+                      updateUserProfile(currentUser.id, { coverImage: undefined });
+                      showToast('Banner reset to default gradient theme.');
+                    }}
+                    className="text-[11px] font-bold text-brand-600 hover:text-brand-700 cursor-pointer"
+                  >
+                    Reset to Default Gradient
+                  </button>
+                )}
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {PRESET_BANNERS.map((url, idx) => (
                   <button
                     key={idx}
                     type="button"
                     onClick={() => {
                       setCoverImage(url);
-                      setShowCoverModal(false);
-                      showToast('Banner photo selected. Click Save to persist.');
+                      setShowBannerModal(false);
+                      updateUserProfile(currentUser.id, { coverImage: url });
+                      showToast('Profile banner updated.');
                     }}
-                    className={`relative rounded-xl overflow-hidden p-0.5 border-2 transition-all cursor-pointer group ${coverImage === url ? 'border-brand-500 ring-2 ring-brand-500/20' : 'border-slate-100 hover:border-slate-300'
+                    className={`relative rounded-2xl overflow-hidden p-0.5 border-2 transition-all cursor-pointer group ${coverImage === url ? 'border-brand-500 ring-2 ring-brand-500/20' : 'border-transparent hover:border-slate-300'
                       }`}
                   >
-                    <img src={url} alt={`Banner Preset ${idx + 1}`} className="w-full h-16 rounded-lg object-cover group-hover:scale-105 transition-transform duration-200" />
+                    <img src={url} alt={`Banner preset ${idx + 1}`} className="w-full h-20 rounded-xl object-cover group-hover:scale-105 transition-transform" />
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Custom URL Input */}
-            <div className="pt-2 border-t border-slate-100 text-xs">
-              <label className="block font-bold text-slate-700 mb-1.5">Or Paste Custom Image URL</label>
+            <div className="pt-3 border-t border-slate-100 text-xs">
+              <label className="block font-bold text-slate-700 mb-1.5">Or Paste Custom Banner Image URL</label>
               <div className="flex gap-2">
                 <input
                   type="url"
-                  value={customCoverUrl}
-                  onChange={e => setCustomCoverUrl(e.target.value)}
-                  placeholder="https://images.unsplash.com/your-cover.jpg"
+                  value={customBannerUrl}
+                  onChange={e => setCustomBannerUrl(e.target.value)}
+                  placeholder="https://images.unsplash.com/your-banner.jpg"
                   className="flex-1 px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-xs focus:outline-none focus:border-brand-500"
                 />
                 <button
                   type="button"
                   onClick={() => {
-                    if (customCoverUrl.trim()) {
-                      setCoverImage(customCoverUrl.trim());
-                      setCustomCoverUrl('');
-                      setShowCoverModal(false);
-                      showToast('Custom banner photo applied. Click Save to persist.');
+                    if (customBannerUrl.trim()) {
+                      const url = customBannerUrl.trim();
+                      setCoverImage(url);
+                      setShowBannerModal(false);
+                      updateUserProfile(currentUser.id, { coverImage: url });
+                      showToast('Custom banner applied successfully.');
                     }
                   }}
-                  className="px-4 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs transition-colors cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs cursor-pointer shadow-sm"
                 >
                   Apply
                 </button>
