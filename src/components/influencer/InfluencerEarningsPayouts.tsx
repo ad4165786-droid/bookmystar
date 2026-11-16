@@ -178,13 +178,13 @@ export const InfluencerEarningsPayouts: React.FC = () => {
             <div className="space-y-1.5">
               <div className="flex justify-between font-semibold">
                 <span className="flex items-center gap-1.5 text-slate-800">
-                  <Video className="w-3.5 h-3.5 text-brand-500" /> 1-on-1 Video Calls
+                  <Video className="w-3.5 h-3.5 text-indigo-600" /> 1-on-1 Video Calls
                 </span>
                 <span className="text-slate-900 font-bold">₹{videoRevenue.toLocaleString('en-IN')}</span>
               </div>
               <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-brand-500 to-amber-500 rounded-full"
+                  className="h-full bg-gradient-to-r from-indigo-600 to-indigo-500 rounded-full"
                   style={{ width: `${totalGrossBookingValue > 0 ? (videoRevenue / (videoRevenue + voiceRevenue || 1)) * 100 : 70}%` }}
                 />
               </div>
@@ -200,7 +200,7 @@ export const InfluencerEarningsPayouts: React.FC = () => {
               </div>
               <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-emerald-500 rounded-full"
+                  className="h-full bg-gradient-to-r from-emerald-600 to-emerald-500 rounded-full"
                   style={{ width: `${totalGrossBookingValue > 0 ? (voiceRevenue / (videoRevenue + voiceRevenue || 1)) * 100 : 30}%` }}
                 />
               </div>

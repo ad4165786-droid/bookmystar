@@ -273,7 +273,7 @@ export const AdminOverview: React.FC = () => {
                     ₹{item.amount}
                   </div>
                   <div
-                    className="w-full max-w-[32px] rounded-t-lg bg-gradient-to-t from-brand-600 via-purple-600 to-amber-400 group-hover:brightness-125 transition-all"
+                    className="w-full max-w-[32px] rounded-t-lg bg-gradient-to-t from-indigo-700 via-indigo-600 to-emerald-500 group-hover:brightness-125 transition-all"
                     style={{ height: item.h }}
                   />
                   <span className="text-[10px] text-slate-400">{item.day}</span>
@@ -283,11 +283,11 @@ export const AdminOverview: React.FC = () => {
 
             <div className="flex items-center justify-between text-xs text-slate-400 px-2">
               <span className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-brand-500 inline-block" />
+                <span className="w-3 h-3 rounded-full bg-indigo-500 inline-block" />
                 Video Sessions (68%)
               </span>
               <span className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-amber-400 inline-block" />
+                <span className="w-3 h-3 rounded-full bg-emerald-500 inline-block" />
                 Voice Sessions (32%)
               </span>
             </div>

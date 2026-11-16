@@ -356,27 +356,33 @@ export const InfluencerDashboard: React.FC = () => {
           {/* Active Data Point Inspection Card (Hovered / Selected) */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-white border border-slate-200/90 shadow-2xs">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-brand-50 text-brand-600 border border-brand-200 flex items-center justify-center font-bold text-xs">
+              <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-200/80 flex items-center justify-center font-bold text-xs shadow-xs">
                 {activePoint.label.slice(0, 3)}
               </div>
               <div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-bold text-slate-900">{activePoint.fullDate}</span>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                  <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200/50">
                     {activePoint.bookingsCount} Completed Calls
                   </span>
                 </div>
-                <div className="text-xs text-slate-500 flex items-center gap-2 mt-0.5">
-                  <span>Video: <strong className="text-slate-800">₹{activePoint.videoRevenue.toLocaleString('en-IN')}</strong></span>
-                  <span>•</span>
-                  <span>Voice: <strong className="text-slate-800">₹{activePoint.voiceRevenue.toLocaleString('en-IN')}</strong></span>
+                <div className="text-xs text-slate-500 flex items-center gap-2.5 mt-0.5">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-indigo-600 inline-block" />
+                    Video: <strong className="text-slate-800 font-bold">₹{activePoint.videoRevenue.toLocaleString('en-IN')}</strong>
+                  </span>
+                  <span className="text-slate-300">•</span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
+                    Voice: <strong className="text-slate-800 font-bold">₹{activePoint.voiceRevenue.toLocaleString('en-IN')}</strong>
+                  </span>
                 </div>
               </div>
             </div>
 
             <div className="text-left sm:text-right">
-              <span className="text-[10px] text-slate-400 font-semibold block uppercase">Interval Net Earnings</span>
-              <span className="text-lg sm:text-xl font-black text-brand-600">
+              <span className="text-[10px] text-slate-400 font-semibold block uppercase tracking-wider">Interval Net Earnings</span>
+              <span className="text-lg sm:text-xl font-black text-slate-900">
                 ₹{activePoint.revenue.toLocaleString('en-IN')}
               </span>
             </div>
@@ -405,7 +411,7 @@ export const InfluencerDashboard: React.FC = () => {
                   >
                     {/* Tooltip on top of column */}
                     <div
-                      className={`mb-2 text-[10px] font-extrabold px-2 py-0.5 rounded-md transition-all ${
+                      className={`mb-2 text-[10px] font-bold px-2 py-0.5 rounded-md transition-all font-mono ${
                         isSelected
                           ? 'bg-slate-900 text-white shadow-md -translate-y-1'
                           : 'bg-slate-100 text-slate-500 opacity-0 group-hover:opacity-100'
@@ -415,24 +421,24 @@ export const InfluencerDashboard: React.FC = () => {
                     </div>
 
                     {/* Dual-Stack Bar (Video on top, Voice below) */}
-                    <div className="w-full max-w-[56px] h-40 bg-slate-100 rounded-t-xl flex flex-col justify-end overflow-hidden border border-slate-200/50">
+                    <div className="w-full max-w-[56px] h-40 bg-slate-100/90 rounded-t-xl flex flex-col justify-end overflow-hidden border border-slate-200/60 shadow-2xs">
                       <div
                         style={{ height: `${heightPercentage}%` }}
                         className={`w-full flex flex-col justify-end transition-all rounded-t-xl overflow-hidden ${
                           isSelected
-                            ? 'ring-2 ring-brand-500 brightness-105'
+                            ? 'ring-2 ring-indigo-500 ring-offset-2 ring-offset-white brightness-105'
                             : 'hover:brightness-105'
                         }`}
                       >
                         {/* Video Portion */}
                         <div
                           style={{ height: `${(point.videoRevenue / point.revenue) * 100}%` }}
-                          className="w-full bg-gradient-to-t from-brand-600 via-brand-500 to-amber-400"
+                          className="w-full bg-gradient-to-t from-indigo-700 via-indigo-600 to-indigo-500"
                         />
                         {/* Voice Portion */}
                         <div
                           style={{ height: `${(point.voiceRevenue / point.revenue) * 100}%` }}
-                          className="w-full bg-gradient-to-t from-sky-600 to-sky-400"
+                          className="w-full bg-gradient-to-t from-emerald-600 via-emerald-500 to-teal-400"
                         />
                       </div>
                     </div>
@@ -441,7 +447,7 @@ export const InfluencerDashboard: React.FC = () => {
                     <div className="mt-2.5 text-center">
                       <span
                         className={`text-xs font-bold block transition-colors ${
-                          isSelected ? 'text-brand-600 font-extrabold' : 'text-slate-500 group-hover:text-slate-900'
+                          isSelected ? 'text-indigo-600 font-extrabold' : 'text-slate-500 group-hover:text-slate-900'
                         }`}
                       >
                         {point.label}
@@ -456,11 +462,11 @@ export const InfluencerDashboard: React.FC = () => {
             <div className="mt-5 pt-3 border-t border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-600">
               <div className="flex items-center gap-5">
                 <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-brand-500" />
+                  <span className="w-3 h-3 rounded-full bg-indigo-600 shadow-xs" />
                   <span className="font-semibold text-slate-800">Video Calls (₹{videoRevenue.toLocaleString('en-IN')})</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-sky-500" />
+                  <span className="w-3 h-3 rounded-full bg-emerald-500 shadow-xs" />
                   <span className="font-semibold text-slate-800">Voice Calls (₹{voiceRevenue.toLocaleString('en-IN')})</span>
                 </div>
               </div>
