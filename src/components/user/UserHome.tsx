@@ -72,8 +72,21 @@ export const UserHome: React.FC = () => {
     <div className="space-y-8 pb-6 font-sans">
 
       {/* Discovery Filters & Search */}
-      <section className="space-y-4">
+      <section className="p-6 sm:p-7 rounded-3xl bg-white border border-slate-200/90 shadow-md ring-1 ring-slate-900/5 space-y-5 transition-all">
         
+        {/* Section Header */}
+        <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
+          <div className="w-9 h-9 rounded-xl bg-brand-50 border border-brand-200/60 text-brand-600 flex items-center justify-center shrink-0 shadow-2xs">
+            <SlidersHorizontal className="w-4 h-4 text-brand-600 stroke-[2.2]" />
+          </div>
+          <div>
+            <h2 className="text-sm sm:text-base font-extrabold uppercase tracking-wide text-slate-900">
+              Find & Filter Creators
+            </h2>
+            <p className="text-[11px] text-slate-500 font-medium">Search by name, call mode, budget, or entertainment category</p>
+          </div>
+        </div>
+
         {/* Search Bar + Controls */}
         <div className="flex flex-col md:flex-row gap-3 items-center justify-between">
           
@@ -145,7 +158,7 @@ export const UserHome: React.FC = () => {
         </div>
 
         {/* Category Horizontal Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+        <div className="pt-2 border-t border-slate-100 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
           {CATEGORIES.map(cat => (
             <button
               key={cat}
@@ -164,18 +177,21 @@ export const UserHome: React.FC = () => {
       </section>
 
       {/* Influencer Grid */}
-      <section className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <h2 className="text-lg font-black text-slate-900 tracking-tight">Available Influencers & Stars</h2>
-            <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
-              {filteredInfluencers.length} listed
-            </span>
+      <section className="space-y-5">
+        <div className="flex items-center justify-between p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/90 shadow-sm ring-1 ring-slate-900/5 flex-wrap gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-amber-50 border border-amber-200/60 text-amber-600 flex items-center justify-center shrink-0 shadow-2xs">
+              <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
+            </div>
+            <div>
+              <h2 className="text-base sm:text-lg font-black text-slate-900 tracking-tight">Available Influencers & Stars</h2>
+              <p className="text-[11px] text-slate-500 font-medium">Real-time availability • Direct 1-on-1 private video & voice consultations</p>
+            </div>
           </div>
 
-          <div className="text-xs text-slate-500 font-medium">
-            Real-time availability updated
-          </div>
+          <span className="text-xs font-bold px-3 py-1 rounded-full bg-brand-50 text-brand-700 border border-brand-200/80 shadow-2xs">
+            {filteredInfluencers.length} Creators Available
+          </span>
         </div>
 
         {filteredInfluencers.length === 0 ? (
@@ -206,7 +222,7 @@ export const UserHome: React.FC = () => {
               return (
                 <div
                   key={inf.id}
-                  className="group relative rounded-3xl bg-white border border-slate-200/90 hover:border-brand-500/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg shadow-sm flex flex-col overflow-hidden text-slate-900"
+                  className="group relative rounded-3xl bg-white border-2 border-slate-200/90 hover:border-brand-500/60 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl shadow-md ring-1 ring-slate-900/5 flex flex-col overflow-hidden text-slate-900"
                 >
                   {/* Cover Header */}
                   <div className="relative h-28 w-full overflow-hidden bg-slate-100">

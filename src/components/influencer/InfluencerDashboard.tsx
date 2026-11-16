@@ -153,7 +153,7 @@ export const InfluencerDashboard: React.FC = () => {
     <div className="space-y-8 pb-6 font-sans">
 
       {/* ================= 1. WELCOME BANNER ================= */}
-      <div className="relative rounded-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white p-6 sm:p-8 overflow-hidden shadow-xl border border-slate-700/80">
+      <div className="relative rounded-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white p-6 sm:p-8 overflow-hidden shadow-xl border-2 border-slate-700/80 ring-1 ring-white/10">
         <div className="absolute right-0 top-0 -mr-10 -mt-10 w-72 h-72 bg-brand-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10">
@@ -210,14 +210,14 @@ export const InfluencerDashboard: React.FC = () => {
 
       {/* ================= 2. NEXT UPCOMING CALL HIGHLIGHT ================= */}
       {upcomingBookings.length > 0 && (
-        <div className="p-6 rounded-3xl bg-white border border-slate-200/80 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
+        <div className="p-6 sm:p-7 rounded-3xl bg-white border-2 border-emerald-300/80 flex flex-col md:flex-row md:items-center justify-between gap-5 shadow-md ring-4 ring-emerald-500/10 transition-all">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+            <div className="w-13 h-13 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200/80 flex items-center justify-center shrink-0 shadow-2xs">
               <Radio className="w-6 h-6 animate-pulse" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 uppercase border border-emerald-200">
+                <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 uppercase border border-emerald-300/80">
                   Next Scheduled Call
                 </span>
                 <span className="text-xs font-mono text-slate-400">Ref: {upcomingBookings[0].bookingRef}</span>
@@ -233,7 +233,7 @@ export const InfluencerDashboard: React.FC = () => {
 
           <button
             onClick={() => startCall(upcomingBookings[0], true)}
-            className="flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs shadow-md transition-transform hover:scale-105 shrink-0 cursor-pointer"
+            className="flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs shadow-md shadow-emerald-600/30 transition-transform hover:scale-105 shrink-0 cursor-pointer"
           >
             <Radio className="w-4 h-4" />
             <span>Launch Host Call Room</span>
@@ -242,7 +242,7 @@ export const InfluencerDashboard: React.FC = () => {
       )}
 
       {/* ================= 3. ILLUSTRATIVE BOOKING OVERVIEW & REVENUE CHART ================= */}
-      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-6 sm:p-7 space-y-6">
+      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-md ring-1 ring-slate-900/5 p-6 sm:p-7 space-y-6 hover:shadow-lg transition-all">
 
         {/* Section Header with Timeframe Filter */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-100">
@@ -294,7 +294,7 @@ export const InfluencerDashboard: React.FC = () => {
         {/* 4 Summary Highlight Tiles Above the Chart */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
 
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1">
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 shadow-2xs space-y-1 hover:border-brand-500/40 hover:shadow-xs transition-all">
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
               Period Revenue
             </span>
@@ -307,7 +307,7 @@ export const InfluencerDashboard: React.FC = () => {
             </span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1">
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 shadow-2xs space-y-1 hover:border-brand-500/40 hover:shadow-xs transition-all">
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
               Total Bookings
             </span>
@@ -319,7 +319,7 @@ export const InfluencerDashboard: React.FC = () => {
             </span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1">
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 shadow-2xs space-y-1 hover:border-brand-500/40 hover:shadow-xs transition-all">
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
               Average Order Value
             </span>
@@ -331,7 +331,7 @@ export const InfluencerDashboard: React.FC = () => {
             </span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1">
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 shadow-2xs space-y-1 hover:border-brand-500/40 hover:shadow-xs transition-all">
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
               Top Monetization Format
             </span>
@@ -347,7 +347,7 @@ export const InfluencerDashboard: React.FC = () => {
         </div>
 
         {/* Dynamic Chart Display Box */}
-        <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-b from-slate-50/70 to-white border border-slate-200 space-y-4">
+        <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-b from-slate-50/80 to-white border border-slate-200/90 shadow-2xs space-y-4">
 
           {/* Active Data Point Inspection Card (Hovered / Selected) */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-white border border-slate-200/90 shadow-2xs">
@@ -477,10 +477,16 @@ export const InfluencerDashboard: React.FC = () => {
       </div>
 
       {/* ================= 4. RECENT BOOKING INQUIRIES & ACTIVITY FEED ================= */}
-      <div className="p-6 rounded-3xl bg-white border border-slate-200/80 shadow-sm space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-          <div>
-            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Recent Booking Inquiries</h3>
+      <div className="p-6 sm:p-7 rounded-3xl bg-white border border-slate-200/90 shadow-md ring-1 ring-slate-900/5 space-y-4 hover:shadow-lg transition-all">
+        <div className="flex items-center justify-between pb-4 border-b border-slate-100 flex-wrap gap-2">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-brand-50 border border-brand-200/60 text-brand-600 flex items-center justify-center shrink-0 shadow-2xs">
+              <Calendar className="w-4 h-4 text-brand-600 stroke-[2.2]" />
+            </div>
+            <div>
+              <h3 className="text-sm sm:text-base font-extrabold text-slate-900 uppercase tracking-wide">Recent Booking Inquiries</h3>
+              <p className="text-[11px] text-slate-500 font-medium">Live customer appointments & incoming scheduled sessions</p>
+            </div>
           </div>
 
           <button
@@ -488,7 +494,7 @@ export const InfluencerDashboard: React.FC = () => {
               setActiveView('bookings');
               navigate('/influencer/bookings');
             }}
-            className="text-xs font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1 cursor-pointer"
+            className="text-xs font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-50/70 border border-brand-200/60 hover:bg-brand-50 transition-all cursor-pointer shadow-2xs"
           >
             <span>View All Bookings ({creatorBookings.length})</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
@@ -496,23 +502,23 @@ export const InfluencerDashboard: React.FC = () => {
         </div>
 
         {creatorBookings.length === 0 ? (
-          <div className="p-8 text-center text-slate-400 text-xs">
+          <div className="p-10 text-center rounded-2xl bg-slate-50 border border-dashed border-slate-200 text-slate-400 text-xs">
             No booking requests yet. Once fans book calls with you, they will appear here.
           </div>
         ) : (
-          <div className="divide-y divide-slate-100 text-xs">
+          <div className="space-y-2.5">
             {creatorBookings.slice(0, 5).map(b => (
-              <div key={b.id} className="py-3.5 flex items-center justify-between gap-4">
+              <div key={b.id} className="p-3.5 rounded-2xl bg-slate-50/80 border border-slate-200/80 hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center justify-between gap-4 shadow-2xs">
                 <div className="flex items-center gap-3">
                   <img
                     src={b.userAvatar}
                     alt={b.userName}
-                    className="w-10 h-10 rounded-xl object-cover ring-2 ring-slate-100"
+                    className="w-10 h-10 rounded-xl object-cover ring-2 ring-white shadow-xs"
                   />
                   <div>
                     <div className="font-bold text-slate-900">{b.userName}</div>
                     <div className="text-[11px] text-slate-500 flex items-center gap-2">
-                      <span className="capitalize">{b.callType} Call</span>
+                      <span className="capitalize font-semibold text-slate-700">{b.callType} Call</span>
                       <span>•</span>
                       <span>{b.durationMinutes} mins</span>
                       <span>•</span>
@@ -522,12 +528,12 @@ export const InfluencerDashboard: React.FC = () => {
                 </div>
 
                 <div className="text-right">
-                  <div className="font-bold text-emerald-600">+₹{b.influencerEarnings}</div>
-                  <span className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${b.bookingStatus === 'upcoming'
-                    ? 'bg-sky-50 text-sky-700'
+                  <div className="font-extrabold text-emerald-600 text-sm">+₹{b.influencerEarnings}</div>
+                  <span className={`inline-block text-[10px] font-bold px-2.5 py-0.5 rounded-full capitalize ${b.bookingStatus === 'upcoming'
+                    ? 'bg-sky-50 text-sky-700 border border-sky-200'
                     : b.bookingStatus === 'completed'
-                      ? 'bg-emerald-50 text-emerald-700'
-                      : 'bg-slate-100 text-slate-600'
+                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                      : 'bg-slate-100 text-slate-600 border border-slate-200'
                     }`}>
                     {b.bookingStatus}
                   </span>
