@@ -853,11 +853,9 @@ export const CoreCreatorDetails: React.FC = () => {
                 )}
               </div>
 
-              {/* Creator Handle & ID */}
+              {/* Creator Handle */}
               <div className="flex items-center gap-3 pt-1 text-xs font-semibold text-slate-600 flex-wrap">
                 <span className="text-brand-600 font-mono font-bold">{handle || '@username'}</span>
-                <span className="text-slate-300">•</span>
-                <span className="text-slate-400 font-mono text-[11px]">Creator ID: {currentInfluencer.id}</span>
               </div>
 
               {/* Photo quick actions (URL / Remove) */}
