@@ -73,7 +73,7 @@ export const INITIAL_USERS: UserProfile[] = [
 export const INITIAL_INFLUENCERS: InfluencerProfile[] = [
   {
     id: 'inf-1',
-    name: 'Vikram "Vortex" Rajput',
+    name: 'Vikram Rajput',
     fullName: 'Vikram Singh Rajput',
     handle: '@vortex_esports',
     professionalTitle: 'Pro Esports Athlete & Gaming Streamer',
@@ -478,7 +478,7 @@ export const INITIAL_BOOKINGS: Booking[] = [
     userEmail: 'aarav.sharma@gmail.com',
     userPhone: '+91 98201 44810',
     influencerId: 'inf-1',
-    influencerName: 'Vikram "Vortex" Rajput',
+    influencerName: 'Vikram Rajput',
     influencerAvatar: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=150&auto=format&fit=crop&q=80',
     influencerCategory: 'Gaming',
     callType: 'video',
@@ -610,7 +610,7 @@ export const INITIAL_PAYOUTS: PayoutRequest[] = [
     id: 'pay-1',
     payoutRef: 'PAY-2026-901',
     influencerId: 'inf-1',
-    influencerName: 'Vikram "Vortex" Rajput',
+    influencerName: 'Vikram Rajput',
     influencerAvatar: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=150&auto=format&fit=crop&q=80',
     amount: 4200,
     method: 'bank',
@@ -688,7 +688,7 @@ export const INITIAL_GRIEVANCES: GrievanceTicket[] = [
     ticketRef: 'GRV-8109',
     raisedBy: 'influencer',
     submitterId: 'inf-1',
-    submitterName: 'Vikram "Vortex" Rajput',
+    submitterName: 'Vikram Rajput',
     submitterRole: 'influencer',
     targetId: 'usr-3',
     targetName: 'Rohan Gupta',
@@ -703,7 +703,7 @@ export const INITIAL_GRIEVANCES: GrievanceTicket[] = [
     responses: [
       {
         id: 'resp-3',
-        sender: 'Vikram "Vortex" Rajput',
+        sender: 'Vikram Rajput',
         role: 'influencer',
         message: 'Reporting user behavior that breached creator boundary policy.',
         timestamp: '2026-11-09 19:10'
@@ -790,7 +790,7 @@ export const INITIAL_AUDIT_LOGS: AuditLogItem[] = [
     action: 'APPROVE_VERIFICATION',
     targetType: 'Influencer',
     targetId: 'inf-1',
-    details: 'Verified government identity credentials and approved Vortex Esports for paid booking calls.',
+    details: 'Verified government identity credentials and approved Vikram Rajput for paid booking calls.',
     timestamp: '2026-10-01 10:14',
     ipAddress: '103.21.244.18'
   },

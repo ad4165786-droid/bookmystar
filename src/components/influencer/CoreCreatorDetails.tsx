@@ -1,30 +1,30 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useApp } from '../../context/AppContext';
 import { Category, InfluencerProfile, SupportedSocialPlatform, SavedSocialLink, InfluencerGalleryItem } from '../../types';
-import { 
-  User, 
-  Camera, 
-  UploadCloud, 
-  Trash2, 
-  Save, 
-  RotateCcw, 
-  Sparkles, 
-  Share2, 
-  Globe, 
-  Mail, 
-  Phone, 
-  Calendar, 
-  MapPin, 
-  Briefcase, 
-  ExternalLink, 
-  ShieldCheck, 
-  CheckCircle2, 
-  AlertCircle, 
-  Eye, 
-  X, 
-  Plus, 
-  Loader2, 
-  Check, 
+import {
+  User,
+  Camera,
+  UploadCloud,
+  Trash2,
+  Save,
+  RotateCcw,
+  Sparkles,
+  Share2,
+  Globe,
+  Mail,
+  Phone,
+  Calendar,
+  MapPin,
+  Briefcase,
+  ExternalLink,
+  ShieldCheck,
+  CheckCircle2,
+  AlertCircle,
+  Eye,
+  X,
+  Plus,
+  Loader2,
+  Check,
   Info,
   Link as LinkIcon,
   ChevronDown,
@@ -225,16 +225,16 @@ interface FormErrors {
 }
 
 export const CoreCreatorDetails: React.FC = () => {
-  const { 
-    currentInfluencer, 
-    influencers, 
+  const {
+    currentInfluencer,
+    influencers,
     updateInfluencerProfile,
     addGalleryItem,
     deleteGalleryItem,
     setSelectedInfluencerId,
     setActiveView,
     navigate,
-    showToast 
+    showToast
   } = useApp();
 
   // If no authenticated creator is present (fallback safety)
@@ -261,7 +261,7 @@ export const CoreCreatorDetails: React.FC = () => {
   const [name, setName] = useState(currentInfluencer.name);
   const [handle, setHandle] = useState(currentInfluencer.handle);
   const [email, setEmail] = useState(currentInfluencer.email || 'creator@bookmystar.in');
-  
+
   // Phone parsing
   const initialCountryCode = currentInfluencer.phoneCountryCode || (currentInfluencer.phone?.startsWith('+') ? currentInfluencer.phone.split(' ')[0] : '+91');
   const initialPhoneDigits = currentInfluencer.phone ? currentInfluencer.phone.replace(/^\+\d+\s*/, '') : '9820144820';
@@ -371,13 +371,13 @@ export const CoreCreatorDetails: React.FC = () => {
   const handleAvailability = useMemo(() => {
     const formatted = handle.trim().startsWith('@') ? handle.trim() : `@${handle.trim()}`;
     if (!formatted || formatted === '@') return { checked: false, available: false, message: 'Username is required' };
-    
+
     const cleanNoAt = formatted.replace(/^@/, '');
     if (!/^[a-zA-Z0-9_]{3,30}$/.test(cleanNoAt)) {
-      return { 
-        checked: true, 
-        available: false, 
-        message: 'Must be 3-30 characters (letters, numbers, underscores)' 
+      return {
+        checked: true,
+        available: false,
+        message: 'Must be 3-30 characters (letters, numbers, underscores)'
       };
     }
 
@@ -395,7 +395,7 @@ export const CoreCreatorDetails: React.FC = () => {
   const isDirty = useMemo(() => {
     const currentPhone = `${phoneCountryCode} ${phoneDigits.trim()}`;
     const initialLinks = extractInitialSocialLinks(currentInfluencer);
-    const socialLinksChanged = JSON.stringify(socialLinksList.map(l => ({ p: l.platform, u: l.url }))) !== 
+    const socialLinksChanged = JSON.stringify(socialLinksList.map(l => ({ p: l.platform, u: l.url }))) !==
       JSON.stringify(initialLinks.map(l => ({ p: l.platform, u: l.url })));
 
     return (
@@ -620,8 +620,8 @@ export const CoreCreatorDetails: React.FC = () => {
 
     let updatedList: SavedSocialLink[];
     if (editingLinkId) {
-      updatedList = socialLinksList.map(item => 
-        item.id === editingLinkId 
+      updatedList = socialLinksList.map(item =>
+        item.id === editingLinkId
           ? { ...item, platform: selectedPlatform, url: normalizedUrl }
           : item
       );
@@ -792,11 +792,11 @@ export const CoreCreatorDetails: React.FC = () => {
 
   return (
     <div className="space-y-8 pb-24 max-w-6xl mx-auto font-sans">
-      
+
       {/* ================= 1. PROFILE HEADER ================= */}
       <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-soft">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-          
+
           {/* Left: Avatar + Title & Meta */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
             {/* Profile Picture with Upload/Change */}
@@ -852,15 +852,9 @@ export const CoreCreatorDetails: React.FC = () => {
                   </span>
                 )}
               </div>
-              
-              <p className="text-xs sm:text-sm text-slate-500">
-                Manage your public creator information, professional credentials, and media showcase.
-              </p>
 
-              {/* Creator Name & ID */}
+              {/* Creator Handle & ID */}
               <div className="flex items-center gap-3 pt-1 text-xs font-semibold text-slate-600 flex-wrap">
-                <span className="text-slate-900 font-bold">{name || 'Creator'}</span>
-                <span className="text-slate-300">•</span>
                 <span className="text-brand-600 font-mono font-bold">{handle || '@username'}</span>
                 <span className="text-slate-300">•</span>
                 <span className="text-slate-400 font-mono text-[11px]">Creator ID: {currentInfluencer.id}</span>
@@ -951,7 +945,7 @@ export const CoreCreatorDetails: React.FC = () => {
 
       {/* ================= MAIN HORIZONTAL FORM ================= */}
       <form onSubmit={handleSave} className="space-y-8">
-        
+
         {/* ================= 2. PERSONAL INFORMATION (2-Column Grid) ================= */}
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-soft space-y-6">
           <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
@@ -962,14 +956,12 @@ export const CoreCreatorDetails: React.FC = () => {
               <h2 className="text-base font-extrabold text-slate-900 tracking-tight">
                 Personal Information
               </h2>
-              <p className="text-xs text-slate-500">
-                Your legal identity and contact credentials for platform verification and fan notifications.
-              </p>
+
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-            
+
             {/* Row 1: Full Name | Username */}
             <div className="space-y-1.5">
               <label className="block text-xs font-bold text-slate-800">
@@ -983,9 +975,8 @@ export const CoreCreatorDetails: React.FC = () => {
                   if (errors.fullName) setErrors(prev => ({ ...prev, fullName: undefined }));
                 }}
                 placeholder="Enter your full legal name"
-                className={`w-full px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 focus:outline-none focus:bg-white transition-all ${
-                  errors.fullName ? 'border-rose-400 focus:border-rose-500' : 'border-slate-200 focus:border-brand-500'
-                }`}
+                className={`w-full px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 focus:outline-none focus:bg-white transition-all ${errors.fullName ? 'border-rose-400 focus:border-rose-500' : 'border-slate-200 focus:border-brand-500'
+                  }`}
               />
               {errors.fullName && (
                 <p className="text-[11px] font-semibold text-rose-500">{errors.fullName}</p>
@@ -1013,9 +1004,8 @@ export const CoreCreatorDetails: React.FC = () => {
                     if (errors.handle) setErrors(prev => ({ ...prev, handle: undefined }));
                   }}
                   placeholder="@username"
-                  className={`w-full px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 font-mono focus:outline-none focus:bg-white transition-all ${
-                    errors.handle ? 'border-rose-400 focus:border-rose-500' : 'border-slate-200 focus:border-brand-500'
-                  }`}
+                  className={`w-full px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 font-mono focus:outline-none focus:bg-white transition-all ${errors.handle ? 'border-rose-400 focus:border-rose-500' : 'border-slate-200 focus:border-brand-500'
+                    }`}
                 />
               </div>
               {errors.handle && (
@@ -1037,9 +1027,8 @@ export const CoreCreatorDetails: React.FC = () => {
                     if (errors.email) setErrors(prev => ({ ...prev, email: undefined }));
                   }}
                   placeholder="creator@domain.com"
-                  className={`w-full px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 focus:outline-none focus:bg-white transition-all ${
-                    errors.email ? 'border-rose-400 focus:border-rose-500' : 'border-slate-200 focus:border-brand-500'
-                  }`}
+                  className={`w-full px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 focus:outline-none focus:bg-white transition-all ${errors.email ? 'border-rose-400 focus:border-rose-500' : 'border-slate-200 focus:border-brand-500'
+                    }`}
                 />
               </div>
               {errors.email && (
@@ -1072,9 +1061,8 @@ export const CoreCreatorDetails: React.FC = () => {
                     if (errors.phone) setErrors(prev => ({ ...prev, phone: undefined }));
                   }}
                   placeholder="9820144820"
-                  className={`flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 focus:outline-none focus:bg-white transition-all ${
-                    errors.phone ? 'border-rose-400 focus:border-rose-500' : 'border-slate-200 focus:border-brand-500'
-                  }`}
+                  className={`flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 focus:outline-none focus:bg-white transition-all ${errors.phone ? 'border-rose-400 focus:border-rose-500' : 'border-slate-200 focus:border-brand-500'
+                    }`}
                 />
               </div>
               {errors.phone && (
@@ -1101,9 +1089,8 @@ export const CoreCreatorDetails: React.FC = () => {
                   setDob(e.target.value);
                   if (errors.dob) setErrors(prev => ({ ...prev, dob: undefined }));
                 }}
-                className={`w-full px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 focus:outline-none focus:bg-white transition-all ${
-                  errors.dob ? 'border-rose-400 focus:border-rose-500' : 'border-slate-200 focus:border-brand-500'
-                }`}
+                className={`w-full px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 focus:outline-none focus:bg-white transition-all ${errors.dob ? 'border-rose-400 focus:border-rose-500' : 'border-slate-200 focus:border-brand-500'
+                  }`}
               />
               {errors.dob && (
                 <p className="text-[11px] font-semibold text-rose-500">{errors.dob}</p>
@@ -1167,14 +1154,11 @@ export const CoreCreatorDetails: React.FC = () => {
               <h2 className="text-base font-extrabold text-slate-900 tracking-tight">
                 Creator Information
               </h2>
-              <p className="text-xs text-slate-500">
-                Marketplace category, professional headline, bio, and experience tier.
-              </p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-            
+
             {/* Row 1: Creator Category (dropdown) | Professional Title */}
             <div className="space-y-1.5">
               <label className="block text-xs font-bold text-slate-800">
@@ -1222,9 +1206,8 @@ export const CoreCreatorDetails: React.FC = () => {
                   if (errors.bio) setErrors(prev => ({ ...prev, bio: undefined }));
                 }}
                 placeholder="Describe your background, what you advise on, and what fans can expect in a 1-on-1 call..."
-                className={`w-full px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 focus:outline-none focus:bg-white transition-all resize-none ${
-                  errors.bio ? 'border-rose-400 focus:border-rose-500' : 'border-slate-200 focus:border-brand-500'
-                }`}
+                className={`w-full px-4 py-2.5 rounded-xl bg-slate-50 border text-xs font-medium text-slate-900 focus:outline-none focus:bg-white transition-all resize-none ${errors.bio ? 'border-rose-400 focus:border-rose-500' : 'border-slate-200 focus:border-brand-500'
+                  }`}
               />
               {errors.bio && (
                 <p className="text-[11px] font-semibold text-rose-500">{errors.bio}</p>
@@ -1292,11 +1275,10 @@ export const CoreCreatorDetails: React.FC = () => {
                             key={lang}
                             type="button"
                             onClick={() => handleToggleLanguage(lang)}
-                            className={`px-2 py-1 rounded-md text-[11px] font-bold border cursor-pointer ${
-                              isSelected
-                                ? 'bg-brand-500 text-white border-brand-500'
-                                : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'
-                            }`}
+                            className={`px-2 py-1 rounded-md text-[11px] font-bold border cursor-pointer ${isSelected
+                              ? 'bg-brand-500 text-white border-brand-500'
+                              : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'
+                              }`}
                           >
                             {lang}
                           </button>
@@ -1327,9 +1309,6 @@ export const CoreCreatorDetails: React.FC = () => {
                     {socialLinksList.length} Connected
                   </span>
                 </div>
-                <p className="text-xs text-slate-500">
-                  Select a platform, paste your public profile URL, and click Add Link.
-                </p>
               </div>
             </div>
           </div>
@@ -1337,14 +1316,14 @@ export const CoreCreatorDetails: React.FC = () => {
           {/* Single Dropdown + Single Dynamic URL Input Section */}
           <div className="p-4 sm:p-5 rounded-2xl bg-slate-50/70 border border-slate-200/90 space-y-3">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
-              
+
               {/* 1. Platform Dropdown */}
               <div className="md:col-span-4 relative" ref={platformDropdownRef}>
                 <label className="block text-xs font-bold text-slate-800 mb-1.5 flex items-center justify-between">
                   <span>Social Media Platform</span>
                   <span className="text-[10px] text-slate-400 font-normal">8 options</span>
                 </label>
-                
+
                 {(() => {
                   const activePlatformConfig = SUPPORTED_PLATFORMS.find(p => p.name === selectedPlatform) || SUPPORTED_PLATFORMS[0];
                   const ActiveIcon = activePlatformConfig.icon;
@@ -1384,9 +1363,8 @@ export const CoreCreatorDetails: React.FC = () => {
                                     setPlatformDropdownOpen(false);
                                     setSocialInputError(null);
                                   }}
-                                  className={`w-full flex items-center justify-between px-3.5 py-2.5 text-xs text-left transition-colors cursor-pointer ${
-                                    isSelected ? 'bg-brand-50/70 text-brand-700 font-bold' : 'hover:bg-slate-50 text-slate-700 font-medium'
-                                  }`}
+                                  className={`w-full flex items-center justify-between px-3.5 py-2.5 text-xs text-left transition-colors cursor-pointer ${isSelected ? 'bg-brand-50/70 text-brand-700 font-bold' : 'hover:bg-slate-50 text-slate-700 font-medium'
+                                    }`}
                                 >
                                   <div className="flex items-center gap-2.5 min-w-0">
                                     <div className={`w-6 h-6 rounded-lg ${platform.bgColor} ${platform.badgeColor} border ${platform.borderLight} flex items-center justify-center shrink-0`}>
@@ -1430,7 +1408,7 @@ export const CoreCreatorDetails: React.FC = () => {
                     </span>
                   )}
                 </label>
-                
+
                 <div className="flex flex-col sm:flex-row gap-2">
                   <div className="relative flex-1">
                     <input
@@ -1447,11 +1425,10 @@ export const CoreCreatorDetails: React.FC = () => {
                         }
                       }}
                       placeholder={`Paste your ${selectedPlatform} profile URL`}
-                      className={`w-full px-4 py-2.5 rounded-xl bg-white border text-xs font-medium text-slate-900 transition-all focus:outline-none ${
-                        socialInputError 
-                          ? 'border-rose-400 focus:border-rose-500 ring-2 ring-rose-500/10' 
-                          : 'border-slate-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20'
-                      }`}
+                      className={`w-full px-4 py-2.5 rounded-xl bg-white border text-xs font-medium text-slate-900 transition-all focus:outline-none ${socialInputError
+                        ? 'border-rose-400 focus:border-rose-500 ring-2 ring-rose-500/10'
+                        : 'border-slate-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20'
+                        }`}
                     />
                     {socialUrlInput && (
                       <button
@@ -1540,11 +1517,10 @@ export const CoreCreatorDetails: React.FC = () => {
                   return (
                     <div
                       key={link.id}
-                      className={`flex flex-col sm:flex-row sm:items-center justify-between p-3.5 rounded-2xl border transition-all gap-3 ${
-                        isCurrentlyEditing
-                          ? 'bg-amber-50/60 border-amber-300 shadow-xs'
-                          : 'bg-white hover:bg-slate-50/80 border-slate-200/90 shadow-xs'
-                      }`}
+                      className={`flex flex-col sm:flex-row sm:items-center justify-between p-3.5 rounded-2xl border transition-all gap-3 ${isCurrentlyEditing
+                        ? 'bg-amber-50/60 border-amber-300 shadow-xs'
+                        : 'bg-white hover:bg-slate-50/80 border-slate-200/90 shadow-xs'
+                        }`}
                     >
                       {/* Left: Platform Icon & Details */}
                       <div className="flex items-center gap-3 min-w-0">
@@ -1593,11 +1569,10 @@ export const CoreCreatorDetails: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => handleStartEdit(link)}
-                          className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
-                            isCurrentlyEditing
-                              ? 'bg-amber-500 text-white shadow-xs'
-                              : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-                          }`}
+                          className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${isCurrentlyEditing
+                            ? 'bg-amber-500 text-white shadow-xs'
+                            : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                            }`}
                           title="Edit this link"
                         >
                           <Pencil className="w-3.5 h-3.5" />
@@ -1678,18 +1653,16 @@ export const CoreCreatorDetails: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setMediaType('image')}
-                      className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold border transition-colors cursor-pointer ${
-                        mediaType === 'image' ? 'bg-brand-500 text-white border-brand-500' : 'bg-white text-[#64748B] border-slate-200 hover:text-[#172554]'
-                      }`}
+                      className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold border transition-colors cursor-pointer ${mediaType === 'image' ? 'bg-brand-500 text-white border-brand-500' : 'bg-white text-[#64748B] border-slate-200 hover:text-[#172554]'
+                        }`}
                     >
                       Photo / Image
                     </button>
                     <button
                       type="button"
                       onClick={() => setMediaType('video')}
-                      className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold border transition-colors cursor-pointer ${
-                        mediaType === 'video' ? 'bg-brand-500 text-white border-brand-500' : 'bg-white text-[#64748B] border-slate-200 hover:text-[#172554]'
-                      }`}
+                      className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold border transition-colors cursor-pointer ${mediaType === 'video' ? 'bg-brand-500 text-white border-brand-500' : 'bg-white text-[#64748B] border-slate-200 hover:text-[#172554]'
+                        }`}
                     >
                       Video Highlight
                     </button>
@@ -1764,9 +1737,8 @@ export const CoreCreatorDetails: React.FC = () => {
                       alt={item.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    <span className={`absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-bold text-white shadow-xs ${
-                      item.type === 'video' ? 'bg-rose-600' : 'bg-slate-900/80 backdrop-blur-sm'
-                    }`}>
+                    <span className={`absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-bold text-white shadow-xs ${item.type === 'video' ? 'bg-rose-600' : 'bg-slate-900/80 backdrop-blur-sm'
+                      }`}>
                       {item.type === 'video' ? 'Video' : 'Photo'}
                     </span>
                   </div>

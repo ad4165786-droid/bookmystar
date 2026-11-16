@@ -179,7 +179,7 @@ export const InfluencerDashboard: React.FC = () => {
                 )}
               </div>
               <p className="text-xs text-slate-300 mt-1">
-                <span className="text-brand-400 font-semibold">{currentInfluencer.handle}</span> • {currentInfluencer.category} Specialist • 1-on-1 Creator Studio
+                <span className="text-brand-400 font-semibold">{currentInfluencer.handle}</span> • {currentInfluencer.category} Specialist
               </p>
             </div>
           </div>
@@ -243,7 +243,7 @@ export const InfluencerDashboard: React.FC = () => {
 
       {/* ================= 3. ILLUSTRATIVE BOOKING OVERVIEW & REVENUE CHART ================= */}
       <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-6 sm:p-7 space-y-6">
-        
+
         {/* Section Header with Timeframe Filter */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-100">
           <div className="space-y-1">
@@ -282,11 +282,10 @@ export const InfluencerDashboard: React.FC = () => {
                     setTimeRange(range);
                     setActiveDataIndex(null);
                   }}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                    isActive
-                      ? 'bg-white text-slate-900 shadow-xs ring-1 ring-slate-200'
-                      : 'text-slate-500 hover:text-slate-900 hover:bg-slate-200/50'
-                  }`}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${isActive
+                    ? 'bg-white text-slate-900 shadow-xs ring-1 ring-slate-200'
+                    : 'text-slate-500 hover:text-slate-900 hover:bg-slate-200/50'
+                    }`}
                 >
                   {labelMap[range]}
                 </button>
@@ -297,7 +296,7 @@ export const InfluencerDashboard: React.FC = () => {
 
         {/* 4 Summary Highlight Tiles Above the Chart */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
-          
+
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1">
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
               Period Revenue
@@ -352,7 +351,7 @@ export const InfluencerDashboard: React.FC = () => {
 
         {/* Dynamic Chart Display Box */}
         <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-b from-slate-50/70 to-white border border-slate-200 space-y-4">
-          
+
           {/* Active Data Point Inspection Card (Hovered / Selected) */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-white border border-slate-200/90 shadow-2xs">
             <div className="flex items-center gap-3">
@@ -392,7 +391,7 @@ export const InfluencerDashboard: React.FC = () => {
           <div className="pt-4">
             {/* Chart Grid and Columns */}
             <div className="h-56 flex items-end justify-between gap-3 sm:gap-5 px-2 relative">
-              
+
               {/* Background Guide Lines */}
               <div className="absolute inset-x-0 top-0 border-b border-dashed border-slate-200 pointer-events-none" />
               <div className="absolute inset-x-0 top-1/2 border-b border-dashed border-slate-200 pointer-events-none" />
@@ -401,7 +400,7 @@ export const InfluencerDashboard: React.FC = () => {
               {chartDataset.map((point, index) => {
                 const heightPercentage = Math.round((point.revenue / maxRevenue) * 100);
                 const isSelected = activeDataIndex === index || (activeDataIndex === null && index === chartDataset.length - 1);
-                
+
                 return (
                   <div
                     key={index}
@@ -411,11 +410,10 @@ export const InfluencerDashboard: React.FC = () => {
                   >
                     {/* Tooltip on top of column */}
                     <div
-                      className={`mb-2 text-[10px] font-bold px-2 py-0.5 rounded-md transition-all font-mono ${
-                        isSelected
-                          ? 'bg-slate-900 text-white shadow-md -translate-y-1'
-                          : 'bg-slate-100 text-slate-500 opacity-0 group-hover:opacity-100'
-                      }`}
+                      className={`mb-2 text-[10px] font-bold px-2 py-0.5 rounded-md transition-all font-mono ${isSelected
+                        ? 'bg-slate-900 text-white shadow-md -translate-y-1'
+                        : 'bg-slate-100 text-slate-500 opacity-0 group-hover:opacity-100'
+                        }`}
                     >
                       ₹{point.revenue > 9999 ? `${(point.revenue / 1000).toFixed(1)}k` : point.revenue}
                     </div>
@@ -424,11 +422,10 @@ export const InfluencerDashboard: React.FC = () => {
                     <div className="w-full max-w-[56px] h-40 bg-slate-100/90 rounded-t-xl flex flex-col justify-end overflow-hidden border border-slate-200/60 shadow-2xs">
                       <div
                         style={{ height: `${heightPercentage}%` }}
-                        className={`w-full flex flex-col justify-end transition-all rounded-t-xl overflow-hidden ${
-                          isSelected
-                            ? 'ring-2 ring-indigo-500 ring-offset-2 ring-offset-white brightness-105'
-                            : 'hover:brightness-105'
-                        }`}
+                        className={`w-full flex flex-col justify-end transition-all rounded-t-xl overflow-hidden ${isSelected
+                          ? 'ring-2 ring-indigo-500 ring-offset-2 ring-offset-white brightness-105'
+                          : 'hover:brightness-105'
+                          }`}
                       >
                         {/* Video Portion */}
                         <div
@@ -446,9 +443,8 @@ export const InfluencerDashboard: React.FC = () => {
                     {/* Bottom Label */}
                     <div className="mt-2.5 text-center">
                       <span
-                        className={`text-xs font-bold block transition-colors ${
-                          isSelected ? 'text-indigo-600 font-extrabold' : 'text-slate-500 group-hover:text-slate-900'
-                        }`}
+                        className={`text-xs font-bold block transition-colors ${isSelected ? 'text-indigo-600 font-extrabold' : 'text-slate-500 group-hover:text-slate-900'
+                          }`}
                       >
                         {point.label}
                       </span>
@@ -532,10 +528,10 @@ export const InfluencerDashboard: React.FC = () => {
                 <div className="text-right">
                   <div className="font-bold text-emerald-600">+₹{b.influencerEarnings}</div>
                   <span className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${b.bookingStatus === 'upcoming'
-                      ? 'bg-sky-50 text-sky-700'
-                      : b.bookingStatus === 'completed'
-                        ? 'bg-emerald-50 text-emerald-700'
-                        : 'bg-slate-100 text-slate-600'
+                    ? 'bg-sky-50 text-sky-700'
+                    : b.bookingStatus === 'completed'
+                      ? 'bg-emerald-50 text-emerald-700'
+                      : 'bg-slate-100 text-slate-600'
                     }`}>
                     {b.bookingStatus}
                   </span>

@@ -251,7 +251,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [influencers, setInfluencers] = useState<InfluencerProfile[]>(() => {
     const saved = localStorage.getItem('bms_influencers');
-    return saved ? JSON.parse(saved) : INITIAL_INFLUENCERS;
+    if (saved) {
+      try {
+        const parsed: InfluencerProfile[] = JSON.parse(saved);
+        return parsed.map(inf => inf.name?.includes('"Vortex"') ? { ...inf, name: inf.name.replace(/\s*"Vortex"\s*/g, ' ').trim() } : inf);
+      } catch {}
+    }
+    return INITIAL_INFLUENCERS;
   });
 
   const [bookings, setBookings] = useState<Booking[]>(() => {
@@ -337,7 +343,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (parsed.role === 'influencer' && parsed.influencer) return parsed.influencer;
+        if (parsed.role === 'influencer' && parsed.influencer) {
+          const inf = parsed.influencer;
+          if (inf.name?.includes('"Vortex"')) {
+            inf.name = inf.name.replace(/\s*"Vortex"\s*/g, ' ').trim();
+          }
+          return inf;
+        }
       } catch {}
     }
     return null;
