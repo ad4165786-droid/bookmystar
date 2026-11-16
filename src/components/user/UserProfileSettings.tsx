@@ -285,7 +285,7 @@ export const UserProfileSettings: React.FC = () => {
 
         {/* Profile Identity Bar */}
         <div className="px-6 sm:px-8 pb-6 pt-0">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-5 -mt-16 sm:-mt-20 relative z-10">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-5 -mt-12 sm:-mt-14 relative z-10">
 
             {/* Avatar & Basic Info */}
             <div className="flex flex-col sm:flex-row items-center sm:items-end gap-5 text-center sm:text-left">
@@ -305,7 +305,7 @@ export const UserProfileSettings: React.FC = () => {
                 </button>
               </div>
 
-              <div className="space-y-1">
+              <div className="space-y-1 sm:translate-y-1">
                 <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
                   <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                     {name || currentUser.name}
