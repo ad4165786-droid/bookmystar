@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useApp } from '../../context/AppContext';
 import { CallType } from '../../types';
 import {
@@ -40,15 +40,13 @@ export const InfluencerDetailView: React.FC = () => {
   );
   const [selectedDuration, setSelectedDuration] = useState<10 | 15 | 30>(10);
 
-  // Available dates (Next 5 days)
-  const availableDates = [
-    { label: 'Today', date: '2026-11-11' },
-    { label: 'Tomorrow', date: '2026-11-12' },
-    { label: 'Thu, Nov 13', date: '2026-11-13' },
-    { label: 'Fri, Nov 14', date: '2026-11-14' },
-    { label: 'Sat, Nov 15', date: '2026-11-15' },
-  ];
-  const [selectedDate, setSelectedDate] = useState(availableDates[1].date);
+  // Booking date state
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    return d.toISOString().split('T')[0];
+  });
+  const dateInputRef = useRef<HTMLInputElement>(null);
   const [selectedSlot, setSelectedSlot] = useState(influencer.availability.timeSlots[0] || '06:00 PM');
 
   // Reviews for this influencer
@@ -383,7 +381,6 @@ export const InfluencerDetailView: React.FC = () => {
             <div className="pb-4 border-b border-slate-800">
               <span className="text-[10px] font-bold uppercase tracking-wider text-brand-400 bg-brand-500/15 px-2.5 py-1 rounded-md border border-brand-500/30 inline-block mb-1.5">Interactive Booking Console</span>
               <h3 className="text-xl font-black text-white mt-0.5">Select Session & Lock Slot</h3>
-              <p className="text-xs text-slate-400 mt-1">Direct 1-on-1 private connection with {influencer.name}</p>
             </div>
 
             {/* 1. Call Type Selector Box */}
@@ -458,20 +455,52 @@ export const InfluencerDetailView: React.FC = () => {
                 <span>3. Select Date</span>
                 <span className="text-[10px] text-brand-400 font-semibold">IST (Indian Standard Time)</span>
               </label>
-              <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
-                {availableDates.map(d => (
-                  <button
-                    key={d.date}
-                    type="button"
-                    onClick={() => setSelectedDate(d.date)}
-                    className={`whitespace-nowrap px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${selectedDate === d.date
-                      ? 'bg-white text-slate-900 border-white font-bold shadow-md'
-                      : 'bg-slate-800/80 border-slate-700 text-slate-300 hover:text-white'
-                      }`}
-                  >
-                    {d.label}
-                  </button>
-                ))}
+
+              {/* Button Calendar */}
+              <div 
+                onClick={() => {
+                  try {
+                    dateInputRef.current?.showPicker?.();
+                  } catch {
+                    // Fallback handled by overlay
+                  }
+                }}
+                className="relative cursor-pointer group"
+              >
+                <div className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-slate-800/90 group-hover:bg-slate-800 border border-slate-700 group-hover:border-brand-500/70 text-white font-semibold text-xs shadow-xs transition-all">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-brand-500/20 text-brand-400 border border-brand-500/30 flex items-center justify-center group-hover:bg-brand-500 group-hover:text-white transition-all shadow-xs">
+                      <Calendar className="w-4 h-4" />
+                    </div>
+                    <div className="text-left">
+                      <span className="block text-[10px] text-slate-400 font-medium">Session Date</span>
+                      <span className="text-xs font-bold text-white tracking-wide">
+                        {new Date(selectedDate + 'T00:00:00').toLocaleDateString('en-US', {
+                          weekday: 'short',
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric'
+                        })}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 text-[11px] font-bold text-brand-400 bg-brand-500/10 px-3 py-1.5 rounded-xl border border-brand-500/30 group-hover:bg-brand-500 group-hover:text-white transition-all">
+                    <Calendar className="w-3.5 h-3.5" />
+                    <span>Choose Date</span>
+                  </div>
+                </div>
+
+                <input
+                  ref={dateInputRef}
+                  type="date"
+                  min={new Date().toISOString().split('T')[0]}
+                  value={selectedDate}
+                  onChange={e => {
+                    if (e.target.value) setSelectedDate(e.target.value);
+                  }}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
               </div>
             </div>
 
