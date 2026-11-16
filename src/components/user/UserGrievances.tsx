@@ -87,15 +87,45 @@ export const UserGrievances: React.FC = () => {
       </div>
 
       {userTickets.length === 0 ? (
-        <div className="p-12 sm:p-16 text-center rounded-3xl bg-white border border-slate-200/90 shadow-sm space-y-4">
-          <div className="w-14 h-14 rounded-2xl bg-brand-50 border border-brand-100 text-brand-600 flex items-center justify-center mx-auto shadow-2xs">
-            <LifeBuoy className="w-7 h-7 text-brand-600" />
+        <div className="p-10 sm:p-14 text-center rounded-3xl bg-white border border-slate-200/90 shadow-md ring-1 ring-slate-900/5 space-y-6 hover:shadow-lg transition-all">
+          <div className="w-16 h-16 rounded-2xl bg-brand-50 border border-brand-200/80 text-brand-600 flex items-center justify-center mx-auto shadow-2xs">
+            <LifeBuoy className="w-8 h-8 text-brand-600 stroke-[2.2]" />
           </div>
-          <div className="space-y-1">
-            <h3 className="text-base font-extrabold text-slate-900">No Support Cases Raised</h3>
-            <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
-              All your bookings and payment transactions are in good standing. Have questions? Our support team is here.
+          <div className="space-y-1.5 max-w-md mx-auto">
+            <h3 className="text-lg font-black text-slate-900 tracking-tight">No Support Cases Raised</h3>
+            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
+              All your bookings and payment transactions are in good standing. Encountered a technical glitch or have a billing query? Our operations team is on standby 24/7.
             </p>
+          </div>
+
+          <div className="pt-2">
+            <button
+              type="button"
+              onClick={() => setShowNewModal(true)}
+              className="inline-flex items-center gap-2 py-2.5 px-6 rounded-xl bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-extrabold text-xs shadow-md shadow-brand-500/25 transition-all cursor-pointer"
+            >
+              <PlusCircle className="w-4 h-4" />
+              <span>Open Support Ticket</span>
+            </button>
+          </div>
+
+          {/* Guarantee Highlights Strip */}
+          <div className="mt-8 pt-8 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 shadow-2xs">
+              <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wider block">Escrow Security</span>
+              <div className="text-xs font-black text-slate-900 mt-1">100% Refund Protection</div>
+              <p className="text-[11px] text-slate-500 mt-0.5">Funds held safe until session completes.</p>
+            </div>
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 shadow-2xs">
+              <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wider block">Turnaround SLA</span>
+              <div className="text-xs font-black text-brand-600 mt-1">&lt; 2 Hours Fast Response</div>
+              <p className="text-[11px] text-slate-500 mt-0.5">Rapid resolution by senior dispute managers.</p>
+            </div>
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 shadow-2xs">
+              <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wider block">Mediation</span>
+              <div className="text-xs font-black text-emerald-600 mt-1">Official BMS Desk</div>
+              <p className="text-[11px] text-slate-500 mt-0.5">Direct coordinator link for uninterrupted calls.</p>
+            </div>
           </div>
         </div>
       ) : (
@@ -107,30 +137,30 @@ export const UserGrievances: React.FC = () => {
               <div
                 key={ticket.id}
                 onClick={() => setSelectedTicketId(ticket.id)}
-                className={`p-4 rounded-xl border text-xs cursor-pointer transition-all ${selectedTicket?.id === ticket.id
-                    ? 'bg-slate-900 border-brand-500 shadow-glow'
-                    : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
+                className={`p-4 rounded-2xl border text-xs cursor-pointer transition-all ${selectedTicket?.id === ticket.id
+                    ? 'bg-white border-2 border-brand-500 shadow-md ring-2 ring-brand-500/20'
+                    : 'bg-white border-slate-200/90 hover:border-slate-300 shadow-sm ring-1 ring-slate-900/5 hover:shadow-md'
                   }`}
               >
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="font-mono text-brand-300 font-bold">{ticket.ticketRef}</span>
+                  <span className="font-mono text-brand-600 font-bold">{ticket.ticketRef}</span>
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${ticket.status === 'resolved'
-                      ? 'bg-emerald-950/70 text-emerald-300 border border-emerald-500/30'
+                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                       : ticket.status === 'in_progress'
-                        ? 'bg-amber-950/70 text-amber-300 border border-amber-500/30'
-                        : 'bg-slate-800 text-slate-300'
+                        ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                        : 'bg-slate-100 text-slate-600 border border-slate-200'
                     }`}>
                     {ticket.status.replace('_', ' ')}
                   </span>
                 </div>
 
-                <h4 className="font-bold text-white line-clamp-1">{ticket.subject}</h4>
-                <p className="text-[11px] text-slate-400 line-clamp-2 mt-1 leading-relaxed">
+                <h4 className="font-bold text-slate-900 line-clamp-1">{ticket.subject}</h4>
+                <p className="text-[11px] text-slate-500 line-clamp-2 mt-1 leading-relaxed">
                   {ticket.description}
                 </p>
 
-                <div className="mt-3 flex items-center justify-between text-[10px] text-slate-500 pt-2 border-t border-slate-800/80">
-                  <span className="capitalize font-medium text-slate-400">Category: {ticket.category}</span>
+                <div className="mt-3 flex items-center justify-between text-[10px] text-slate-400 pt-2 border-t border-slate-100">
+                  <span className="capitalize font-medium text-slate-600">Category: {ticket.category}</span>
                   <span>{ticket.createdAt.split(' ')[0]}</span>
                 </div>
               </div>
@@ -140,45 +170,45 @@ export const UserGrievances: React.FC = () => {
           {/* Ticket Conversation Detail View (7 cols) */}
           <div className="lg:col-span-7">
             {selectedTicket ? (
-              <div className="rounded-2xl bg-slate-900 border border-slate-800 flex flex-col h-[580px] overflow-hidden shadow-xl">
+              <div className="rounded-3xl bg-white border border-slate-200/90 shadow-md ring-1 ring-slate-900/5 flex flex-col h-[580px] overflow-hidden hover:shadow-lg transition-all">
 
                 {/* Header */}
-                <div className="p-4 border-b border-slate-800 bg-slate-950/60">
+                <div className="p-4 sm:p-5 border-b border-slate-100 bg-slate-50/70">
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="text-xs font-mono text-brand-400 font-bold">{selectedTicket.ticketRef}</span>
-                      <h3 className="text-sm font-bold text-white mt-0.5">{selectedTicket.subject}</h3>
+                      <span className="text-xs font-mono text-brand-600 font-bold">{selectedTicket.ticketRef}</span>
+                      <h3 className="text-sm font-bold text-slate-900 mt-0.5">{selectedTicket.subject}</h3>
                     </div>
-                    <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 uppercase">
+                    <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 uppercase border border-slate-200">
                       {selectedTicket.priority} Priority
                     </span>
                   </div>
                   {selectedTicket.bookingRef && (
-                    <div className="text-[11px] text-slate-400 mt-1">
-                      Associated Booking: <span className="font-mono text-white">{selectedTicket.bookingRef}</span>
+                    <div className="text-[11px] text-slate-500 mt-1">
+                      Associated Booking: <span className="font-mono text-slate-800 font-bold">{selectedTicket.bookingRef}</span>
                     </div>
                   )}
                 </div>
 
                 {/* Message Log */}
-                <div className="flex-1 p-4 overflow-y-auto space-y-3 text-xs">
+                <div className="flex-1 p-4 overflow-y-auto space-y-3 text-xs bg-slate-50/30">
                   {selectedTicket.responses.map(resp => {
                     const isAdmin = resp.role === 'admin';
                     return (
                       <div
                         key={resp.id}
-                        className={`p-3.5 rounded-xl border leading-relaxed ${isAdmin
-                            ? 'bg-brand-950/40 border-brand-500/30 text-brand-100 ml-4'
-                            : 'bg-slate-800/80 border-slate-700/60 text-slate-200 mr-4'
+                        className={`p-3.5 rounded-2xl border leading-relaxed shadow-2xs ${isAdmin
+                            ? 'bg-brand-50/80 border-brand-200/80 text-brand-950 ml-4'
+                            : 'bg-white border-slate-200/90 text-slate-800 mr-4'
                           }`}
                       >
-                        <div className="flex items-center justify-between pb-1 mb-1 border-b border-white/5 text-[10px]">
-                          <span className={`font-bold ${isAdmin ? 'text-brand-300' : 'text-slate-300'}`}>
+                        <div className="flex items-center justify-between pb-1.5 mb-1.5 border-b border-slate-200/60 text-[10px]">
+                          <span className={`font-bold ${isAdmin ? 'text-brand-700' : 'text-slate-700'}`}>
                             {resp.sender} {isAdmin && '(BMS Support)'}
                           </span>
-                          <span className="text-slate-500">{resp.timestamp}</span>
+                          <span className="text-slate-400">{resp.timestamp}</span>
                         </div>
-                        <p>{resp.message}</p>
+                        <p className="text-slate-700">{resp.message}</p>
                       </div>
                     );
                   })}
@@ -186,24 +216,24 @@ export const UserGrievances: React.FC = () => {
 
                 {/* Reply Box */}
                 {selectedTicket.status !== 'closed' ? (
-                  <form onSubmit={handleSendReply} className="p-3 border-t border-slate-800 bg-slate-950/60 flex gap-2">
+                  <form onSubmit={handleSendReply} className="p-3.5 border-t border-slate-100 bg-slate-50/70 flex gap-2">
                     <input
                       type="text"
                       value={replyText}
                       onChange={e => setReplyText(e.target.value)}
                       placeholder="Add information or ask support team..."
-                      className="flex-1 px-3 py-2 text-xs rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+                      className="flex-1 px-3.5 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/10 transition-all"
                     />
                     <button
                       type="submit"
-                      className="py-2 px-4 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs shadow-md transition-colors flex items-center gap-1.5"
+                      className="py-2 px-4 rounded-xl bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold text-xs shadow-md shadow-brand-500/25 transition-all flex items-center gap-1.5 cursor-pointer"
                     >
                       <Send className="w-3.5 h-3.5" />
                       <span>Reply</span>
                     </button>
                   </form>
                 ) : (
-                  <div className="p-3 text-center text-xs text-slate-500 bg-slate-950/40 border-t border-slate-800">
+                  <div className="p-3.5 text-center text-xs text-slate-500 bg-slate-50 border-t border-slate-100">
                     This ticket is resolved and closed.
                   </div>
                 )}
