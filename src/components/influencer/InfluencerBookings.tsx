@@ -47,9 +47,9 @@ export const InfluencerBookings: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 text-xs shadow-sm">
+          <div className="px-4 py-2 rounded-xl bg-white border border-slate-200/90 shadow-sm ring-1 ring-slate-900/5 text-xs">
             <span className="text-slate-500 font-medium">Total Bookings: </span>
-            <span className="font-bold text-brand-600">{creatorBookings.length}</span>
+            <span className="font-extrabold text-brand-600">{creatorBookings.length}</span>
           </div>
         </div>
       </div>
@@ -60,9 +60,9 @@ export const InfluencerBookings: React.FC = () => {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`capitalize px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === tab
-                ? 'bg-brand-500 text-white shadow-sm shadow-brand-500/25'
-                : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-slate-200/80'
+            className={`capitalize px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${activeTab === tab
+                ? 'bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-md shadow-brand-500/25'
+                : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-slate-200/90 shadow-2xs'
               }`}
           >
             {tab} ({tab === 'all' ? creatorBookings.length : creatorBookings.filter(b => b.bookingStatus === tab).length})
@@ -72,10 +72,16 @@ export const InfluencerBookings: React.FC = () => {
 
       {/* Booking List */}
       {filteredBookings.length === 0 ? (
-        <div className="p-12 text-center rounded-3xl bg-white border border-slate-200/80 space-y-3 shadow-sm">
-          <Calendar className="w-8 h-8 text-slate-300 mx-auto" />
-          <h3 className="text-sm font-bold text-slate-800">No {activeTab} bookings</h3>
-          <p className="text-xs text-slate-400">When fans book your slots, they will appear here in real-time.</p>
+        <div className="p-12 sm:p-16 text-center rounded-3xl bg-white border border-slate-200/90 space-y-4 shadow-md ring-1 ring-slate-900/5 hover:shadow-lg transition-all">
+          <div className="w-14 h-14 rounded-2xl bg-brand-50 border border-brand-200/80 text-brand-600 flex items-center justify-center mx-auto shadow-2xs">
+            <Calendar className="w-7 h-7 text-brand-600" />
+          </div>
+          <div className="space-y-1">
+            <h3 className="text-base font-extrabold text-slate-900">No {activeTab} bookings found</h3>
+            <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
+              When fans book 1-on-1 video or voice calls with you from your marketplace profile, they will appear here in real-time.
+            </p>
+          </div>
         </div>
       ) : (
         <div className="space-y-4">
@@ -126,7 +132,7 @@ export const InfluencerBookings: React.FC = () => {
 
               {/* Call Details */}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
-                <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200/80">
+                <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 shadow-2xs">
                   <span className="text-[10px] text-slate-500 font-bold uppercase block">Session Type</span>
                   <div className="flex items-center gap-1.5 font-bold text-slate-900 mt-0.5 capitalize">
                     {b.callType === 'video' ? <Video className="w-3.5 h-3.5 text-brand-500" /> : <PhoneCall className="w-3.5 h-3.5 text-emerald-600" />}
@@ -134,7 +140,7 @@ export const InfluencerBookings: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200/80">
+                <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 shadow-2xs">
                   <span className="text-[10px] text-slate-500 font-bold uppercase block">Scheduled Time</span>
                   <div className="flex items-center gap-1.5 font-bold text-slate-900 mt-0.5">
                     <Calendar className="w-3.5 h-3.5 text-brand-500" />
@@ -142,7 +148,7 @@ export const InfluencerBookings: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200/80">
+                <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 shadow-2xs">
                   <span className="text-[10px] text-slate-500 font-bold uppercase block">Payment Verification</span>
                   <div className="font-mono font-bold text-emerald-700 mt-0.5 uppercase">
                     Paid via {b.paymentMethod}
