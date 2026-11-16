@@ -140,10 +140,6 @@ export const InfluencerReviewsGrievances: React.FC = () => {
               </div>
               <p className="text-xs text-slate-400 mt-0.5">Based on {creatorReviews.length} fan ratings</p>
             </div>
-
-            <div className="text-right text-[11px] text-slate-400 max-w-xs">
-              <span className="font-semibold text-slate-300">Policy Notice:</span> Influencers cannot alter or delete fan ratings directly. Inappropriate reviews can be flagged for Admin moderation.
-            </div>
           </div>
 
           {creatorReviews.length === 0 ? (
