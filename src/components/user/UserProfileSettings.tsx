@@ -344,8 +344,8 @@ export const UserProfileSettings: React.FC = () => {
           type="button"
           onClick={() => setActiveTab('personal')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'personal'
-              ? 'bg-brand-500 text-white shadow-md shadow-brand-500/25'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+            ? 'bg-brand-500 text-white shadow-md shadow-brand-500/25'
+            : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
             }`}
         >
           <User className="w-4 h-4" />
@@ -356,8 +356,8 @@ export const UserProfileSettings: React.FC = () => {
           type="button"
           onClick={() => setActiveTab('security')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'security'
-              ? 'bg-brand-500 text-white shadow-md shadow-brand-500/25'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+            ? 'bg-brand-500 text-white shadow-md shadow-brand-500/25'
+            : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
             }`}
         >
           <ShieldCheck className="w-4 h-4" />
@@ -368,8 +368,8 @@ export const UserProfileSettings: React.FC = () => {
           type="button"
           onClick={() => setActiveTab('notifications')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'notifications'
-              ? 'bg-brand-500 text-white shadow-md shadow-brand-500/25'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+            ? 'bg-brand-500 text-white shadow-md shadow-brand-500/25'
+            : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
             }`}
         >
           <Bell className="w-4 h-4" />
@@ -380,8 +380,8 @@ export const UserProfileSettings: React.FC = () => {
           type="button"
           onClick={() => setActiveTab('billing')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'billing'
-              ? 'bg-brand-500 text-white shadow-md shadow-brand-500/25'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+            ? 'bg-brand-500 text-white shadow-md shadow-brand-500/25'
+            : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
             }`}
         >
           <CreditCard className="w-4 h-4" />
@@ -396,8 +396,8 @@ export const UserProfileSettings: React.FC = () => {
           type="button"
           onClick={() => setActiveTab('favorites')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'favorites'
-              ? 'bg-brand-500 text-white shadow-md shadow-brand-500/25'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+            ? 'bg-brand-500 text-white shadow-md shadow-brand-500/25'
+            : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
             }`}
         >
           <Heart className="w-4 h-4" />
@@ -579,16 +579,12 @@ export const UserProfileSettings: React.FC = () => {
                   placeholder="Tell creators a little about who you are, topics you love discussing, or goals for your session..."
                   className="w-full p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white focus:ring-2 focus:ring-brand-500/10 text-xs font-medium transition-all"
                 />
-                <p className="text-[11px] text-slate-400 mt-1">
-                  Creators see this introduction prior to joining the 1-on-1 video/voice room so they can personalize the conversation.
-                </p>
+
               </div>
 
               {/* Submit Button */}
               <div className="pt-2 flex items-center justify-between">
-                <p className="text-[11px] text-slate-400">
-                  Last updated: Just now • Auto-synced to secure storage
-                </p>
+
                 <button
                   type="submit"
                   className="flex items-center gap-2 py-2.5 px-6 rounded-xl bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-extrabold text-xs shadow-md shadow-brand-500/25 transition-all cursor-pointer"
