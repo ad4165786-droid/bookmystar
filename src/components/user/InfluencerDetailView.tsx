@@ -525,7 +525,7 @@ export const InfluencerDetailView: React.FC = () => {
             </div>
 
             {/* Price Total & CTA Box */}
-            <div className="p-4 rounded-2xl bg-slate-950/90 border border-slate-800 space-y-3 shadow-md">
+            <div className="p-4 rounded-2xl bg-slate-800/80 border border-slate-700/80 space-y-3 shadow-md">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-xs text-slate-400 font-medium">Total Payable (Excl. Tax)</div>
@@ -545,7 +545,7 @@ export const InfluencerDetailView: React.FC = () => {
               <button
                 type="button"
                 onClick={handleInitiateBooking}
-                className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-brand-600 via-pink-600 to-amber-500 hover:opacity-95 text-white font-extrabold text-sm shadow-glow flex items-center justify-center gap-2 transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+                className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-extrabold text-sm shadow-md shadow-brand-500/30 flex items-center justify-center gap-2 transition-all transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
               >
                 <span>Proceed to Pay ₹{currentPrice}</span>
                 <ChevronRight className="w-4 h-4" />
