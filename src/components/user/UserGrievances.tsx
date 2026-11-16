@@ -217,22 +217,31 @@ export const UserGrievances: React.FC = () => {
 
       {/* New Ticket Modal */}
       {showNewModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
-          <div className="w-full max-w-lg rounded-2xl bg-slate-900 border border-slate-800 p-6 space-y-4 shadow-2xl">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-              <h3 className="text-base font-bold text-white">Create New Support Case</h3>
-              <button onClick={() => setShowNewModal(false)} className="text-slate-400 hover:text-white">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-xs animate-fadeIn"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowNewModal(false);
+          }}
+        >
+          <div className="w-full max-w-lg rounded-3xl bg-white border border-slate-200 p-6 sm:p-7 space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <h3 className="text-base font-extrabold text-slate-900">Create New Support Case</h3>
+              <button 
+                type="button"
+                onClick={() => setShowNewModal(false)} 
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+              >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleCreateTicket} className="space-y-3.5 text-xs">
+            <form onSubmit={handleCreateTicket} className="space-y-4 text-xs">
               <div>
-                <label className="block text-slate-300 font-semibold mb-1">Issue Category</label>
+                <label className="block text-slate-700 font-bold mb-1.5">Issue Category</label>
                 <select
                   value={category}
                   onChange={e => setCategory(e.target.value as any)}
-                  className="w-full p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white focus:outline-none"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-brand-500"
                 >
                   <option value="call">Call Disconnect / Technical Glitch</option>
                   <option value="payment">Payment / Refund / Billing</option>
@@ -243,11 +252,11 @@ export const UserGrievances: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-slate-300 font-semibold mb-1">Associated Booking (Optional)</label>
+                <label className="block text-slate-700 font-bold mb-1.5">Associated Booking (Optional)</label>
                 <select
                   value={selectedBookingRef}
                   onChange={e => setSelectedBookingRef(e.target.value)}
-                  className="w-full p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white focus:outline-none"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-brand-500"
                 >
                   <option value="">None / General Inquiry</option>
                   {bookings.filter(b => b.userId === currentUser.id).map(b => (
@@ -259,40 +268,40 @@ export const UserGrievances: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-slate-300 font-semibold mb-1">Subject</label>
+                <label className="block text-slate-700 font-bold mb-1.5">Subject</label>
                 <input
                   type="text"
                   value={subject}
                   onChange={e => setSubject(e.target.value)}
                   placeholder="e.g. Video call froze after 2 minutes"
-                  className="w-full p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-500"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-slate-300 font-semibold mb-1">Detailed Description</label>
+                <label className="block text-slate-700 font-bold mb-1.5">Detailed Description</label>
                 <textarea
                   value={description}
                   onChange={e => setDescription(e.target.value)}
                   placeholder="Provide timestamps and details for our operations team..."
                   rows={4}
-                  className="w-full p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-500"
                   required
                 />
               </div>
 
-              <div className="flex gap-2 pt-2">
+              <div className="flex gap-2.5 pt-2">
                 <button
                   type="submit"
-                  className="flex-1 py-3 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs shadow-glow transition-colors"
+                  className="flex-1 py-3 rounded-xl bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-extrabold text-xs shadow-md shadow-brand-500/25 transition-all cursor-pointer"
                 >
                   Submit Ticket
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowNewModal(false)}
-                  className="px-4 py-3 rounded-xl bg-slate-800 text-slate-300 text-xs font-semibold"
+                  className="px-5 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>

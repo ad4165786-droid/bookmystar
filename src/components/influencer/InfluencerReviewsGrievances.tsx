@@ -263,38 +263,38 @@ export const InfluencerReviewsGrievances: React.FC = () => {
       {/* Flag Review Modal */}
       {flaggingReviewId && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-xs animate-fadeIn"
           onClick={(e) => {
             if (e.target === e.currentTarget) setFlaggingReviewId(null);
           }}
         >
-          <div className="w-full max-w-md rounded-2xl bg-slate-900 border border-slate-800 p-6 space-y-4 shadow-2xl">
-            <h3 className="text-base font-bold text-white">Report Inappropriate Fan Feedback</h3>
+          <div className="w-full max-w-md rounded-3xl bg-white border border-slate-200 p-6 sm:p-7 space-y-4 shadow-2xl">
+            <h3 className="text-base font-extrabold text-slate-900">Report Inappropriate Fan Feedback</h3>
 
-            <form onSubmit={handleFlagSubmit} className="space-y-3 text-xs">
+            <form onSubmit={handleFlagSubmit} className="space-y-3.5 text-xs">
               <div>
-                <label className="block text-slate-300 font-semibold mb-1">Reason for Flagging</label>
+                <label className="block text-slate-700 font-bold mb-1.5">Reason for Flagging</label>
                 <textarea
                   value={flagReason}
                   onChange={e => setFlagReason(e.target.value)}
                   placeholder="Explain why this review violates platform terms (e.g. abusive language, spam, harassment)..."
                   rows={3}
-                  className="w-full p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white focus:outline-none"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-500"
                   required
                 />
               </div>
 
-              <div className="flex gap-2 pt-2">
+              <div className="flex gap-2.5 pt-2">
                 <button
                   type="submit"
-                  className="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-md"
+                  className="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-md shadow-rose-600/25 cursor-pointer"
                 >
                   Submit for Admin Review
                 </button>
                 <button
                   type="button"
                   onClick={() => setFlaggingReviewId(null)}
-                  className="px-4 py-2.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-semibold"
+                  className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -307,50 +307,50 @@ export const InfluencerReviewsGrievances: React.FC = () => {
       {/* Report Misconduct Modal */}
       {showGrievanceModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-xs animate-fadeIn"
           onClick={(e) => {
             if (e.target === e.currentTarget) setShowGrievanceModal(false);
           }}
         >
-          <div className="w-full max-w-md rounded-2xl bg-slate-900 border border-slate-800 p-6 space-y-4 shadow-2xl">
-            <h3 className="text-base font-bold text-white">Report Inappropriate User Conduct</h3>
+          <div className="w-full max-w-md rounded-3xl bg-white border border-slate-200 p-6 sm:p-7 space-y-4 shadow-2xl">
+            <h3 className="text-base font-extrabold text-slate-900">Report Inappropriate User Conduct</h3>
 
-            <form onSubmit={handleGrievanceSubmit} className="space-y-3 text-xs">
+            <form onSubmit={handleGrievanceSubmit} className="space-y-3.5 text-xs">
               <div>
-                <label className="block text-slate-300 font-semibold mb-1">Subject</label>
+                <label className="block text-slate-700 font-bold mb-1.5">Subject</label>
                 <input
                   type="text"
                   value={reportSubject}
                   onChange={e => setReportSubject(e.target.value)}
                   placeholder="e.g. User made non-professional remarks during coaching"
-                  className="w-full p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white focus:outline-none"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-500"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-slate-300 font-semibold mb-1">Details & Context</label>
+                <label className="block text-slate-700 font-bold mb-1.5">Details & Context</label>
                 <textarea
                   value={reportDesc}
                   onChange={e => setReportDesc(e.target.value)}
                   placeholder="Provide call timestamps, specific remarks, or harassment details..."
                   rows={4}
-                  className="w-full p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white focus:outline-none"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-500"
                   required
                 />
               </div>
 
-              <div className="flex gap-2 pt-2">
+              <div className="flex gap-2.5 pt-2">
                 <button
                   type="submit"
-                  className="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-md"
+                  className="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-md shadow-rose-600/25 cursor-pointer"
                 >
                   File Complaint
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowGrievanceModal(false)}
-                  className="px-4 py-2.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-semibold"
+                  className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold cursor-pointer"
                 >
                   Cancel
                 </button>
