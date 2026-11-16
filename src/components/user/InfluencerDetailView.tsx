@@ -88,7 +88,7 @@ export const InfluencerDetailView: React.FC = () => {
             setActiveView('explore');
             navigate('/fan/dashboard');
           }}
-          className="flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white transition-colors"
+          className="flex items-center gap-2 text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Explore Creators</span>
@@ -101,7 +101,7 @@ export const InfluencerDetailView: React.FC = () => {
               navigator.clipboard?.writeText(url);
               showToast('Creator profile link copied to clipboard!');
             }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-300 hover:text-white hover:bg-slate-800"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-700 hover:text-slate-900 hover:bg-slate-50 shadow-2xs transition-all"
           >
             <Share2 className="w-3.5 h-3.5" />
             <span>Share Profile</span>
@@ -242,16 +242,16 @@ export const InfluencerDetailView: React.FC = () => {
         <div className="lg:col-span-7 space-y-8">
           
           {/* About Bio Section */}
-          <section className="p-6 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-3">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-300">About the Creator</h3>
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+          <section className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-3">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900">About the Creator</h3>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
               {influencer.bio}
             </p>
             {influencer.languages && influencer.languages.length > 0 && (
-              <div className="pt-2 flex items-center gap-2 flex-wrap border-t border-slate-800/80">
-                <span className="text-xs text-slate-400 font-medium">Spoken Languages:</span>
+              <div className="pt-2 flex items-center gap-2 flex-wrap border-t border-slate-100">
+                <span className="text-xs text-slate-500 font-medium">Spoken Languages:</span>
                 {influencer.languages.map(l => (
-                  <span key={l} className="text-xs font-semibold px-2.5 py-0.5 rounded-md bg-slate-800 text-slate-300 border border-slate-700">
+                  <span key={l} className="text-xs font-semibold px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200">
                     {l}
                   </span>
                 ))}
@@ -262,10 +262,10 @@ export const InfluencerDetailView: React.FC = () => {
           {/* Media Showcase / Content Portfolio */}
           <section className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-300">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900">
                 Creator Showcase & Portfolio ({influencer.gallery.length})
               </h3>
-              <span className="text-xs text-slate-400">Verified Uploads</span>
+              <span className="text-xs text-slate-500 font-medium">Verified Uploads</span>
             </div>
 
             {influencer.gallery.length === 0 ? (
@@ -297,14 +297,14 @@ export const InfluencerDetailView: React.FC = () => {
           </section>
 
           {/* Reviews & Ratings Section */}
-          <section className="p-6 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-5">
-            <div className="flex items-center justify-between pb-3">
+          <section className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div>
-                <h3 className="text-sm font-bold uppercase tracking-wider text-slate-300">Fan Ratings & Feedback</h3>
-                <p className="text-xs text-slate-400 mt-0.5">Verified attendees after completed sessions</p>
+                <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900">Fan Ratings & Feedback</h3>
+                <p className="text-xs text-slate-500 mt-0.5">Verified attendees after completed sessions</p>
               </div>
 
-              <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 font-bold text-sm">
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 font-bold text-sm shadow-2xs">
                 <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
                 <span>{influencer.rating > 0 ? influencer.rating : '5.0'} / 5.0</span>
               </div>
@@ -315,24 +315,24 @@ export const InfluencerDetailView: React.FC = () => {
             ) : (
               <div className="space-y-3.5">
                 {creatorReviews.map(rev => (
-                  <div key={rev.id} className="p-4 rounded-xl bg-slate-900/90 border border-slate-800/80 space-y-2 text-xs">
+                  <div key={rev.id} className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2 text-xs">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2.5">
-                        <img src={rev.userAvatar} alt={rev.userName} className="w-7 h-7 rounded-full object-cover ring-1 ring-slate-700" />
+                        <img src={rev.userAvatar} alt={rev.userName} className="w-7 h-7 rounded-full object-cover ring-1 ring-slate-200" />
                         <div>
-                          <div className="font-bold text-white">{rev.userName}</div>
-                          <div className="text-[10px] text-slate-400">{rev.callType === 'video' ? 'Video Session' : 'Voice Session'} • {rev.createdAt.split(' ')[0]}</div>
+                          <div className="font-bold text-slate-900">{rev.userName}</div>
+                          <div className="text-[10px] text-slate-500">{rev.callType === 'video' ? 'Video Session' : 'Voice Session'} • {rev.createdAt.split(' ')[0]}</div>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-0.5 text-amber-400">
+                      <div className="flex items-center gap-0.5 text-amber-500">
                         {Array.from({ length: rev.rating }).map((_, i) => (
                           <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                         ))}
                       </div>
                     </div>
 
-                    <p className="text-slate-300 leading-relaxed text-xs">
+                    <p className="text-slate-600 leading-relaxed text-xs">
                       "{rev.comment}"
                     </p>
                   </div>

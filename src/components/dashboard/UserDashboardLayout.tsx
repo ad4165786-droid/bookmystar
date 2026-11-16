@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { 
-  Sparkles, 
-  Compass, 
-  Calendar, 
-  LifeBuoy, 
-  User, 
-  LogOut, 
-  Bell, 
-  Menu, 
-  X, 
+import {
+  Sparkles,
+  Compass,
+  Calendar,
+  LifeBuoy,
+  User,
+  LogOut,
+  Bell,
+  Menu,
+  X,
   ShieldCheck,
   CreditCard,
   ChevronRight
@@ -23,23 +23,23 @@ import { UserGrievances } from '../user/UserGrievances';
 import { UserProfileSettings } from '../user/UserProfileSettings';
 
 export const UserDashboardLayout: React.FC = () => {
-  const { 
-    currentUser, 
+  const {
+    currentUser,
     currentPath,
     navigate,
-    activeView, 
-    setActiveView, 
-    selectedInfluencerId, 
+    activeView,
+    setActiveView,
+    selectedInfluencerId,
     setSelectedInfluencerId,
-    logout, 
+    logout,
     notifications,
-    showToast 
+    showToast
   } = useApp();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showNotifDropdown, setShowNotifDropdown] = useState(false);
 
-  const unreadNotifs = notifications.filter(n => 
+  const unreadNotifs = notifications.filter(n =>
     !n.read && (n.targetAudience === 'all' || n.targetAudience === 'users' || n.recipientId === currentUser?.id)
   );
 
@@ -52,17 +52,16 @@ export const UserDashboardLayout: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col lg:flex-row font-sans selection:bg-brand-500 selection:text-white">
-      
+
       {/* 1. Left Sidebar for Fan Portal */}
-      <aside className={`fixed inset-y-0 left-0 z-40 w-72 bg-white border-r border-slate-200/90 flex flex-col justify-between transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${
-        mobileMenuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
-      }`}>
-        
+      <aside className={`fixed inset-y-0 left-0 z-40 w-72 bg-white border-r border-slate-200/90 flex flex-col justify-between transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${mobileMenuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
+        }`}>
+
         {/* Top: Logo & User Identity */}
         <div>
           {/* Logo Bar */}
           <div className="h-18 p-5 border-b border-slate-100 flex items-center justify-between">
-            <div 
+            <div
               className="flex items-center gap-3 cursor-pointer"
               onClick={() => {
                 setSelectedInfluencerId(null);
@@ -83,7 +82,7 @@ export const UserDashboardLayout: React.FC = () => {
               </div>
             </div>
 
-            <button 
+            <button
               onClick={() => setMobileMenuOpen(false)}
               className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-slate-600"
             >
@@ -92,7 +91,7 @@ export const UserDashboardLayout: React.FC = () => {
           </div>
 
           {/* User Profile Mini Badge */}
-          <div 
+          <div
             onClick={() => {
               navigate('/fan/profile');
               setMobileMenuOpen(false);
@@ -129,11 +128,10 @@ export const UserDashboardLayout: React.FC = () => {
                     if (item.id === 'explore') setSelectedInfluencerId(null);
                     setMobileMenuOpen(false);
                   }}
-                  className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-bold transition-all ${
-                    isActive
-                      ? 'bg-brand-600 text-white shadow-orange-glow'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                  }`}
+                  className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-bold transition-all ${isActive
+                    ? 'bg-brand-600 text-white shadow-orange-glow'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                    }`}
                 >
                   <div className="flex items-center gap-3">
                     <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
@@ -161,7 +159,7 @@ export const UserDashboardLayout: React.FC = () => {
 
       {/* Backdrop for mobile */}
       {mobileMenuOpen && (
-        <div 
+        <div
           onClick={() => setMobileMenuOpen(false)}
           className="fixed inset-0 bg-slate-900/40 z-30 lg:hidden"
         />
@@ -169,7 +167,7 @@ export const UserDashboardLayout: React.FC = () => {
 
       {/* 2. Main Workspace Layout */}
       <div className="flex-1 lg:pl-72 flex flex-col min-h-screen">
-        
+
         {/* Top Sticky Header */}
         <header className="sticky top-0 z-20 h-16 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -182,17 +180,14 @@ export const UserDashboardLayout: React.FC = () => {
 
             <div>
               <h2 className="text-sm sm:text-base font-extrabold text-slate-900">
-                Welcome, {currentUser?.name.split(' ')[0]} 👋
+                Welcome, {currentUser?.name.split(' ')[0]}
               </h2>
-              <p className="text-[11px] text-slate-500 hidden sm:block">
-                Discover creators, schedule 1-on-1 sessions, and join live rooms.
-              </p>
             </div>
           </div>
 
           {/* Right Header Badges & Actions */}
           <div className="flex items-center gap-3">
-            
+
             {/* Currency Pill */}
             <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-emerald-700">
               <span>₹ INR</span>
