@@ -38,7 +38,6 @@ import {
   Award,
   Video,
   PhoneCall,
-  Pencil,
   X
 } from 'lucide-react';
 import { InvoiceModal } from '../modals/InvoiceModal';
@@ -338,19 +337,6 @@ export const UserProfileSettings: React.FC = () => {
 
             {/* Quick Summary Pill Badges */}
             <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveTab('personal');
-                  const el = document.getElementById('personal-details-section');
-                  el?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold text-xs transition-all cursor-pointer border border-slate-200 shadow-2xs"
-              >
-                <Pencil className="w-3.5 h-3.5 text-slate-600" />
-                <span>Edit Profile</span>
-              </button>
-
               <button
                 type="button"
                 onClick={() => {
