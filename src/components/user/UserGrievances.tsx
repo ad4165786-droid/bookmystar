@@ -87,45 +87,15 @@ export const UserGrievances: React.FC = () => {
       </div>
 
       {userTickets.length === 0 ? (
-        <div className="p-10 sm:p-14 text-center rounded-3xl bg-white border border-slate-200/90 shadow-md ring-1 ring-slate-900/5 space-y-6 hover:shadow-lg transition-all">
-          <div className="w-16 h-16 rounded-2xl bg-brand-50 border border-brand-200/80 text-brand-600 flex items-center justify-center mx-auto shadow-2xs">
-            <LifeBuoy className="w-8 h-8 text-brand-600 stroke-[2.2]" />
+        <div className="p-12 sm:p-16 text-center rounded-3xl bg-white border border-slate-200/90 shadow-md ring-1 ring-slate-900/5 space-y-4">
+          <div className="w-14 h-14 rounded-2xl bg-brand-50 border border-brand-100 text-brand-600 flex items-center justify-center mx-auto shadow-2xs">
+            <LifeBuoy className="w-7 h-7 text-brand-600" />
           </div>
-          <div className="space-y-1.5 max-w-md mx-auto">
-            <h3 className="text-lg font-black text-slate-900 tracking-tight">No Support Cases Raised</h3>
-            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
-              All your bookings and payment transactions are in good standing. Encountered a technical glitch or have a billing query? Our operations team is on standby 24/7.
+          <div className="space-y-1">
+            <h3 className="text-base font-extrabold text-slate-900">No Support Cases Raised</h3>
+            <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
+              All your bookings and payment transactions are in good standing. Have questions? Our support team is here.
             </p>
-          </div>
-
-          <div className="pt-2">
-            <button
-              type="button"
-              onClick={() => setShowNewModal(true)}
-              className="inline-flex items-center gap-2 py-2.5 px-6 rounded-xl bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-extrabold text-xs shadow-md shadow-brand-500/25 transition-all cursor-pointer"
-            >
-              <PlusCircle className="w-4 h-4" />
-              <span>Open Support Ticket</span>
-            </button>
-          </div>
-
-          {/* Guarantee Highlights Strip */}
-          <div className="mt-8 pt-8 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 shadow-2xs">
-              <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wider block">Escrow Security</span>
-              <div className="text-xs font-black text-slate-900 mt-1">100% Refund Protection</div>
-              <p className="text-[11px] text-slate-500 mt-0.5">Funds held safe until session completes.</p>
-            </div>
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 shadow-2xs">
-              <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wider block">Turnaround SLA</span>
-              <div className="text-xs font-black text-brand-600 mt-1">&lt; 2 Hours Fast Response</div>
-              <p className="text-[11px] text-slate-500 mt-0.5">Rapid resolution by senior dispute managers.</p>
-            </div>
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 shadow-2xs">
-              <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wider block">Mediation</span>
-              <div className="text-xs font-black text-emerald-600 mt-1">Official BMS Desk</div>
-              <p className="text-[11px] text-slate-500 mt-0.5">Direct coordinator link for uninterrupted calls.</p>
-            </div>
           </div>
         </div>
       ) : (
