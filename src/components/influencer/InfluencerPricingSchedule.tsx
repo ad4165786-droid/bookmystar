@@ -820,13 +820,13 @@ export const InfluencerPricingSchedule: React.FC = () => {
       {/* ================= HEADER CONTROL BAR ================= */}
       <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
 
-        <div className="flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-xl bg-brand-50 text-brand-600 border border-brand-200/70 flex items-center justify-center shrink-0">
-            <Clock className="w-5 h-5 text-brand-600 stroke-[2.2]" />
+        <div className="flex items-start sm:items-center gap-4">
+          <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-brand-50 text-brand-600 border border-brand-200/70 flex items-center justify-center shrink-0">
+            <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-brand-600 stroke-[2.2]" />
           </div>
           <div className="space-y-1">
-            <div className="flex items-center gap-2.5 flex-wrap">
-              <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+            <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
+              <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight leading-tight">
                 Availability & Slot Management
               </h1>
 
@@ -846,7 +846,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
             </div>
 
             {/* Subtitle & Timezone */}
-            <div className="flex items-center gap-2 text-xs text-slate-500 flex-wrap">
+            <div className="flex items-center gap-2 text-xs text-slate-500 flex-wrap pt-0.5">
               <span className="inline-flex items-center gap-1 font-semibold text-slate-600">
                 <Globe className="w-3.5 h-3.5 text-slate-400" />
                 <span>Asia/Kolkata (IST, UTC+05:30)</span>
@@ -860,7 +860,7 @@ export const InfluencerPricingSchedule: React.FC = () => {
         {/* Right Header Actions */}
         <div className="flex items-center gap-2.5 self-start md:self-auto shrink-0 flex-wrap">
           {isDirty && (
-            <span className="text-xs font-bold text-amber-600 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-200 animate-fadeIn">
+            <span className="text-xs font-bold text-amber-600 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-amber-50 border border-amber-200 animate-fadeIn">
               <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
               <span>Unsaved Changes</span>
             </span>

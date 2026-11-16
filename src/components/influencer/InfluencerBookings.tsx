@@ -1,28 +1,28 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { BookingStatus, Booking } from '../../types';
-import { 
-  Calendar, 
-  Clock, 
-  Video, 
-  PhoneCall, 
-  Radio, 
-  CheckCircle2, 
-  XCircle, 
-  AlertCircle, 
-  User, 
-  Mail, 
+import {
+  Calendar,
+  Clock,
+  Video,
+  PhoneCall,
+  Radio,
+  CheckCircle2,
+  XCircle,
+  AlertCircle,
+  User,
+  Mail,
   Phone,
   FileText
 } from 'lucide-react';
 import { InvoiceModal } from '../modals/InvoiceModal';
 
 export const InfluencerBookings: React.FC = () => {
-  const { 
-    currentInfluencer, 
-    bookings, 
-    startCall, 
-    cancelBooking, 
+  const {
+    currentInfluencer,
+    bookings,
+    startCall,
+    cancelBooking,
     showToast,
     settings
   } = useApp();
@@ -39,12 +39,11 @@ export const InfluencerBookings: React.FC = () => {
 
   return (
     <div className="space-y-6 pb-6">
-      
+
       {/* Title */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900">Call Booking Schedule</h1>
-          <p className="text-xs text-slate-500 mt-0.5">Manage incoming fan requests, upcoming live calls, and completed records</p>
         </div>
 
         <div className="flex items-center gap-3">
@@ -61,11 +60,10 @@ export const InfluencerBookings: React.FC = () => {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`capitalize px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-              activeTab === tab
+            className={`capitalize px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === tab
                 ? 'bg-brand-500 text-white shadow-sm shadow-brand-500/25'
                 : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-slate-200/80'
-            }`}
+              }`}
           >
             {tab} ({tab === 'all' ? creatorBookings.length : creatorBookings.filter(b => b.bookingStatus === tab).length})
           </button>
@@ -96,13 +94,12 @@ export const InfluencerBookings: React.FC = () => {
                   <div>
                     <div className="flex items-center gap-2">
                       <h3 className="text-sm font-bold text-slate-900">{b.userName}</h3>
-                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold capitalize ${
-                        b.bookingStatus === 'upcoming' 
-                          ? 'bg-sky-50 text-sky-700 border border-sky-200' 
-                          : b.bookingStatus === 'completed' 
-                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
-                          : 'bg-slate-100 text-slate-600'
-                      }`}>
+                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold capitalize ${b.bookingStatus === 'upcoming'
+                          ? 'bg-sky-50 text-sky-700 border border-sky-200'
+                          : b.bookingStatus === 'completed'
+                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                            : 'bg-slate-100 text-slate-600'
+                        }`}>
                         {b.bookingStatus}
                       </span>
                     </div>
