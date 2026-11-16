@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { Category } from '../../types';
-import { 
-  Sparkles, 
-  User, 
-  Video, 
-  Mail, 
-  Lock, 
-  Phone, 
-  ArrowRight, 
-  CheckCircle2, 
-  Star, 
-  Eye, 
-  EyeOff, 
-  KeyRound, 
+import {
+  Sparkles,
+  User,
+  Video,
+  Mail,
+  Lock,
+  Phone,
+  ArrowRight,
+  CheckCircle2,
+  Star,
+  Eye,
+  EyeOff,
+  KeyRound,
   HelpCircle,
   X,
   PhoneCall,
@@ -131,13 +131,13 @@ export const AuthPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white text-slate-900 flex flex-col justify-between selection:bg-brand-500 selection:text-white">
-      
+
       {/* 1. Clean Top Header Bar */}
       <header className="w-full border-b border-slate-100 bg-white/95 backdrop-blur-md sticky top-0 z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 py-3.5 flex items-center justify-between">
-          
+
           {/* Logo & Branding */}
-          <div 
+          <div
             onClick={() => navigate('/')}
             className="flex items-center gap-3 cursor-pointer"
           >
@@ -169,10 +169,10 @@ export const AuthPage: React.FC = () => {
       {/* 2. Main Hero + Login Workspace */}
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16 w-full flex items-center">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center w-full">
-          
+
           {/* Left Column: Hero Showcase (7 cols) */}
           <div className="lg:col-span-7 space-y-8">
-            
+
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-xs font-bold tracking-wide">
               <Sparkles className="w-4 h-4 text-brand-600" />
               <span>India's Premier Celebrity & Creator Video Network</span>
@@ -185,7 +185,7 @@ export const AuthPage: React.FC = () => {
                   Favourite Stars
                 </span>
               </h1>
-              
+
               <p className="text-base sm:text-lg text-slate-600 max-w-xl font-normal leading-relaxed">
                 Book exclusive voice and video calls with your favourite influencers. Private, high-definition 1-on-1 sessions with top creators in Gaming, Music, Tech, Fashion, and Entertainment.
               </p>
@@ -265,7 +265,7 @@ export const AuthPage: React.FC = () => {
           {/* Right Column: Premium Auth Card with Role Switcher (5 cols) */}
           <div className="lg:col-span-5">
             <div className="bg-white rounded-3xl border border-slate-200/80 shadow-soft-lg p-7 sm:p-8 relative overflow-hidden transition-all">
-              
+
               {/* Subtle visual accent blob */}
               <div className="absolute top-0 right-0 -mr-8 -mt-8 w-40 h-40 bg-gradient-to-br from-brand-100 to-amber-100 rounded-full blur-2xl opacity-70 pointer-events-none" />
 
@@ -281,11 +281,10 @@ export const AuthPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => handleRoleSwitch('user')}
-                    className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition-all ${
-                      activeRoleTab === 'user'
-                        ? 'bg-white text-slate-900 shadow-sm'
-                        : 'text-slate-500 hover:text-slate-900'
-                    }`}
+                    className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition-all ${activeRoleTab === 'user'
+                      ? 'bg-white text-slate-900 shadow-sm'
+                      : 'text-slate-500 hover:text-slate-900'
+                      }`}
                   >
                     <User className={`w-4 h-4 ${activeRoleTab === 'user' ? 'text-brand-600' : 'text-slate-400'}`} />
                     <span>User Sign In</span>
@@ -294,11 +293,10 @@ export const AuthPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => handleRoleSwitch('influencer')}
-                    className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition-all ${
-                      activeRoleTab === 'influencer'
-                        ? 'bg-slate-900 text-white shadow-sm'
-                        : 'text-slate-500 hover:text-slate-900'
-                    }`}
+                    className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition-all ${activeRoleTab === 'influencer'
+                      ? 'bg-slate-900 text-white shadow-sm'
+                      : 'text-slate-500 hover:text-slate-900'
+                      }`}
                   >
                     <Video className={`w-4 h-4 ${activeRoleTab === 'influencer' ? 'text-brand-400' : 'text-slate-400'}`} />
                     <span>Influencer Sign In</span>
@@ -311,7 +309,7 @@ export const AuthPage: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-xl font-black text-slate-900">
-                      {activeRoleTab === 'user' 
+                      {activeRoleTab === 'user'
                         ? (authMode === 'signin' ? 'Welcome Back, Fan!' : 'Create Fan Account')
                         : (authMode === 'signin' ? 'Creator Studio Login' : 'Influencer Registration')
                       }
@@ -324,11 +322,10 @@ export const AuthPage: React.FC = () => {
                     </p>
                   </div>
 
-                  <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase ${
-                    activeRoleTab === 'user' 
-                      ? 'bg-brand-50 text-brand-700 border border-brand-200' 
-                      : 'bg-slate-900 text-white'
-                  }`}>
+                  <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase ${activeRoleTab === 'user'
+                    ? 'bg-brand-50 text-brand-700 border border-brand-200'
+                    : 'bg-slate-900 text-white'
+                    }`}>
                     {activeRoleTab === 'user' ? 'Fan Access' : 'Creator Access'}
                   </span>
                 </div>
@@ -338,7 +335,7 @@ export const AuthPage: React.FC = () => {
               {authMode === 'signin' ? (
                 /* SIGN IN FORM */
                 <form onSubmit={handleSignIn} className="space-y-4 text-xs relative z-10">
-                  
+
                   {/* Email or Mobile Number */}
                   <div>
                     <label className="block text-slate-700 font-bold mb-1.5">
@@ -396,11 +393,10 @@ export const AuthPage: React.FC = () => {
                   {/* Sign In Submit Button */}
                   <button
                     type="submit"
-                    className={`w-full py-3.5 px-4 rounded-xl font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 transform active:scale-[0.99] ${
-                      activeRoleTab === 'user'
-                        ? 'bg-brand-600 hover:bg-brand-500 text-white shadow-orange-glow'
-                        : 'bg-slate-900 hover:bg-slate-800 text-white'
-                    }`}
+                    className={`w-full py-3.5 px-4 rounded-xl font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 transform active:scale-[0.99] ${activeRoleTab === 'user'
+                      ? 'bg-brand-600 hover:bg-brand-500 text-white shadow-orange-glow'
+                      : 'bg-slate-900 hover:bg-slate-800 text-white'
+                      }`}
                   >
                     <span>
                       {activeRoleTab === 'user' ? 'Sign In as Fan' : 'Sign In to Creator Studio'}
@@ -485,7 +481,7 @@ export const AuthPage: React.FC = () => {
               ) : (
                 /* REGISTRATION FORM */
                 <form onSubmit={handleSignUp} className="space-y-3.5 text-xs relative z-10">
-                  
+
                   {activeRoleTab === 'user' ? (
                     /* User Registration */
                     <>

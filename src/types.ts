@@ -16,6 +16,7 @@ export interface UserProfile {
   email: string;
   phone: string;
   avatar: string;
+  coverImage?: string;
   role: 'user';
   status: 'active' | 'suspended';
   createdAt: string;
