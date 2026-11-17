@@ -378,21 +378,14 @@ export const InfluencerDetailView: React.FC = () => {
         <div className="lg:col-span-5">
           <div className="sticky top-24 rounded-3xl bg-white border border-slate-200/90 shadow-md ring-1 ring-slate-900/5 p-6 sm:p-7 space-y-5">
 
-            {/* Header: Creator Identity */}
+            {/* Header: Interactive Booking Console */}
             <div className="pb-4 border-b border-slate-100">
-              <div className="flex items-center gap-3">
-                <img
-                  src={influencer.avatar}
-                  alt={influencer.name}
-                  className="w-12 h-12 rounded-2xl object-cover ring-2 ring-brand-500/30 shadow-xs"
-                />
-                <div>
-                  <h3 className="text-base font-extrabold text-[#0B132B]">
-                    Book a Call with {influencer.name}
-                  </h3>
-                  <p className="text-xs text-brand-600 font-bold">{influencer.handle}</p>
-                </div>
-              </div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-brand-600 bg-brand-50 px-2.5 py-1 rounded-md border border-brand-200/80 inline-block mb-1.5">
+                INTERACTIVE BOOKING CONSOLE
+              </span>
+              <h3 className="text-xl font-black text-[#0B132B] mt-0.5">
+                Select Session & Lock Slot
+              </h3>
             </div>
 
             {/* 1. Select Call Mode */}
@@ -403,11 +396,10 @@ export const InfluencerDetailView: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setSelectedCallType('video')}
-                    className={`flex items-center justify-center gap-2 p-3 rounded-2xl border text-xs font-bold transition-all cursor-pointer ${
-                      selectedCallType === 'video'
+                    className={`flex items-center justify-center gap-2 p-3 rounded-2xl border text-xs font-bold transition-all cursor-pointer ${selectedCallType === 'video'
                         ? 'bg-purple-50/70 border-2 border-purple-500 text-purple-800 shadow-xs ring-1 ring-purple-500/20'
                         : 'bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100'
-                    }`}
+                      }`}
                   >
                     <Video className="w-4 h-4 text-purple-600" />
                     <span>HD Video Call</span>
@@ -418,11 +410,10 @@ export const InfluencerDetailView: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setSelectedCallType('voice')}
-                    className={`flex items-center justify-center gap-2 p-3 rounded-2xl border text-xs font-bold transition-all cursor-pointer ${
-                      selectedCallType === 'voice'
+                    className={`flex items-center justify-center gap-2 p-3 rounded-2xl border text-xs font-bold transition-all cursor-pointer ${selectedCallType === 'voice'
                         ? 'bg-emerald-50/70 border-2 border-emerald-500 text-emerald-800 shadow-xs ring-1 ring-emerald-500/20'
                         : 'bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100'
-                    }`}
+                      }`}
                   >
                     <PhoneCall className="w-4 h-4 text-emerald-600" />
                     <span>Private Voice Call</span>
@@ -449,11 +440,10 @@ export const InfluencerDetailView: React.FC = () => {
                       key={dur}
                       type="button"
                       onClick={() => setSelectedDuration(dur as any)}
-                      className={`p-3 rounded-2xl border text-center transition-all cursor-pointer ${
-                        isSelected
+                      className={`p-3 rounded-2xl border text-center transition-all cursor-pointer ${isSelected
                           ? 'border-2 border-brand-500 bg-brand-50/50 shadow-xs ring-1 ring-brand-500/20'
                           : 'border border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
-                      }`}
+                        }`}
                     >
                       <div className={`text-xs font-bold ${isSelected ? 'text-brand-900' : 'text-slate-800'}`}>
                         {dur} Minutes
@@ -527,11 +517,6 @@ export const InfluencerDetailView: React.FC = () => {
               <span>Proceed to Payment</span>
               <ChevronRight className="w-4 h-4" />
             </button>
-
-            <p className="text-[10px] text-slate-400 text-center">
-              Slot is held for 10 minutes upon proceeding to checkout.
-            </p>
-
           </div>
         </div>
 
