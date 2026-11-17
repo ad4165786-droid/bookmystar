@@ -8,7 +8,9 @@ export type Category =
   | 'Tech & Coding'
   | 'Education & Career'
   | 'Comedy & Entertainment'
-  | 'Lifestyle & Travel';
+  | 'Lifestyle & Travel'
+  | 'Other'
+  | (string & {});
 
 export interface UserProfile {
   id: string;
@@ -108,6 +110,7 @@ export interface InfluencerProfile {
   avatar: string;
   coverImage: string;
   category: Category;
+  customCategory?: string;
   secondaryCategory?: Category | '';
   gender?: 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to-say' | '';
   locationCity?: string;

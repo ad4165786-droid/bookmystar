@@ -46,7 +46,8 @@ const CATEGORIES: Category[] = [
   'Tech & Coding',
   'Education & Career',
   'Comedy & Entertainment',
-  'Lifestyle & Travel'
+  'Lifestyle & Travel',
+  'Other'
 ];
 
 const POPULAR_LANGUAGES = [
@@ -283,7 +284,11 @@ export const CoreCreatorDetails: React.FC = () => {
   const [locationState, setLocationState] = useState(currentInfluencer.locationState || 'Maharashtra');
 
   // --- 2. Creator Information State ---
-  const [category, setCategory] = useState<Category>(currentInfluencer.category);
+  const initialCategoryIsOther = !CATEGORIES.slice(0, 8).includes(currentInfluencer.category as any) || currentInfluencer.category === 'Other';
+  const [category, setCategory] = useState<Category>(initialCategoryIsOther ? 'Other' : currentInfluencer.category);
+  const [customCategory, setCustomCategory] = useState<string>(
+    currentInfluencer.customCategory || (initialCategoryIsOther && currentInfluencer.category !== 'Other' ? currentInfluencer.category : '')
+  );
   const [secondaryCategory, setSecondaryCategory] = useState<Category | ''>(currentInfluencer.secondaryCategory || '');
   const [professionalTitle, setProfessionalTitle] = useState(currentInfluencer.professionalTitle || '');
   const [bio, setBio] = useState(currentInfluencer.bio || '');
@@ -375,7 +380,9 @@ export const CoreCreatorDetails: React.FC = () => {
     setEmail(currentInfluencer.email || 'creator@bookmystar.in');
     setAvatar(currentInfluencer.avatar);
     setAvatarPreview(currentInfluencer.avatar);
-    setCategory(currentInfluencer.category);
+    const isOther = !CATEGORIES.slice(0, 8).includes(currentInfluencer.category as any) || currentInfluencer.category === 'Other';
+    setCategory(isOther ? 'Other' : currentInfluencer.category);
+    setCustomCategory(currentInfluencer.customCategory || (isOther && currentInfluencer.category !== 'Other' ? currentInfluencer.category : ''));
     setSecondaryCategory(currentInfluencer.secondaryCategory || '');
     setDob(currentInfluencer.dob || '1998-05-14');
     setGender(currentInfluencer.gender || 'male');
@@ -757,7 +764,9 @@ export const CoreCreatorDetails: React.FC = () => {
     setLocationCity(currentInfluencer.locationCity || 'Mumbai');
     setLocationState(currentInfluencer.locationState || 'Maharashtra');
     setBio(currentInfluencer.bio || '');
-    setCategory(currentInfluencer.category);
+    const isOther = !CATEGORIES.slice(0, 8).includes(currentInfluencer.category as any) || currentInfluencer.category === 'Other';
+    setCategory(isOther ? 'Other' : currentInfluencer.category);
+    setCustomCategory(currentInfluencer.customCategory || (isOther && currentInfluencer.category !== 'Other' ? currentInfluencer.category : ''));
     setSecondaryCategory(currentInfluencer.secondaryCategory || '');
     setLanguages(currentInfluencer.languages || ['English', 'Hindi']);
     setExperienceYears(currentInfluencer.experienceYears || '3-5 years');
@@ -818,7 +827,8 @@ export const CoreCreatorDetails: React.FC = () => {
       locationCity: locationCity.trim(),
       locationState: locationState.trim(),
       bio: bio.trim(),
-      category,
+      category: (category === 'Other' && customCategory.trim()) ? (customCategory.trim() as Category) : category,
+      customCategory: category === 'Other' ? customCategory.trim() : undefined,
       secondaryCategory: secondaryCategory || undefined,
       languages,
       experienceYears,
@@ -1187,15 +1197,37 @@ export const CoreCreatorDetails: React.FC = () => {
               <label className="block text-xs font-bold text-slate-800">
                 Creator Category <span className="text-rose-500">*</span>
               </label>
-              <select
-                value={category}
-                onChange={e => setCategory(e.target.value as Category)}
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white transition-all"
-              >
-                {CATEGORIES.map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
-              </select>
+              <div className="space-y-2">
+                <select
+                  value={category}
+                  onChange={e => {
+                    const val = e.target.value as Category;
+                    setCategory(val);
+                    if (val !== 'Other') {
+                      setCustomCategory('');
+                    }
+                  }}
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white transition-all"
+                >
+                  {CATEGORIES.map(cat => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+
+                {category === 'Other' && (
+                  <div className="animate-fadeIn">
+                    <input
+                      type="text"
+                      value={customCategory}
+                      onChange={e => setCustomCategory(e.target.value)}
+                      placeholder="Please enter your custom creator category..."
+                      className="w-full px-4 py-2.5 rounded-xl bg-white border border-brand-500 text-xs font-medium text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500/20 shadow-xs"
+                      required
+                      autoFocus
+                    />
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="space-y-1.5">

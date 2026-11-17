@@ -785,7 +785,7 @@ export const CommercialLandingPage: React.FC = () => {
               <p className="text-xs text-slate-500 mt-0.5">
                 {activeRoleTab === 'user'
                   ? (authMode === 'signin' ? 'Sign in to book and join 1-on-1 star calls' : 'Join thousands of fans connecting with stars')
-                  : (authMode === 'signin' ? 'Manage your availability, bookings and payouts' : 'Monetize 1-on-1 time with your community')
+                  : (authMode === 'signin' ? 'Access your creator earnings and call studio' : 'Start monetizing your time with direct 1-on-1 fan calls')
                 }
               </p>
             </div>
