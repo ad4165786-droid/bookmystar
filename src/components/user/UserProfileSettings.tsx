@@ -269,18 +269,6 @@ export const UserProfileSettings: React.FC = () => {
             <Camera className="w-3.5 h-3.5 text-white/90" />
             <span>Edit Banner</span>
           </button>
-
-          {/* Top Brand Badges */}
-          <div className="absolute top-4 right-4 sm:top-6 sm:right-6 flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-white/10 backdrop-blur-md text-white border border-white/20 shadow-xs">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Escrow Protected Fan</span>
-            </span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-brand-500/20 backdrop-blur-md text-brand-300 border border-brand-500/30">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Gold Tier</span>
-            </span>
-          </div>
         </div>
 
         {/* Profile Identity Bar */}
