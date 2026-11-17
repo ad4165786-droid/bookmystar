@@ -431,52 +431,6 @@ export const AuthPage: React.FC = () => {
                     )}
                   </div>
 
-                  {/* Quick One-Click Demo Credentials for Evaluator */}
-                  <div className="pt-4 mt-2 border-t border-slate-100 space-y-2">
-                    <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider text-center">
-                      Quick Demo One-Click Sign In
-                    </span>
-                    {activeRoleTab === 'user' ? (
-                      <div className="grid grid-cols-2 gap-2">
-                        <button
-                          type="button"
-                          onClick={() => loginUser('aarav.sharma@gmail.com', 'pass')}
-                          className="p-2 rounded-xl bg-slate-50 hover:bg-brand-50 border border-slate-200 hover:border-brand-300 text-left transition-colors"
-                        >
-                          <div className="font-bold text-slate-800 text-[11px]">Aarav Sharma</div>
-                          <div className="text-[10px] text-slate-500 truncate">5 bookings completed</div>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => loginUser('priya.m@outlook.com', 'pass')}
-                          className="p-2 rounded-xl bg-slate-50 hover:bg-brand-50 border border-slate-200 hover:border-brand-300 text-left transition-colors"
-                        >
-                          <div className="font-bold text-slate-800 text-[11px]">Priya Mehra</div>
-                          <div className="text-[10px] text-slate-500 truncate">Upcoming video call</div>
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="grid grid-cols-2 gap-2">
-                        <button
-                          type="button"
-                          onClick={() => loginInfluencer('@vortex_esports', 'pass')}
-                          className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-left transition-colors"
-                        >
-                          <div className="font-bold text-slate-800 text-[11px]">Vikram Rajput</div>
-                          <div className="text-[10px] text-brand-600 truncate">@vortex_esports (Gaming)</div>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => loginInfluencer('@ananya_acoustics', 'pass')}
-                          className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-left transition-colors"
-                        >
-                          <div className="font-bold text-slate-800 text-[11px]">Ananya Roy</div>
-                          <div className="text-[10px] text-brand-600 truncate">@ananya_acoustics (Music)</div>
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
                 </form>
               ) : (
                 /* REGISTRATION FORM */

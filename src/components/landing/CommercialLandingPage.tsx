@@ -786,6 +786,7 @@ export const CommercialLandingPage: React.FC = () => {
                 {activeRoleTab === 'user'
                   ? (authMode === 'signin' ? 'Sign in to book and join 1-on-1 star calls' : 'Join thousands of fans connecting with stars')
                   : (authMode === 'signin' ? 'Access your creator earnings and call studio' : 'Start monetizing your time with direct 1-on-1 fan calls')
+
                 }
               </p>
             </div>
@@ -918,64 +919,6 @@ export const CommercialLandingPage: React.FC = () => {
                         Influencer Registration
                       </button>
                     </span>
-                  )}
-                </div>
-
-                {/* One-Click Demo Credentials */}
-                <div className="pt-4 mt-2 border-t border-slate-100 space-y-2">
-                  <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider text-center">
-                    Quick Demo One-Click Sign In
-                  </span>
-                  {activeRoleTab === 'user' ? (
-                    <div className="grid grid-cols-2 gap-2">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          loginUser('aarav.sharma@gmail.com', 'pass');
-                          setIsAuthModalOpen(false);
-                        }}
-                        className="p-2 rounded-xl bg-slate-50 hover:bg-brand-50 border border-slate-200 hover:border-brand-300 text-left transition-colors"
-                      >
-                        <div className="font-bold text-slate-800 text-[11px]">Aarav Sharma</div>
-                        <div className="text-[10px] text-slate-500 truncate">Fan Account</div>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          loginUser('priya.m@outlook.com', 'pass');
-                          setIsAuthModalOpen(false);
-                        }}
-                        className="p-2 rounded-xl bg-slate-50 hover:bg-brand-50 border border-slate-200 hover:border-brand-300 text-left transition-colors"
-                      >
-                        <div className="font-bold text-slate-800 text-[11px]">Priya Mehra</div>
-                        <div className="text-[10px] text-slate-500 truncate">Fan Account</div>
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-2 gap-2">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          loginInfluencer('@vortex_esports', 'pass');
-                          setIsAuthModalOpen(false);
-                        }}
-                        className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-left transition-colors"
-                      >
-                        <div className="font-bold text-slate-800 text-[11px]">Vikram Rajput</div>
-                        <div className="text-[10px] text-brand-600 truncate">@vortex_esports (Gaming)</div>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          loginInfluencer('@ananya_acoustics', 'pass');
-                          setIsAuthModalOpen(false);
-                        }}
-                        className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-left transition-colors"
-                      >
-                        <div className="font-bold text-slate-800 text-[11px]">Ananya Roy</div>
-                        <div className="text-[10px] text-brand-600 truncate">@ananya_acoustics (Music)</div>
-                      </button>
-                    </div>
                   )}
                 </div>
 
