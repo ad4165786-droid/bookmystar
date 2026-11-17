@@ -437,29 +437,6 @@ export const CommercialLandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* 3. CATEGORIES QUICK-FILTER STRIP (matching PetCare) */}
-      <section id="categories" className="py-8 bg-slate-50/70 border-b border-slate-200/60 sticky top-0 z-30 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-            {CATEGORIES.map(cat => {
-              const isActive = selectedCategory === cat;
-              return (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-4 py-2.5 rounded-full text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 ${isActive
-                    ? 'bg-slate-900 text-white shadow-sm'
-                    : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200/80'
-                    }`}
-                >
-                  <span>{cat === 'All' ? '⚡ All Stars' : cat}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
       {/* 4. LIVE STAR DIRECTORY / MARKETPLACE (The Heart of the Portal) */}
       <section id="stars-directory" className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
@@ -976,7 +953,7 @@ export const CommercialLandingPage: React.FC = () => {
             <ul className="space-y-2 text-slate-400">
               <li><a href="#stars-directory" className="hover:text-white transition-colors">Explore Creators</a></li>
               <li><a href="#how-it-works" className="hover:text-white transition-colors">How It Works</a></li>
-              <li><a href="#categories" className="hover:text-white transition-colors">Browse Categories</a></li>
+              <li><a href="#stars-directory" className="hover:text-white transition-colors">Verified Star Directory</a></li>
               <li><a href="#trust-safety" className="hover:text-white transition-colors">Escrow Guarantee</a></li>
               <li>
                 <button
