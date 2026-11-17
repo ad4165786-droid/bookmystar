@@ -305,7 +305,7 @@ export const UserProfileSettings: React.FC = () => {
                 </button>
               </div>
 
-              <div className="space-y-1 sm:translate-y-4">
+              <div className="space-y-1.5 sm:pb-1">
                 <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
                   <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                     {name || currentUser.name}
@@ -316,20 +316,22 @@ export const UserProfileSettings: React.FC = () => {
                   </span>
                 </div>
 
-                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 text-xs text-slate-500 font-medium">
-                  <span className="flex items-center gap-1">
-                    <Mail className="w-3.5 h-3.5 text-slate-400" />
-                    {email || currentUser.email}
+                <div className="flex flex-wrap sm:flex-nowrap items-center justify-center sm:justify-start gap-x-3 gap-y-1 text-xs text-slate-500 font-medium">
+                  <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+                    <Mail className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                    <span>{email || currentUser.email}</span>
                   </span>
-                  <span>•</span>
-                  <span className="flex items-center gap-1">
-                    <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                    {city}, {state}
+                  <span className="hidden sm:inline text-slate-300 select-none">•</span>
+                  <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+                    <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                    <span>{[city, state].filter(Boolean).join(', ') || 'Mumbai, Maharashtra'}</span>
                   </span>
-                  <span>•</span>
-                  <span className="flex items-center gap-1">
-                    <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                    Member since {currentUser.createdAt || 'Aug 2026'}
+                  <span className="hidden sm:inline text-slate-300 select-none">•</span>
+                  <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+                    <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                    <span>
+                      Member since {currentUser.createdAt ? (currentUser.createdAt.includes('-') ? new Date(currentUser.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : currentUser.createdAt) : 'Aug 2026'}
+                    </span>
                   </span>
                 </div>
               </div>
