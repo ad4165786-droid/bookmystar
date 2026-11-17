@@ -782,13 +782,6 @@ export const CommercialLandingPage: React.FC = () => {
                   : (authMode === 'signin' ? 'Creator Studio Login' : 'Influencer Registration')
                 }
               </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
-                {activeRoleTab === 'user'
-                  ? (authMode === 'signin' ? 'Sign in to book and join 1-on-1 star calls' : 'Join thousands of fans connecting with stars')
-                  : (authMode === 'signin' ? 'Access your creator earnings and call studio' : 'Start monetizing your time with direct 1-on-1 fan calls')
-
-                }
-              </p>
             </div>
 
             {/* ROLE SWITCH TABS: User Sign In vs Influencer Sign In */}
@@ -930,7 +923,7 @@ export const CommercialLandingPage: React.FC = () => {
                   /* User Registration */
                   <>
                     <div>
-                      <label className="block text-slate-700 font-bold mb-1">Full Legal Name</label>
+                      <label className="block text-slate-700 font-bold mb-1">Full Name</label>
                       <input
                         type="text"
                         value={regName}

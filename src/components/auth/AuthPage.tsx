@@ -314,12 +314,6 @@ export const AuthPage: React.FC = () => {
                         : (authMode === 'signin' ? 'Creator Studio Login' : 'Influencer Registration')
                       }
                     </h3>
-                    <p className="text-xs text-slate-500 mt-0.5">
-                      {activeRoleTab === 'user'
-                        ? (authMode === 'signin' ? 'Sign in to book and join 1-on-1 star calls' : 'Join thousands of fans connecting with stars')
-                        : (authMode === 'signin' ? 'Manage your availability, bookings and payouts' : '')
-                      }
-                    </p>
                   </div>
 
                   <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase ${activeRoleTab === 'user'
