@@ -35,7 +35,7 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({ booking, onClose }) 
       }}
     >
       <div className="relative w-full max-w-2xl rounded-2xl bg-white text-slate-900 border border-slate-200 shadow-2xl overflow-hidden p-8">
-        
+
         {/* Header Controls */}
         <div className="flex items-center justify-between pb-6 border-b border-slate-200">
           <div className="flex items-center gap-2">
@@ -67,7 +67,7 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({ booking, onClose }) 
 
         {/* Invoice Details */}
         <div className="py-6 space-y-6 text-xs">
-          
+
           <div className="grid grid-cols-2 gap-6">
             <div>
               <span className="text-[10px] uppercase font-bold text-slate-400">Billed To (Customer):</span>

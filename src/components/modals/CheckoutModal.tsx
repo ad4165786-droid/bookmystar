@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { 
-  X, 
-  ShieldCheck, 
-  Clock, 
-  Calendar, 
-  Video, 
-  PhoneCall, 
-  CheckCircle2, 
-  Lock, 
-  CreditCard, 
-  Smartphone, 
-  Building2, 
+import {
+  X,
+  ShieldCheck,
+  Clock,
+  Calendar,
+  Video,
+  PhoneCall,
+  CheckCircle2,
+  Lock,
+  CreditCard,
+  Smartphone,
+  Building2,
   AlertCircle,
   FileText,
   QrCode,
@@ -21,14 +21,14 @@ import { Booking } from '../../types';
 
 export const CheckoutModal: React.FC = () => {
   const { checkoutFlow, closeCheckout, createBooking, startCall } = useApp();
-  
+
   const [selectedMethod, setSelectedMethod] = useState<'upi' | 'card' | 'netbanking'>('upi');
   const [upiId, setUpiId] = useState('');
   const [cardNumber, setCardNumber] = useState('4532 8812 9021 3418');
   const [cardExpiry, setCardExpiry] = useState('08/29');
   const [cardCvv, setCardCvv] = useState('412');
   const [selectedBank, setSelectedBank] = useState('HDFC Bank');
-  
+
   const [isProcessing, setIsProcessing] = useState(false);
   const [confirmedBooking, setConfirmedBooking] = useState<Booking | null>(null);
 
@@ -46,7 +46,7 @@ export const CheckoutModal: React.FC = () => {
     try {
       // Simulate server-side payment verification delay
       await new Promise(r => setTimeout(r, 1400));
-      
+
       const newBooking = await createBooking({
         influencerId: influencer.id,
         callType,
@@ -68,7 +68,7 @@ export const CheckoutModal: React.FC = () => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn">
       <div className="relative w-full max-w-xl rounded-2xl bg-[#121927] border border-slate-700/80 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
-        
+
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900/60">
           <div className="flex items-center gap-2">
@@ -93,7 +93,7 @@ export const CheckoutModal: React.FC = () => {
 
         {/* Content Body */}
         <div className="p-6 overflow-y-auto space-y-6">
-          
+
           {confirmedBooking ? (
             /* Success State */
             <div className="text-center py-4 space-y-5">
@@ -202,11 +202,10 @@ export const CheckoutModal: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setSelectedMethod('upi')}
-                    className={`flex flex-col items-center justify-center p-3 rounded-xl border text-xs font-semibold transition-all ${
-                      selectedMethod === 'upi'
-                        ? 'bg-brand-900/40 border-brand-500 text-brand-300 shadow-glow'
-                        : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-white'
-                    }`}
+                    className={`flex flex-col items-center justify-center p-3 rounded-xl border text-xs font-semibold transition-all ${selectedMethod === 'upi'
+                      ? 'bg-brand-900/40 border-brand-500 text-brand-300 shadow-glow'
+                      : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-white'
+                      }`}
                   >
                     <Smartphone className="w-5 h-5 mb-1 text-emerald-400" />
                     <span>UPI / QR</span>
@@ -215,11 +214,10 @@ export const CheckoutModal: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setSelectedMethod('card')}
-                    className={`flex flex-col items-center justify-center p-3 rounded-xl border text-xs font-semibold transition-all ${
-                      selectedMethod === 'card'
-                        ? 'bg-brand-900/40 border-brand-500 text-brand-300 shadow-glow'
-                        : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-white'
-                    }`}
+                    className={`flex flex-col items-center justify-center p-3 rounded-xl border text-xs font-semibold transition-all ${selectedMethod === 'card'
+                      ? 'bg-brand-900/40 border-brand-500 text-brand-300 shadow-glow'
+                      : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-white'
+                      }`}
                   >
                     <CreditCard className="w-5 h-5 mb-1 text-blue-400" />
                     <span>Cards (Debit/Credit)</span>
@@ -228,11 +226,10 @@ export const CheckoutModal: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setSelectedMethod('netbanking')}
-                    className={`flex flex-col items-center justify-center p-3 rounded-xl border text-xs font-semibold transition-all ${
-                      selectedMethod === 'netbanking'
-                        ? 'bg-brand-900/40 border-brand-500 text-brand-300 shadow-glow'
-                        : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-white'
-                    }`}
+                    className={`flex flex-col items-center justify-center p-3 rounded-xl border text-xs font-semibold transition-all ${selectedMethod === 'netbanking'
+                      ? 'bg-brand-900/40 border-brand-500 text-brand-300 shadow-glow'
+                      : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-white'
+                      }`}
                   >
                     <Building2 className="w-5 h-5 mb-1 text-amber-400" />
                     <span>Net Banking</span>
