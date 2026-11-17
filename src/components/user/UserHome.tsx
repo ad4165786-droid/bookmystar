@@ -147,9 +147,6 @@ export const UserHome: React.FC = () => {
             <h2 className="text-xl sm:text-2xl font-black text-[#0B132B] mt-2 tracking-tight">
               Explore Verified Creators & Stars
             </h2>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Book private 1-on-1 audio and high-definition video calls with your favorite influencers.
-            </p>
           </div>
 
           <div className="flex items-center gap-2 self-start md:self-auto">
@@ -159,17 +156,17 @@ export const UserHome: React.FC = () => {
           </div>
         </div>
 
-        {/* Search Input & Primary Controls */}
-        <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
+        {/* Search Input & Primary Controls - Single Row Clean Alignment */}
+        <div className="flex flex-col xl:flex-row gap-3 items-stretch xl:items-center justify-between">
           {/* Search Field */}
-          <div className="relative w-full lg:w-96">
+          <div className="relative flex-1 max-w-md min-w-[260px]">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
               type="text"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               placeholder="Search creator by name or username..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#F8F9FC] border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/10 transition-all font-medium"
+              className="w-full pl-10 pr-9 py-2.5 rounded-xl bg-[#F8F9FC] border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/10 transition-all font-medium h-10"
             />
             {searchQuery && (
               <button
@@ -181,13 +178,13 @@ export const UserHome: React.FC = () => {
             )}
           </div>
 
-          {/* Secondary Controls (Call Type, Price Slider, Verified) */}
-          <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+          {/* Secondary Controls (Call Type, Price Slider, Verified) - Fixed Single Horizontal Row */}
+          <div className="flex items-center gap-2.5 flex-nowrap overflow-x-auto pb-1 xl:pb-0 scrollbar-none shrink-0">
             {/* Call Type Pill Switcher */}
-            <div className="flex items-center bg-[#F8F9FC] p-1 rounded-xl border border-slate-200 text-xs">
+            <div className="flex items-center bg-[#F8F9FC] p-1 rounded-xl border border-slate-200 text-xs shrink-0 h-10">
               <button
                 onClick={() => setCallTypeFilter('all')}
-                className={`px-3 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+                className={`px-3 py-1 rounded-lg font-bold transition-all cursor-pointer h-full ${
                   callTypeFilter === 'all'
                     ? 'bg-white text-[#0B132B] shadow-xs'
                     : 'text-slate-500 hover:text-slate-900'
@@ -197,29 +194,29 @@ export const UserHome: React.FC = () => {
               </button>
               <button
                 onClick={() => setCallTypeFilter('video')}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-bold transition-all cursor-pointer h-full ${
                   callTypeFilter === 'video'
                     ? 'bg-purple-50 text-purple-700 shadow-xs border border-purple-200'
                     : 'text-slate-500 hover:text-slate-900'
                 }`}
               >
-                <Video className="w-3 h-3 text-purple-600" /> Video
+                <Video className="w-3.5 h-3.5 text-purple-600" /> Video
               </button>
               <button
                 onClick={() => setCallTypeFilter('voice')}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-bold transition-all cursor-pointer h-full ${
                   callTypeFilter === 'voice'
                     ? 'bg-emerald-50 text-emerald-700 shadow-xs border border-emerald-200'
                     : 'text-slate-500 hover:text-slate-900'
                 }`}
               >
-                <PhoneCall className="w-3 h-3 text-emerald-600" /> Voice
+                <PhoneCall className="w-3.5 h-3.5 text-emerald-600" /> Voice
               </button>
             </div>
 
             {/* Price Slider Badge */}
-            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-[#F8F9FC] border border-slate-200 text-xs text-slate-700">
-              <span className="text-slate-500 font-medium">Max Price:</span>
+            <div className="flex items-center gap-2 px-3 rounded-xl bg-[#F8F9FC] border border-slate-200 text-xs text-slate-700 shrink-0 h-10">
+              <span className="text-slate-500 font-medium">Max:</span>
               <span className="font-extrabold text-[#0B132B]">₹{maxPrice}</span>
               <input
                 type="range"
@@ -228,17 +225,17 @@ export const UserHome: React.FC = () => {
                 step="100"
                 value={maxPrice}
                 onChange={e => setMaxPrice(Number(e.target.value))}
-                className="w-20 accent-brand-500 cursor-pointer"
+                className="w-16 sm:w-20 accent-brand-500 cursor-pointer"
               />
             </div>
 
             {/* Verified Filter Checkbox */}
-            <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#F8F9FC] border border-slate-200 text-xs text-slate-700 font-semibold cursor-pointer hover:border-slate-300">
+            <label className="flex items-center gap-2 px-3 rounded-xl bg-[#F8F9FC] border border-slate-200 text-xs text-slate-700 font-semibold cursor-pointer hover:border-slate-300 shrink-0 select-none h-10">
               <input
                 type="checkbox"
                 checked={onlyVerified}
                 onChange={e => setOnlyVerified(e.target.checked)}
-                className="rounded text-brand-600 focus:ring-brand-500"
+                className="rounded text-brand-600 focus:ring-brand-500 cursor-pointer"
               />
               <CheckCircle2 className="w-3.5 h-3.5 text-sky-500" />
               <span>Verified Only</span>
@@ -252,11 +249,10 @@ export const UserHome: React.FC = () => {
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                selectedCategory === cat
+              className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${selectedCategory === cat
                   ? 'bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-md shadow-brand-500/25 ring-1 ring-brand-400/30'
                   : 'bg-white text-slate-600 hover:text-[#0B132B] hover:bg-slate-50 border border-slate-200/90 shadow-2xs'
-              }`}
+                }`}
             >
               {cat}
             </button>
@@ -534,11 +530,10 @@ export const UserHome: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setModalCallType('video')}
-                      className={`flex items-center justify-center gap-2 p-3 rounded-2xl border font-bold transition-all cursor-pointer ${
-                        modalCallType === 'video'
+                      className={`flex items-center justify-center gap-2 p-3 rounded-2xl border font-bold transition-all cursor-pointer ${modalCallType === 'video'
                           ? 'bg-purple-50/70 border-2 border-purple-500 text-purple-800 shadow-xs ring-1 ring-purple-500/20'
                           : 'bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100'
-                      }`}
+                        }`}
                     >
                       <Video className="w-4 h-4 text-purple-600" />
                       <span>HD Video Call</span>
@@ -548,11 +543,10 @@ export const UserHome: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setModalCallType('voice')}
-                      className={`flex items-center justify-center gap-2 p-3 rounded-2xl border font-bold transition-all cursor-pointer ${
-                        modalCallType === 'voice'
+                      className={`flex items-center justify-center gap-2 p-3 rounded-2xl border font-bold transition-all cursor-pointer ${modalCallType === 'voice'
                           ? 'bg-emerald-50/70 border-2 border-emerald-500 text-emerald-800 shadow-xs ring-1 ring-emerald-500/20'
                           : 'bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100'
-                      }`}
+                        }`}
                     >
                       <PhoneCall className="w-4 h-4 text-emerald-600" />
                       <span>Private Voice Call</span>
@@ -575,11 +569,10 @@ export const UserHome: React.FC = () => {
                         key={dur}
                         type="button"
                         onClick={() => setModalDuration(dur)}
-                        className={`p-3 rounded-2xl border text-center transition-all cursor-pointer ${
-                          isSelected
+                        className={`p-3 rounded-2xl border text-center transition-all cursor-pointer ${isSelected
                             ? 'border-2 border-brand-500 bg-brand-50/50 shadow-xs ring-1 ring-brand-500/20'
                             : 'border border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
-                        }`}
+                          }`}
                       >
                         <div className={`text-xs font-bold ${isSelected ? 'text-brand-900' : 'text-slate-800'}`}>
                           {dur} Minutes
