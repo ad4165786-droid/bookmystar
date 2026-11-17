@@ -232,209 +232,121 @@ export const CommercialLandingPage: React.FC = () => {
     });
   };
 
-  // Featured Hero Star (Vikram Rajput)
-  const heroStar = influencers[0] || {
-    id: 'inf-hero',
-    name: 'Vikram Rajput',
-    handle: '@vortex_esports',
-    category: 'Gaming',
-    avatar: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=600&auto=format&fit=crop&q=80',
-    bio: 'Pro Esports Caster, Valorant analyst & PC Build Specialist. 1-on-1 strategic gameplay reviews and PC optimizations.',
-    rating: 4.98,
-    reviewCount: 412,
-    completedCallsCount: 1420,
-    rates: { voice10: 349, voice15: 499, voice30: 899, video10: 699, video15: 999, video30: 1799 }
-  };
-
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-brand-500 selection:text-white">
 
-      {/* 2. HERO SECTION (2 Columns, matching PetCare layout) */}
-      <section className="relative overflow-hidden pt-12 pb-20 bg-gradient-to-b from-white via-orange-50/20 to-white border-b border-slate-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+      {/* 2. HERO SECTION */}
+      <section className="relative overflow-hidden pt-16 pb-20 bg-gradient-to-b from-white via-orange-50/20 to-white border-b border-slate-100">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
 
-            {/* Left Column: Headline, Trust Badges, CTAs (7 cols) */}
-            <div className="lg:col-span-7 space-y-6">
-
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-xs font-bold tracking-wide">
-                <ShieldCheck className="w-4 h-4 text-brand-600" />
-                <span>India's #1 Verified Influencer Call Platform</span>
-              </div>
-
-              <div className="space-y-4">
-                <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.12]">
-                  Connect With Your <br />
-                  <span className="bg-gradient-to-r from-brand-600 via-orange-500 to-amber-500 bg-clip-text text-transparent">
-                    Favourite Stars
-                  </span>
-                </h1>
-
-                <p className="text-base sm:text-lg text-slate-600 max-w-xl font-normal leading-relaxed">
-                  Book exclusive voice and video calls with your favourite influencers. Private, high-definition 1-on-1 sessions with top creators in Gaming, Music, Tech, Fashion, and Entertainment.
-                </p>
-              </div>
-
-              {/* Dual CTA Buttons */}
-              <div className="flex flex-wrap items-center gap-4 pt-2">
-                <button
-                  type="button"
-                  onClick={() => openAuthWithRole('user', 'signin')}
-                  className="px-6 py-4 rounded-2xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-sm shadow-orange-glow transition-all flex items-center gap-2 transform active:scale-95 cursor-pointer"
-                >
-                  <span>Explore Stars Now</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => openAuthWithRole('influencer', 'signup')}
-                  className="px-6 py-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm shadow-soft transition-all flex items-center gap-2"
-                >
-                  <Sparkles className="w-4 h-4 text-brand-400" />
-                  <span>Join as Creator</span>
-                </button>
-              </div>
-
-              {/* Overlapping Fan & Star Avatars + Trust Score */}
-              <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-slate-200/80">
-                <div className="flex -space-x-3 overflow-hidden p-1">
-                  <img
-                    className="inline-block h-12 w-12 rounded-full ring-2 ring-white object-cover shadow-sm"
-                    src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=120&auto=format&fit=crop&q=80"
-                    alt="Vikram Rajput"
-                  />
-                  <img
-                    className="inline-block h-12 w-12 rounded-full ring-2 ring-white object-cover shadow-sm"
-                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80"
-                    alt="Ananya Roy"
-                  />
-                  <img
-                    className="inline-block h-12 w-12 rounded-full ring-2 ring-white object-cover shadow-sm"
-                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80"
-                    alt="Kabir Dev"
-                  />
-                  <img
-                    className="inline-block h-12 w-12 rounded-full ring-2 ring-white object-cover shadow-sm"
-                    src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&auto=format&fit=crop&q=80"
-                    alt="Mira Kapoor"
-                  />
-                </div>
-
-                <div>
-                  <div className="flex items-center gap-1 text-amber-500 font-bold text-sm">
-                    {[1, 2, 3, 4, 5].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
-                    ))}
-                    <span className="text-slate-900 ml-1 font-heading font-extrabold">4.9/5.0</span>
-                  </div>
-                  <p className="text-xs text-slate-500 font-medium">Over 2,400+ Verified 1-on-1 Sessions Completed</p>
-                </div>
-              </div>
-
-              {/* Value Props Row */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 max-w-xl">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-orange-50 text-brand-600 flex items-center justify-center font-bold text-xs shrink-0">
-                    <Video className="w-4 h-4" />
-                  </div>
-                  <div className="text-xs">
-                    <div className="font-bold text-slate-900">HD 1080p Video</div>
-                    <div className="text-slate-500">Crystal clear streams</div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs shrink-0">
-                    <PhoneCall className="w-4 h-4" />
-                  </div>
-                  <div className="text-xs">
-                    <div className="font-bold text-slate-900">Voice Audio Mode</div>
-                    <div className="text-slate-500">Rates from ₹199</div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-xs shrink-0">
-                    <CheckCircle2 className="w-4 h-4" />
-                  </div>
-                  <div className="text-xs">
-                    <div className="font-bold text-slate-900">Instant UPI & QR</div>
-                    <div className="text-slate-500">Secure Indian escrow</div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-            {/* Right Column: Interactive Featured Specialist Card (5 cols) */}
-            <div className="lg:col-span-5 relative">
-              <div className="relative mx-auto max-w-md bg-white rounded-3xl border border-slate-200/90 shadow-soft-lg p-5 sm:p-6 overflow-hidden">
-
-                {/* Floating Live Badge */}
-                <div className="absolute top-4 left-4 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md text-white text-xs font-bold border border-white/10 shadow-sm">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>Available in 15 mins</span>
-                </div>
-
-                {/* Floating Rating Pill */}
-                <div className="absolute top-4 right-4 z-10 flex items-center gap-1 px-3 py-1.5 rounded-full bg-amber-400 text-slate-900 text-xs font-black shadow-md">
-                  <Star className="w-3.5 h-3.5 fill-slate-900" />
-                  <span>4.98</span>
-                </div>
-
-                {/* Star Image */}
-                <div className="relative rounded-2xl overflow-hidden aspect-[4/3] bg-slate-100 mb-5 group">
-                  <img
-                    src={heroStar.avatar}
-                    alt={heroStar.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex flex-col justify-end p-4 text-white">
-                    <div className="flex items-center gap-2">
-                      <span className="font-heading font-extrabold text-xl">{heroStar.name}</span>
-                      <BadgeCheck className="w-5 h-5 text-brand-400 fill-brand-400" />
-                    </div>
-                    <span className="text-xs text-slate-300 font-mono">{heroStar.handle}</span>
-                  </div>
-                </div>
-
-                {/* Star Bio Snippet */}
-                <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed mb-4">
-                  {heroStar.bio}
-                </p>
-
-                {/* Rates Row */}
-                <div className="grid grid-cols-2 gap-2.5 p-3 rounded-2xl bg-slate-50 border border-slate-100 mb-4">
-                  <div className="text-left">
-                    <span className="text-[10px] uppercase font-bold text-slate-400 block">Voice Call</span>
-                    <span className="text-sm font-extrabold text-slate-900 font-mono">₹499 <span className="text-[10px] font-normal text-slate-500">/ 15m</span></span>
-                  </div>
-                  <div className="text-left">
-                    <span className="text-[10px] uppercase font-bold text-slate-400 block">Video Call</span>
-                    <span className="text-sm font-extrabold text-brand-600 font-mono">₹999 <span className="text-[10px] font-normal text-slate-500">/ 15m</span></span>
-                  </div>
-                </div>
-
-                {/* Interactive Instant Book Button */}
-                <button
-                  type="button"
-                  onClick={() => handleBookStar(influencers[0] || (heroStar as any))}
-                  className="w-full py-3.5 px-4 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs shadow-orange-glow transition-all flex items-center justify-center gap-2"
-                >
-                  <Sparkles className="w-4 h-4" />
-                  <span>Book 1-on-1 Session with {heroStar.name.split(' ')[0]}</span>
-                </button>
-
-                <div className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-slate-500 font-medium">
-                  <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
-                  <span>100% Escrow Protected • Instant UPI & NetBanking</span>
-                </div>
-
-              </div>
-            </div>
-
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-xs font-bold tracking-wide">
+            <ShieldCheck className="w-4 h-4 text-brand-600" />
+            <span>India's #1 Verified Influencer Call Platform</span>
           </div>
+
+          <div className="space-y-4">
+            <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.12]">
+              Connect With Your <br />
+              <span className="bg-gradient-to-r from-brand-600 via-orange-500 to-amber-500 bg-clip-text text-transparent">
+                Favourite Stars
+              </span>
+            </h1>
+
+            <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto font-normal leading-relaxed">
+              Book exclusive voice and video calls with your favourite influencers. Private, high-definition 1-on-1 sessions with top creators in Gaming, Music, Tech, Fashion, and Entertainment.
+            </p>
+          </div>
+
+          {/* Dual CTA Buttons */}
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+            <button
+              type="button"
+              onClick={() => openAuthWithRole('user', 'signin')}
+              className="px-6 py-4 rounded-2xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-sm shadow-orange-glow transition-all flex items-center gap-2 transform active:scale-95 cursor-pointer"
+            >
+              <span>Explore Stars Now</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => openAuthWithRole('influencer', 'signup')}
+              className="px-6 py-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm shadow-soft transition-all flex items-center gap-2 cursor-pointer"
+            >
+              <Sparkles className="w-4 h-4 text-brand-400" />
+              <span>Join as Creator</span>
+            </button>
+          </div>
+
+          {/* Overlapping Fan & Star Avatars + Trust Score */}
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-4 border-t border-slate-200/80">
+            <div className="flex -space-x-3 overflow-hidden p-1">
+              <img
+                className="inline-block h-12 w-12 rounded-full ring-2 ring-white object-cover shadow-sm"
+                src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=120&auto=format&fit=crop&q=80"
+                alt="Vikram Rajput"
+              />
+              <img
+                className="inline-block h-12 w-12 rounded-full ring-2 ring-white object-cover shadow-sm"
+                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80"
+                alt="Ananya Roy"
+              />
+              <img
+                className="inline-block h-12 w-12 rounded-full ring-2 ring-white object-cover shadow-sm"
+                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80"
+                alt="Kabir Dev"
+              />
+              <img
+                className="inline-block h-12 w-12 rounded-full ring-2 ring-white object-cover shadow-sm"
+                src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&auto=format&fit=crop&q=80"
+                alt="Mira Kapoor"
+              />
+            </div>
+
+            <div className="text-left">
+              <div className="flex items-center gap-1 text-amber-500 font-bold text-sm">
+                {[1, 2, 3, 4, 5].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                ))}
+                <span className="text-slate-900 ml-1 font-heading font-extrabold">4.9/5.0</span>
+              </div>
+              <p className="text-xs text-slate-500 font-medium">Over 2,400+ Verified 1-on-1 Sessions Completed</p>
+            </div>
+          </div>
+
+          {/* Value Props Row */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 max-w-xl mx-auto text-left">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-orange-50 text-brand-600 flex items-center justify-center font-bold text-xs shrink-0">
+                <Video className="w-4 h-4" />
+              </div>
+              <div className="text-xs">
+                <div className="font-bold text-slate-900">HD 1080p Video</div>
+                <div className="text-slate-500">Crystal clear streams</div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs shrink-0">
+                <PhoneCall className="w-4 h-4" />
+              </div>
+              <div className="text-xs">
+                <div className="font-bold text-slate-900">Voice Audio Mode</div>
+                <div className="text-slate-500">Rates from ₹199</div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-xs shrink-0">
+                <CheckCircle2 className="w-4 h-4" />
+              </div>
+              <div className="text-xs">
+                <div className="font-bold text-slate-900">Instant UPI & QR</div>
+                <div className="text-slate-500">Secure Indian escrow</div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 

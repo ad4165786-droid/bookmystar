@@ -16,7 +16,7 @@ export const NotFoundPage: React.FC = () => {
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col justify-between font-sans selection:bg-brand-500 selection:text-white">
       {/* Top Bar */}
       <header className="w-full border-b border-slate-200/80 bg-white/95 backdrop-blur-md px-6 py-4 flex items-center justify-between">
-        <div 
+        <div
           onClick={() => navigate('/')}
           className="flex items-center gap-3 cursor-pointer"
         >
@@ -59,11 +59,11 @@ export const NotFoundPage: React.FC = () => {
               <span>•</span>
               <span>Page Not Found</span>
             </div>
-            
+
             <h1 className="text-3xl font-black text-slate-900 tracking-tight">
               Lost in the Galaxy?
             </h1>
-            
+
             <p className="text-xs sm:text-sm text-slate-500 leading-relaxed max-w-md mx-auto">
               The page or route you were trying to access{' '}
               <code className="px-2 py-0.5 rounded-lg bg-slate-100 text-slate-800 font-mono text-xs font-bold border border-slate-200">

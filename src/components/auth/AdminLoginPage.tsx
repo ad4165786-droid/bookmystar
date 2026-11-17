@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { 
-  ShieldCheck, 
-  Lock, 
-  Mail, 
-  Key, 
-  ArrowRight, 
-  AlertTriangle, 
-  Eye, 
-  EyeOff, 
+import {
+  ShieldCheck,
+  Lock,
+  Mail,
+  Key,
+  ArrowRight,
+  AlertTriangle,
+  Eye,
+  EyeOff,
   Server,
   ArrowLeft
 } from 'lucide-react';
@@ -33,7 +33,7 @@ export const AdminLoginPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col justify-between selection:bg-brand-500 selection:text-white">
-      
+
       {/* Top Bar with Discreet Return to Platform */}
       <header className="w-full border-b border-slate-200/80 bg-white/90 backdrop-blur-md px-6 py-4 flex items-center justify-between">
         <button
@@ -53,7 +53,7 @@ export const AdminLoginPage: React.FC = () => {
       {/* Main Admin Authentication Box */}
       <main className="flex-1 flex items-center justify-center p-4">
         <div className="w-full max-w-md bg-white rounded-3xl border border-slate-200/90 shadow-soft-lg p-8 space-y-6 relative overflow-hidden">
-          
+
           {/* Subtle Top Accent bar */}
           <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-slate-900 via-brand-600 to-orange-500" />
 
@@ -62,7 +62,7 @@ export const AdminLoginPage: React.FC = () => {
             <div className="w-14 h-14 rounded-2xl bg-slate-900 text-brand-500 flex items-center justify-center mx-auto shadow-md">
               <ShieldCheck className="w-7 h-7" />
             </div>
-            
+
             <div>
               <h2 className="text-2xl font-black text-slate-900">Operations Command</h2>
               <p className="text-xs text-slate-500 mt-1 font-medium">

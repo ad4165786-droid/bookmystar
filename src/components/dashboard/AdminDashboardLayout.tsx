@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { 
-  ShieldCheck, 
-  LayoutDashboard, 
-  Users, 
-  Calendar, 
-  CreditCard, 
-  Percent, 
-  LifeBuoy, 
-  ShieldAlert, 
-  Bell, 
-  FileSpreadsheet, 
-  Lock, 
-  LogOut, 
-  Menu, 
-  X, 
+import {
+  ShieldCheck,
+  LayoutDashboard,
+  Users,
+  Calendar,
+  CreditCard,
+  Percent,
+  LifeBuoy,
+  ShieldAlert,
+  Bell,
+  FileSpreadsheet,
+  Lock,
+  LogOut,
+  Menu,
+  X,
   ChevronRight,
   Server,
   Sparkles
@@ -34,15 +34,15 @@ import { AdminReports } from '../admin/AdminReports';
 import { AdminAuditRoles } from '../admin/AdminAuditRoles';
 
 export const AdminDashboardLayout: React.FC = () => {
-  const { 
-    currentAdmin, 
+  const {
+    currentAdmin,
     currentPath,
     navigate,
-    activeView, 
-    setActiveView, 
-    logout, 
+    activeView,
+    setActiveView,
+    logout,
     notifications,
-    showToast 
+    showToast
   } = useApp();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -64,17 +64,16 @@ export const AdminDashboardLayout: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col lg:flex-row font-sans selection:bg-brand-500 selection:text-white">
-      
+
       {/* 1. Left Sidebar for Admin Console */}
-      <aside className={`fixed inset-y-0 left-0 z-40 w-72 bg-slate-950 text-white flex flex-col justify-between transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${
-        mobileMenuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
-      }`}>
-        
+      <aside className={`fixed inset-y-0 left-0 z-40 w-72 bg-slate-950 text-white flex flex-col justify-between transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${mobileMenuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
+        }`}>
+
         {/* Top: Logo & Operator Identity */}
         <div>
           {/* Logo Bar */}
           <div className="h-18 p-5 border-b border-slate-800 flex items-center justify-between">
-            <div 
+            <div
               className="flex items-center gap-3 cursor-pointer"
               onClick={() => {
                 setActiveView('overview');
@@ -94,7 +93,7 @@ export const AdminDashboardLayout: React.FC = () => {
               </div>
             </div>
 
-            <button 
+            <button
               onClick={() => setMobileMenuOpen(false)}
               className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white"
             >
@@ -136,11 +135,10 @@ export const AdminDashboardLayout: React.FC = () => {
                     navigate(item.path);
                     setMobileMenuOpen(false);
                   }}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
-                    isActive
-                      ? 'bg-amber-600 text-white shadow-md'
-                      : 'text-slate-300 hover:text-white hover:bg-slate-900'
-                  }`}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${isActive
+                    ? 'bg-amber-600 text-white shadow-md'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-900'
+                    }`}
                 >
                   <div className="flex items-center gap-3">
                     <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
@@ -168,7 +166,7 @@ export const AdminDashboardLayout: React.FC = () => {
 
       {/* Backdrop for mobile */}
       {mobileMenuOpen && (
-        <div 
+        <div
           onClick={() => setMobileMenuOpen(false)}
           className="fixed inset-0 bg-slate-900/60 z-30 lg:hidden"
         />
@@ -176,7 +174,7 @@ export const AdminDashboardLayout: React.FC = () => {
 
       {/* 2. Main Workspace Layout */}
       <div className="flex-1 lg:pl-72 flex flex-col min-h-screen">
-        
+
         {/* Top Header */}
         <header className="sticky top-0 z-20 h-16 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -199,7 +197,7 @@ export const AdminDashboardLayout: React.FC = () => {
 
           {/* Right Controls */}
           <div className="flex items-center gap-3">
-            
+
             <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-xs font-mono font-bold text-slate-700">
               <Server className="w-3.5 h-3.5 text-brand-600" />
               <span>Root Privileges Active</span>
