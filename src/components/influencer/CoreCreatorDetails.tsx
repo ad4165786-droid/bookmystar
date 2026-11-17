@@ -903,27 +903,6 @@ export const CoreCreatorDetails: React.FC = () => {
               <div className="flex items-center gap-3 pt-1 text-xs font-semibold text-slate-600 flex-wrap">
                 <span className="text-brand-600 font-mono font-bold">{handle || '@username'}</span>
               </div>
-
-              {/* Photo quick actions (URL / Remove) */}
-              <div className="flex items-center gap-3 pt-1 text-[11px]">
-                <button
-                  type="button"
-                  onClick={() => setShowUrlModal(true)}
-                  className="text-navy-600 hover:text-navy-800 font-semibold hover:underline inline-flex items-center gap-1 cursor-pointer"
-                >
-                  <LinkIcon className="w-3 h-3" />
-                  <span>Direct image URL</span>
-                </button>
-                <span className="text-slate-300">•</span>
-                <button
-                  type="button"
-                  onClick={handleRemovePhoto}
-                  className="text-rose-600 hover:text-rose-800 font-semibold hover:underline inline-flex items-center gap-1 cursor-pointer"
-                >
-                  <Trash2 className="w-3 h-3" />
-                  <span>Reset to initials</span>
-                </button>
-              </div>
             </div>
 
           </div>
@@ -1259,21 +1238,6 @@ export const CoreCreatorDetails: React.FC = () => {
             </div>
 
             <div className="space-y-4 md:col-span-1">
-              <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-slate-800">
-                  Years of Experience
-                </label>
-                <select
-                  value={experienceYears}
-                  onChange={e => setExperienceYears(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white transition-all"
-                >
-                  {EXPERIENCE_OPTIONS.map(opt => (
-                    <option key={opt} value={opt}>{opt}</option>
-                  ))}
-                </select>
-              </div>
-
               {/* Spoken Languages Pills */}
               <div className="space-y-1.5 pt-1">
                 <div className="flex items-center justify-between">
