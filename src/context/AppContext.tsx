@@ -129,6 +129,7 @@ interface AppContextType {
     submitterName: string;
     submitterRole: UserRole;
     category: GrievanceTicket['category'];
+    customCategory?: string;
     priority: GrievanceTicket['priority'];
     subject: string;
     description: string;
@@ -1069,6 +1070,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     submitterName: string;
     submitterRole: UserRole;
     category: GrievanceTicket['category'];
+    customCategory?: string;
     priority: GrievanceTicket['priority'];
     subject: string;
     description: string;
@@ -1083,6 +1085,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       submitterRole: ticket.submitterRole,
       bookingRef: ticket.bookingRef,
       category: ticket.category,
+      customCategory: ticket.customCategory,
       priority: ticket.priority,
       subject: ticket.subject,
       description: ticket.description,

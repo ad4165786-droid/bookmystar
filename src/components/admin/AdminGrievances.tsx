@@ -83,6 +83,7 @@ export const AdminGrievances: React.FC = () => {
             <option value="payment">Payment / Billing</option>
             <option value="behaviour">Behavior / Boundary</option>
             <option value="booking">Booking / Schedule</option>
+            <option value="other">Other / Custom</option>
           </select>
         </div>
       </div>
@@ -124,7 +125,7 @@ export const AdminGrievances: React.FC = () => {
                 <span className="font-semibold text-slate-300">
                   {ticket.submitterName} ({ticket.submitterRole})
                 </span>
-                <span className="capitalize text-amber-400 font-medium">{ticket.category}</span>
+                <span className="capitalize text-amber-400 font-medium">{ticket.customCategory || ticket.category}</span>
               </div>
             </div>
           ))}
@@ -160,7 +161,7 @@ export const AdminGrievances: React.FC = () => {
                 <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-400">
                   <span>Filed by: <strong className="text-white">{selectedTicket.submitterName}</strong></span>
                   <span>•</span>
-                  <span>Category: <strong className="text-amber-300 capitalize">{selectedTicket.category}</strong></span>
+                  <span>Category: <strong className="text-amber-300 capitalize">{selectedTicket.customCategory || selectedTicket.category}</strong></span>
                   {selectedTicket.bookingRef && (
                     <>
                       <span>•</span>

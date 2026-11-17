@@ -29,6 +29,7 @@ export const UserGrievances: React.FC = () => {
 
   // Form states
   const [category, setCategory] = useState<GrievanceTicket['category']>('call');
+  const [customCategory, setCustomCategory] = useState('');
   const [priority, setPriority] = useState<GrievanceTicket['priority']>('medium');
   const [subject, setSubject] = useState('');
   const [description, setDescription] = useState('');
@@ -42,13 +43,15 @@ export const UserGrievances: React.FC = () => {
   const handleCreateTicket = (e: React.FormEvent) => {
     e.preventDefault();
     if (!subject.trim() || !description.trim()) return;
+    if (category === 'other' && !customCategory.trim()) return;
 
     submitGrievance({
       raisedBy: 'user',
       submitterId: currentUser.id,
       submitterName: currentUser.name,
       submitterRole: 'user',
-      category,
+      category: category === 'other' ? (customCategory.trim() || 'other') : category,
+      customCategory: category === 'other' ? customCategory.trim() : undefined,
       priority,
       subject: subject.trim(),
       description: description.trim(),
@@ -57,6 +60,8 @@ export const UserGrievances: React.FC = () => {
 
     setSubject('');
     setDescription('');
+    setCustomCategory('');
+    setCategory('call');
     setShowNewModal(false);
   };
 
@@ -130,7 +135,9 @@ export const UserGrievances: React.FC = () => {
                 </p>
 
                 <div className="mt-3 flex items-center justify-between text-[10px] text-slate-400 pt-2 border-t border-slate-100">
-                  <span className="capitalize font-medium text-slate-600">Category: {ticket.category}</span>
+                  <span className="capitalize font-medium text-slate-600">
+                    Category: {ticket.customCategory || ticket.category}
+                  </span>
                   <span>{ticket.createdAt.split(' ')[0]}</span>
                 </div>
               </div>
@@ -238,17 +245,40 @@ export const UserGrievances: React.FC = () => {
             <form onSubmit={handleCreateTicket} className="space-y-4 text-xs">
               <div>
                 <label className="block text-slate-700 font-bold mb-1.5">Issue Category</label>
-                <select
-                  value={category}
-                  onChange={e => setCategory(e.target.value as any)}
-                  className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-brand-500"
-                >
-                  <option value="call">Call Disconnect / Technical Glitch</option>
-                  <option value="payment">Payment / Refund / Billing</option>
-                  <option value="booking">Booking / Schedule Issue</option>
-                  <option value="behaviour">Influencer Conduct / Boundary Issue</option>
-                  <option value="account">Account Access</option>
-                </select>
+                <div className="space-y-2">
+                  <select
+                    value={category}
+                    onChange={e => {
+                      const val = e.target.value as any;
+                      setCategory(val);
+                      if (val !== 'other') {
+                        setCustomCategory('');
+                      }
+                    }}
+                    className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-brand-500"
+                  >
+                    <option value="call">Call Disconnect / Technical Glitch</option>
+                    <option value="payment">Payment / Refund / Billing</option>
+                    <option value="booking">Booking / Schedule Issue</option>
+                    <option value="behaviour">Influencer Conduct / Boundary Issue</option>
+                    <option value="account">Account Access</option>
+                    <option value="other">Other</option>
+                  </select>
+
+                  {category === 'other' && (
+                    <div className="animate-fadeIn">
+                      <input
+                        type="text"
+                        value={customCategory}
+                        onChange={e => setCustomCategory(e.target.value)}
+                        placeholder="Please enter your custom issue category..."
+                        className="w-full p-2.5 rounded-xl bg-white border border-brand-500 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500/20 shadow-xs"
+                        required
+                        autoFocus
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div>

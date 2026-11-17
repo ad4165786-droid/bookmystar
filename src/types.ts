@@ -235,7 +235,8 @@ export interface GrievanceTicket {
   targetId?: string;
   targetName?: string;
   bookingRef?: string;
-  category: 'payment' | 'booking' | 'call' | 'account' | 'behaviour';
+  category: 'payment' | 'booking' | 'call' | 'account' | 'behaviour' | 'other' | (string & {});
+  customCategory?: string;
   priority: 'low' | 'medium' | 'high';
   subject: string;
   description: string;
