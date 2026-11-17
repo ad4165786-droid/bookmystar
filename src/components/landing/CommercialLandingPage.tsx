@@ -1,22 +1,22 @@
 import React, { useState, useMemo } from 'react';
 import { useApp } from '../../context/AppContext';
 import { Category, CallType, InfluencerProfile } from '../../types';
-import { 
-  Sparkles, 
-  User, 
-  Video, 
-  Mail, 
-  Lock, 
-  ArrowRight, 
-  CheckCircle2, 
-  Star, 
-  Eye, 
-  EyeOff, 
-  KeyRound, 
+import {
+  Sparkles,
+  User,
+  Video,
+  Mail,
+  Lock,
+  ArrowRight,
+  CheckCircle2,
+  Star,
+  Eye,
+  EyeOff,
+  KeyRound,
   X,
-  PhoneCall, 
-  ShieldCheck, 
-  Zap, 
+  PhoneCall,
+  ShieldCheck,
+  Zap,
   AtSign,
   Search,
   SlidersHorizontal,
@@ -44,19 +44,19 @@ const CATEGORIES: ('All' | Category)[] = [
 ];
 
 export const CommercialLandingPage: React.FC = () => {
-  const { 
-    isAuthenticated, 
-    currentRole, 
-    currentUser, 
-    currentInfluencer, 
-    currentAdmin, 
-    navigate, 
+  const {
+    isAuthenticated,
+    currentRole,
+    currentUser,
+    currentInfluencer,
+    currentAdmin,
+    navigate,
     logout,
-    influencers, 
-    loginUser, 
-    registerUser, 
-    loginInfluencer, 
-    registerInfluencer, 
+    influencers,
+    loginUser,
+    registerUser,
+    loginInfluencer,
+    registerInfluencer,
     showToast,
     openCheckout
   } = useApp();
@@ -253,10 +253,10 @@ export const CommercialLandingPage: React.FC = () => {
       <section className="relative overflow-hidden pt-12 pb-20 bg-gradient-to-b from-white via-orange-50/20 to-white border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-            
+
             {/* Left Column: Headline, Trust Badges, CTAs (7 cols) */}
             <div className="lg:col-span-7 space-y-6">
-              
+
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-xs font-bold tracking-wide">
                 <ShieldCheck className="w-4 h-4 text-brand-600" />
                 <span>India's #1 Verified Influencer Call Platform</span>
@@ -269,7 +269,7 @@ export const CommercialLandingPage: React.FC = () => {
                     Favourite Stars
                   </span>
                 </h1>
-                
+
                 <p className="text-base sm:text-lg text-slate-600 max-w-xl font-normal leading-relaxed">
                   Book exclusive voice and video calls with your favourite influencers. Private, high-definition 1-on-1 sessions with top creators in Gaming, Music, Tech, Fashion, and Entertainment.
                 </p>
@@ -369,7 +369,7 @@ export const CommercialLandingPage: React.FC = () => {
             {/* Right Column: Interactive Featured Specialist Card (5 cols) */}
             <div className="lg:col-span-5 relative">
               <div className="relative mx-auto max-w-md bg-white rounded-3xl border border-slate-200/90 shadow-soft-lg p-5 sm:p-6 overflow-hidden">
-                
+
                 {/* Floating Live Badge */}
                 <div className="absolute top-4 left-4 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md text-white text-xs font-bold border border-white/10 shadow-sm">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -384,9 +384,9 @@ export const CommercialLandingPage: React.FC = () => {
 
                 {/* Star Image */}
                 <div className="relative rounded-2xl overflow-hidden aspect-[4/3] bg-slate-100 mb-5 group">
-                  <img 
-                    src={heroStar.avatar} 
-                    alt={heroStar.name} 
+                  <img
+                    src={heroStar.avatar}
+                    alt={heroStar.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex flex-col justify-end p-4 text-white">
@@ -447,11 +447,10 @@ export const CommercialLandingPage: React.FC = () => {
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-4 py-2.5 rounded-full text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 ${
-                    isActive
-                      ? 'bg-slate-900 text-white shadow-sm'
-                      : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200/80'
-                  }`}
+                  className={`px-4 py-2.5 rounded-full text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 ${isActive
+                    ? 'bg-slate-900 text-white shadow-sm'
+                    : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200/80'
+                    }`}
                 >
                   <span>{cat === 'All' ? '⚡ All Stars' : cat}</span>
                 </button>
@@ -464,7 +463,7 @@ export const CommercialLandingPage: React.FC = () => {
       {/* 4. LIVE STAR DIRECTORY / MARKETPLACE (The Heart of the Portal) */}
       <section id="stars-directory" className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          
+
           {/* Section Header + Search & Filter Controls */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-slate-100">
             <div>
@@ -548,17 +547,17 @@ export const CommercialLandingPage: React.FC = () => {
               {filteredInfluencers.map(inf => {
                 const nextSlotTime = inf.availability?.timeSlots?.[0] || '16:00';
                 return (
-                  <div 
-                    key={inf.id} 
+                  <div
+                    key={inf.id}
                     className="bg-white rounded-3xl border border-slate-200/90 shadow-soft hover:shadow-soft-lg transition-all duration-300 p-5 flex flex-col justify-between group hover:-translate-y-1"
                   >
                     <div>
                       {/* Card Header: Avatar + Status + Category */}
                       <div className="flex items-start gap-4 mb-4">
                         <div className="relative w-16 h-16 rounded-2xl overflow-hidden bg-slate-100 shrink-0">
-                          <img 
-                            src={inf.avatar} 
-                            alt={inf.name} 
+                          <img
+                            src={inf.avatar}
+                            alt={inf.name}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                           />
                           <span className="absolute bottom-1 right-1 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-white" />
@@ -573,9 +572,9 @@ export const CommercialLandingPage: React.FC = () => {
                               <BadgeCheck className="w-4 h-4 text-brand-600 fill-brand-600 shrink-0" />
                             )}
                           </div>
-                          
+
                           <div className="text-xs text-slate-500 font-mono truncate">{inf.handle}</div>
-                          
+
                           <div className="flex items-center gap-2 mt-1">
                             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">
                               {inf.category}
@@ -648,7 +647,7 @@ export const CommercialLandingPage: React.FC = () => {
       {/* 5. HOW IT WORKS 3-STEP SECTION (matching PetCare) */}
       <section id="how-it-works" className="py-20 bg-slate-50/80 border-y border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          
+
           <div className="text-center max-w-2xl mx-auto space-y-3">
             <span className="text-xs font-bold text-brand-600 uppercase tracking-wider">Simple 3-Step Process</span>
             <h2 className="font-heading text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -660,7 +659,7 @@ export const CommercialLandingPage: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            
+
             {/* Step 1 */}
             <div className="bg-white rounded-3xl border border-slate-200/80 p-8 shadow-soft relative space-y-4">
               <div className="w-12 h-12 rounded-2xl bg-orange-50 text-brand-600 flex items-center justify-center font-heading font-black text-xl">
@@ -708,7 +707,7 @@ export const CommercialLandingPage: React.FC = () => {
       {/* 6. PLATFORM TRUST & SAFETY GUARANTEES (Why BookMyStar) */}
       <section id="trust-safety" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          
+
           <div className="text-center max-w-2xl mx-auto space-y-3">
             <span className="text-xs font-bold text-brand-600 uppercase tracking-wider">Enterprise-Grade Security</span>
             <h2 className="font-heading text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -720,7 +719,7 @@ export const CommercialLandingPage: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            
+
             <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200/80 space-y-3">
               <div className="w-10 h-10 rounded-xl bg-orange-100 text-brand-600 flex items-center justify-center">
                 <ShieldCheck className="w-5 h-5" />
@@ -769,7 +768,7 @@ export const CommercialLandingPage: React.FC = () => {
       {/* 7. VERIFIED FAN TESTIMONIALS (matching PetCare) */}
       <section id="fan-reviews" className="py-20 bg-slate-50/70 border-t border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          
+
           <div className="text-center max-w-2xl mx-auto space-y-3">
             <span className="text-xs font-bold text-brand-600 uppercase tracking-wider">Real Stories from Fans</span>
             <h2 className="font-heading text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -781,7 +780,7 @@ export const CommercialLandingPage: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
+
             {/* Review 1 */}
             <div className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-soft space-y-4">
               <div className="flex items-center gap-1 text-amber-400">
@@ -793,9 +792,9 @@ export const CommercialLandingPage: React.FC = () => {
                 "Had a 30-min strategy review with Vikram Rajput for my competitive Valorant squad. He spotted 4 key mistakes we were making on Ascent within minutes. Worth every single rupee!"
               </p>
               <div className="flex items-center gap-3 pt-2 border-t border-slate-100">
-                <img 
-                  src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80" 
-                  alt="Aarav Sharma" 
+                <img
+                  src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80"
+                  alt="Aarav Sharma"
                   className="w-9 h-9 rounded-full object-cover"
                 />
                 <div>
@@ -816,9 +815,9 @@ export const CommercialLandingPage: React.FC = () => {
                 "Ananya Roy heard my original acoustic track and gave me live feedback on my vocal harmonies. She even guided me on Spotify distribution! A dream come true."
               </p>
               <div className="flex items-center gap-3 pt-2 border-t border-slate-100">
-                <img 
-                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80" 
-                  alt="Priya Mehra" 
+                <img
+                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80"
+                  alt="Priya Mehra"
                   className="w-9 h-9 rounded-full object-cover"
                 />
                 <div>
@@ -839,9 +838,9 @@ export const CommercialLandingPage: React.FC = () => {
                 "Kabir Dev roasted my distributed systems architecture and gave me the exact blueprint that helped me crack my L6 staff engineer interview. Best career investment."
               </p>
               <div className="flex items-center gap-3 pt-2 border-t border-slate-100">
-                <img 
-                  src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=80" 
-                  alt="Rohan Verma" 
+                <img
+                  src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=80"
+                  alt="Rohan Verma"
                   className="w-9 h-9 rounded-full object-cover"
                 />
                 <div>
@@ -859,7 +858,7 @@ export const CommercialLandingPage: React.FC = () => {
       {/* 8. INTERACTIVE FAQ ACCORDION */}
       <section id="faq" className="py-20 bg-white border-t border-slate-100">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          
+
           <div className="text-center space-y-2">
             <span className="text-xs font-bold text-brand-600 uppercase tracking-wider">Frequently Asked Questions</span>
             <h2 className="font-heading text-3xl font-black text-slate-900 tracking-tight">
@@ -892,8 +891,8 @@ export const CommercialLandingPage: React.FC = () => {
             ].map((faq, idx) => {
               const isOpen = openFaqIndex === idx;
               return (
-                <div 
-                  key={idx} 
+                <div
+                  key={idx}
                   className="rounded-2xl border border-slate-200/90 overflow-hidden transition-all"
                 >
                   <button
@@ -949,7 +948,7 @@ export const CommercialLandingPage: React.FC = () => {
       {/* 10. MULTI-COLUMN COMMERCIAL FOOTER (matching PetCare) */}
       <footer className="bg-slate-950 text-slate-400 py-16 text-xs border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-10">
-          
+
           {/* Brand Info */}
           <div className="space-y-4">
             <div className="flex items-center gap-2.5">
@@ -980,8 +979,8 @@ export const CommercialLandingPage: React.FC = () => {
               <li><a href="#categories" className="hover:text-white transition-colors">Browse Categories</a></li>
               <li><a href="#trust-safety" className="hover:text-white transition-colors">Escrow Guarantee</a></li>
               <li>
-                <button 
-                  onClick={() => openAuthWithRole('user', 'signin')} 
+                <button
+                  onClick={() => openAuthWithRole('user', 'signin')}
                   className="hover:text-brand-400 transition-colors font-semibold"
                 >
                   Fan Login / Register
@@ -995,16 +994,16 @@ export const CommercialLandingPage: React.FC = () => {
             <h5 className="font-bold text-white uppercase tracking-wider text-xs">For Creators</h5>
             <ul className="space-y-2 text-slate-400">
               <li>
-                <button 
-                  onClick={() => openAuthWithRole('influencer', 'signup')} 
+                <button
+                  onClick={() => openAuthWithRole('influencer', 'signup')}
                   className="hover:text-white transition-colors"
                 >
                   Creator Registration
                 </button>
               </li>
               <li>
-                <button 
-                  onClick={() => openAuthWithRole('influencer', 'signin')} 
+                <button
+                  onClick={() => openAuthWithRole('influencer', 'signin')}
                   className="hover:text-white transition-colors"
                 >
                   Creator Studio Login
@@ -1041,7 +1040,7 @@ export const CommercialLandingPage: React.FC = () => {
       {isAuthModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn">
           <div className="w-full max-w-lg bg-white rounded-3xl border border-slate-200/90 shadow-2xl p-7 sm:p-8 relative overflow-hidden transition-all max-h-[92vh] overflow-y-auto">
-            
+
             {/* Close Button */}
             <button
               type="button"
@@ -1065,7 +1064,7 @@ export const CommercialLandingPage: React.FC = () => {
                 </span>
               </div>
               <h3 className="font-heading text-2xl font-black text-slate-900">
-                {activeRoleTab === 'user' 
+                {activeRoleTab === 'user'
                   ? (authMode === 'signin' ? 'Welcome Back, Fan!' : 'Create Fan Account')
                   : (authMode === 'signin' ? 'Creator Studio Login' : 'Influencer Registration')
                 }
@@ -1087,11 +1086,10 @@ export const CommercialLandingPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => handleRoleSwitch('user')}
-                  className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition-all ${
-                    activeRoleTab === 'user'
-                      ? 'bg-white text-slate-900 shadow-sm'
-                      : 'text-slate-500 hover:text-slate-900'
-                  }`}
+                  className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition-all ${activeRoleTab === 'user'
+                    ? 'bg-white text-slate-900 shadow-sm'
+                    : 'text-slate-500 hover:text-slate-900'
+                    }`}
                 >
                   <User className={`w-4 h-4 ${activeRoleTab === 'user' ? 'text-brand-600' : 'text-slate-400'}`} />
                   <span>User Sign In</span>
@@ -1100,11 +1098,10 @@ export const CommercialLandingPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => handleRoleSwitch('influencer')}
-                  className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition-all ${
-                    activeRoleTab === 'influencer'
-                      ? 'bg-slate-900 text-white shadow-sm'
-                      : 'text-slate-500 hover:text-slate-900'
-                  }`}
+                  className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition-all ${activeRoleTab === 'influencer'
+                    ? 'bg-slate-900 text-white shadow-sm'
+                    : 'text-slate-500 hover:text-slate-900'
+                    }`}
                 >
                   <Video className={`w-4 h-4 ${activeRoleTab === 'influencer' ? 'text-brand-400' : 'text-slate-400'}`} />
                   <span>Influencer Sign In</span>
@@ -1173,11 +1170,10 @@ export const CommercialLandingPage: React.FC = () => {
                 {/* Sign In Button */}
                 <button
                   type="submit"
-                  className={`w-full py-3.5 px-4 rounded-xl font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 transform active:scale-[0.99] ${
-                    activeRoleTab === 'user'
-                      ? 'bg-brand-600 hover:bg-brand-500 text-white shadow-orange-glow'
-                      : 'bg-slate-900 hover:bg-slate-800 text-white'
-                  }`}
+                  className={`w-full py-3.5 px-4 rounded-xl font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 transform active:scale-[0.99] ${activeRoleTab === 'user'
+                    ? 'bg-brand-600 hover:bg-brand-500 text-white shadow-orange-glow'
+                    : 'bg-slate-900 hover:bg-slate-800 text-white'
+                    }`}
                 >
                   <span>
                     {activeRoleTab === 'user' ? 'Sign In as Fan' : 'Sign In to Creator Studio'}

@@ -105,8 +105,8 @@ export const InfluencerReviewsGrievances: React.FC = () => {
           <button
             onClick={() => setActiveSubTab('reviews')}
             className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${activeSubTab === 'reviews'
-                ? 'bg-purple-600 text-white shadow-glow'
-                : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+              ? 'bg-purple-600 text-white shadow-glow'
+              : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
               }`}
           >
             Fan Reviews ({creatorReviews.length})
@@ -114,8 +114,8 @@ export const InfluencerReviewsGrievances: React.FC = () => {
           <button
             onClick={() => setActiveSubTab('grievances')}
             className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${activeSubTab === 'grievances'
-                ? 'bg-purple-600 text-white shadow-glow'
-                : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+              ? 'bg-purple-600 text-white shadow-glow'
+              : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
               }`}
           >
             Safety Grievances ({creatorGrievances.length})
@@ -150,8 +150,8 @@ export const InfluencerReviewsGrievances: React.FC = () => {
                 <div
                   key={rev.id}
                   className={`p-4 rounded-xl border text-xs space-y-2 ${rev.isFlagged
-                      ? 'bg-rose-950/20 border-rose-500/30'
-                      : 'bg-slate-900/80 border-slate-800'
+                    ? 'bg-rose-950/20 border-rose-500/30'
+                    : 'bg-slate-900/80 border-slate-800'
                     }`}
                 >
                   <div className="flex items-center justify-between">

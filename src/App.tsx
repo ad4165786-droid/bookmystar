@@ -44,15 +44,15 @@ const VALID_ADMIN_ROUTES = [
 ];
 
 const MainRouter: React.FC = () => {
-  const { 
-    isAuthenticated, 
-    currentRole, 
-    currentPath, 
-    navigate, 
-    activeCall, 
-    checkoutFlow, 
+  const {
+    isAuthenticated,
+    currentRole,
+    currentPath,
+    navigate,
+    activeCall,
+    checkoutFlow,
     toastMessage,
-    showToast 
+    showToast
   } = useApp();
 
   // Enforce RBAC route protection and redirects

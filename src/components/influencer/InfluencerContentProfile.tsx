@@ -1,28 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { CoreCreatorDetails } from './CoreCreatorDetails';
-import { 
-  User, 
-  Image, 
-  ShieldCheck, 
-  Plus, 
-  Trash2, 
-  CheckCircle2, 
-  FileText, 
-  Eye, 
-  Play, 
-  UploadCloud, 
+import {
+  User,
+  Image,
+  ShieldCheck,
+  Plus,
+  Trash2,
+  CheckCircle2,
+  FileText,
+  Eye,
+  Play,
+  UploadCloud,
   Sparkles,
   ExternalLink
 } from 'lucide-react';
 
 export const InfluencerContentProfile: React.FC = () => {
-  const { 
-    currentInfluencer, 
-    addGalleryItem, 
-    deleteGalleryItem, 
+  const {
+    currentInfluencer,
+    addGalleryItem,
+    deleteGalleryItem,
     setSelectedInfluencerId,
-    setActiveView 
+    setActiveView
   } = useApp();
 
   const [activeTab, setActiveTab] = useState<'core' | 'gallery' | 'kyc'>('core');
@@ -76,18 +76,17 @@ export const InfluencerContentProfile: React.FC = () => {
 
   return (
     <div className="space-y-6 pb-6 max-w-7xl mx-auto">
-      
+
       {/* Studio Profile Top Navigation Tabs */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-white border border-slate-200/90 self-start sm:self-auto shadow-sm">
           <button
             type="button"
             onClick={() => setActiveTab('core')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'core'
-                ? 'bg-[#EFF6FF] text-[#172554] border border-[#BFDBFE]/70 shadow-xs'
-                : 'text-[#64748B] hover:text-[#172554]'
-            }`}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${activeTab === 'core'
+              ? 'bg-[#EFF6FF] text-[#172554] border border-[#BFDBFE]/70 shadow-xs'
+              : 'text-[#64748B] hover:text-[#172554]'
+              }`}
           >
             <User className="w-4 h-4 text-brand-500" />
             <span>Edit Creator Profile</span>
@@ -96,11 +95,10 @@ export const InfluencerContentProfile: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveTab('gallery')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'gallery'
-                ? 'bg-[#EFF6FF] text-[#172554] border border-[#BFDBFE]/70 shadow-xs'
-                : 'text-[#64748B] hover:text-[#172554]'
-            }`}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${activeTab === 'gallery'
+              ? 'bg-[#EFF6FF] text-[#172554] border border-[#BFDBFE]/70 shadow-xs'
+              : 'text-[#64748B] hover:text-[#172554]'
+              }`}
           >
             <Image className="w-4 h-4 text-[#1D4ED8]" />
             <span>Showcase Portfolio</span>
@@ -112,11 +110,10 @@ export const InfluencerContentProfile: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveTab('kyc')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'kyc'
-                ? 'bg-[#EFF6FF] text-[#172554] border border-[#BFDBFE]/70 shadow-xs'
-                : 'text-[#64748B] hover:text-[#172554]'
-            }`}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${activeTab === 'kyc'
+              ? 'bg-[#EFF6FF] text-[#172554] border border-[#BFDBFE]/70 shadow-xs'
+              : 'text-[#64748B] hover:text-[#172554]'
+              }`}
           >
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
             <span>KYC & Verification</span>
@@ -151,7 +148,7 @@ export const InfluencerContentProfile: React.FC = () => {
       {activeTab === 'gallery' && (
         <div className="space-y-6 animate-fadeIn">
           <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/90 shadow-md ring-1 ring-slate-900/5 space-y-6 hover:shadow-lg transition-all">
-            
+
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
               <div>
                 <h3 className="text-base font-extrabold text-[#172554]">
@@ -194,8 +191,8 @@ export const InfluencerContentProfile: React.FC = () => {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 {currentInfluencer.gallery.map(item => (
-                  <div 
-                    key={item.id} 
+                  <div
+                    key={item.id}
                     className="rounded-2xl overflow-hidden bg-white border border-slate-200/90 shadow-sm flex flex-col justify-between hover:shadow-md transition-all"
                   >
                     <div className="relative h-48 bg-slate-100">
@@ -236,7 +233,7 @@ export const InfluencerContentProfile: React.FC = () => {
       {activeTab === 'kyc' && (
         <div className="space-y-6 animate-fadeIn">
           <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/90 shadow-md ring-1 ring-slate-900/5 space-y-6 hover:shadow-lg transition-all">
-            
+
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 rounded-xl bg-[#EFF6FF] text-[#1D4ED8] flex items-center justify-center border border-[#DBEAFE]">
@@ -252,11 +249,10 @@ export const InfluencerContentProfile: React.FC = () => {
                 </div>
               </div>
 
-              <span className={`text-xs font-bold px-3 py-1 rounded-full uppercase ${
-                currentInfluencer.verificationStatus === 'approved'
-                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                  : 'bg-amber-50 text-amber-700 border border-amber-200'
-              }`}>
+              <span className={`text-xs font-bold px-3 py-1 rounded-full uppercase ${currentInfluencer.verificationStatus === 'approved'
+                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                : 'bg-amber-50 text-amber-700 border border-amber-200'
+                }`}>
                 Status: {currentInfluencer.verificationStatus}
               </span>
             </div>
@@ -322,22 +318,20 @@ export const InfluencerContentProfile: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setMediaType('image')}
-                    className={`py-2 rounded-xl font-bold border transition-all cursor-pointer ${
-                      mediaType === 'image' 
-                        ? 'bg-brand-500 text-white border-brand-500 shadow-sm' 
-                        : 'bg-[#F8FAFC] text-[#64748B] border-slate-200 hover:text-[#172554]'
-                    }`}
+                    className={`py-2 rounded-xl font-bold border transition-all cursor-pointer ${mediaType === 'image'
+                      ? 'bg-brand-500 text-white border-brand-500 shadow-sm'
+                      : 'bg-[#F8FAFC] text-[#64748B] border-slate-200 hover:text-[#172554]'
+                      }`}
                   >
                     Image / Photo
                   </button>
                   <button
                     type="button"
                     onClick={() => setMediaType('video')}
-                    className={`py-2 rounded-xl font-bold border transition-all cursor-pointer ${
-                      mediaType === 'video' 
-                        ? 'bg-brand-500 text-white border-brand-500 shadow-sm' 
-                        : 'bg-[#F8FAFC] text-[#64748B] border-slate-200 hover:text-[#172554]'
-                    }`}
+                    className={`py-2 rounded-xl font-bold border transition-all cursor-pointer ${mediaType === 'video'
+                      ? 'bg-brand-500 text-white border-brand-500 shadow-sm'
+                      : 'bg-[#F8FAFC] text-[#64748B] border-slate-200 hover:text-[#172554]'
+                      }`}
                   >
                     Video Clip
                   </button>

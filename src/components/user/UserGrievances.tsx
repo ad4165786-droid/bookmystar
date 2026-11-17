@@ -108,17 +108,17 @@ export const UserGrievances: React.FC = () => {
                 key={ticket.id}
                 onClick={() => setSelectedTicketId(ticket.id)}
                 className={`p-4 rounded-2xl border text-xs cursor-pointer transition-all ${selectedTicket?.id === ticket.id
-                    ? 'bg-white border-2 border-brand-500 shadow-md ring-2 ring-brand-500/20'
-                    : 'bg-white border-slate-200/90 hover:border-slate-300 shadow-sm ring-1 ring-slate-900/5 hover:shadow-md'
+                  ? 'bg-white border-2 border-brand-500 shadow-md ring-2 ring-brand-500/20'
+                  : 'bg-white border-slate-200/90 hover:border-slate-300 shadow-sm ring-1 ring-slate-900/5 hover:shadow-md'
                   }`}
               >
                 <div className="flex items-center justify-between mb-1.5">
                   <span className="font-mono text-brand-600 font-bold">{ticket.ticketRef}</span>
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${ticket.status === 'resolved'
-                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                      : ticket.status === 'in_progress'
-                        ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                        : 'bg-slate-100 text-slate-600 border border-slate-200'
+                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                    : ticket.status === 'in_progress'
+                      ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                      : 'bg-slate-100 text-slate-600 border border-slate-200'
                     }`}>
                     {ticket.status.replace('_', ' ')}
                   </span>
@@ -168,8 +168,8 @@ export const UserGrievances: React.FC = () => {
                       <div
                         key={resp.id}
                         className={`p-3.5 rounded-2xl border leading-relaxed shadow-2xs ${isAdmin
-                            ? 'bg-brand-50/80 border-brand-200/80 text-brand-950 ml-4'
-                            : 'bg-white border-slate-200/90 text-slate-800 mr-4'
+                          ? 'bg-brand-50/80 border-brand-200/80 text-brand-950 ml-4'
+                          : 'bg-white border-slate-200/90 text-slate-800 mr-4'
                           }`}
                       >
                         <div className="flex items-center justify-between pb-1.5 mb-1.5 border-b border-slate-200/60 text-[10px]">
@@ -217,7 +217,7 @@ export const UserGrievances: React.FC = () => {
 
       {/* New Ticket Modal */}
       {showNewModal && (
-        <div 
+        <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn"
           onClick={(e) => {
             if (e.target === e.currentTarget) setShowNewModal(false);
@@ -226,9 +226,9 @@ export const UserGrievances: React.FC = () => {
           <div className="w-full max-w-lg rounded-3xl bg-white border border-slate-200 p-6 sm:p-7 space-y-4 shadow-2xl">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <h3 className="text-base font-extrabold text-slate-900">Create New Support Case</h3>
-              <button 
+              <button
                 type="button"
-                onClick={() => setShowNewModal(false)} 
+                onClick={() => setShowNewModal(false)}
                 className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />

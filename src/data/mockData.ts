@@ -1,13 +1,13 @@
-import { 
-  UserProfile, 
-  InfluencerProfile, 
-  Booking, 
-  PayoutRequest, 
-  GrievanceTicket, 
-  ReviewItem, 
-  AuditLogItem, 
-  PlatformNotification, 
-  PlatformSettings 
+import {
+  UserProfile,
+  InfluencerProfile,
+  Booking,
+  PayoutRequest,
+  GrievanceTicket,
+  ReviewItem,
+  AuditLogItem,
+  PlatformNotification,
+  PlatformSettings
 } from '../types';
 
 export const INITIAL_SETTINGS: PlatformSettings = {

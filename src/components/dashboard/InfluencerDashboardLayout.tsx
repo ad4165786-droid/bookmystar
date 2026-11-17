@@ -132,8 +132,8 @@ export const InfluencerDashboardLayout: React.FC = () => {
                     setMobileMenuOpen(false);
                   }}
                   className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-bold transition-all ${isActive
-                      ? 'bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-md shadow-brand-500/25'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                    ? 'bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-md shadow-brand-500/25'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                     }`}
                 >
                   <div className="flex items-center gap-3">
@@ -254,8 +254,8 @@ export const InfluencerDashboardLayout: React.FC = () => {
             currentPath !== '/influencer/reviews' &&
             currentPath !== '/influencer/terms-conditions'
           )) && (
-            <InfluencerDashboard />
-          )}
+              <InfluencerDashboard />
+            )}
         </main>
 
       </div>

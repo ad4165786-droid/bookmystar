@@ -87,8 +87,8 @@ export const UserBookings: React.FC = () => {
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`capitalize px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${activeTab === tab
-                ? 'bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-md shadow-brand-500/25'
-                : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-slate-200/90 shadow-2xs'
+              ? 'bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-md shadow-brand-500/25'
+              : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-slate-200/90 shadow-2xs'
               }`}
           >
             {tab} ({tab === 'all' ? userBookings.length : userBookings.filter(b => b.bookingStatus === tab).length})

@@ -1,13 +1,13 @@
 export type UserRole = 'user' | 'influencer' | 'admin';
 
-export type Category = 
-  | 'Gaming' 
-  | 'Music' 
-  | 'Fashion & Beauty' 
-  | 'Fitness & Health' 
-  | 'Tech & Coding' 
-  | 'Education & Career' 
-  | 'Comedy & Entertainment' 
+export type Category =
+  | 'Gaming'
+  | 'Music'
+  | 'Fashion & Beauty'
+  | 'Fitness & Health'
+  | 'Tech & Coding'
+  | 'Education & Career'
+  | 'Comedy & Entertainment'
   | 'Lifestyle & Travel';
 
 export interface UserProfile {
@@ -51,7 +51,7 @@ export interface InfluencerGalleryItem {
   uploadedAt: string;
 }
 
-export type SupportedSocialPlatform = 
+export type SupportedSocialPlatform =
   | 'Instagram'
   | 'Facebook'
   | 'YouTube'

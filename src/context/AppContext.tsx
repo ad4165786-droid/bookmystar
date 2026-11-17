@@ -1,29 +1,29 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { 
-  UserRole, 
-  UserProfile, 
-  InfluencerProfile, 
-  Booking, 
-  PayoutRequest, 
-  GrievanceTicket, 
-  ReviewItem, 
-  AuditLogItem, 
-  PlatformNotification, 
-  PlatformSettings, 
+import {
+  UserRole,
+  UserProfile,
+  InfluencerProfile,
+  Booking,
+  PayoutRequest,
+  GrievanceTicket,
+  ReviewItem,
+  AuditLogItem,
+  PlatformNotification,
+  PlatformSettings,
   AdminUser,
   CallType,
   Category
 } from '../types';
-import { 
-  INITIAL_SETTINGS, 
-  INITIAL_USERS, 
-  INITIAL_INFLUENCERS, 
-  INITIAL_BOOKINGS, 
-  INITIAL_PAYOUTS, 
-  INITIAL_GRIEVANCES, 
-  INITIAL_REVIEWS, 
-  INITIAL_AUDIT_LOGS, 
-  INITIAL_NOTIFICATIONS 
+import {
+  INITIAL_SETTINGS,
+  INITIAL_USERS,
+  INITIAL_INFLUENCERS,
+  INITIAL_BOOKINGS,
+  INITIAL_PAYOUTS,
+  INITIAL_GRIEVANCES,
+  INITIAL_REVIEWS,
+  INITIAL_AUDIT_LOGS,
+  INITIAL_NOTIFICATIONS
 } from '../data/mockData';
 
 interface BookingCheckoutFlow {
@@ -158,7 +158,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 // URL / Path Normalization Helper
 export const normalizePath = (rawPath: string): string => {
   if (!rawPath) return '/';
-  
+
   let clean = rawPath.trim();
   // Support hash routing (e.g. "#/fan/bookings" -> "/fan/bookings")
   if (clean.includes('#')) {
@@ -255,7 +255,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       try {
         const parsed: InfluencerProfile[] = JSON.parse(saved);
         return parsed.map(inf => inf.name?.includes('"Vortex"') ? { ...inf, name: inf.name.replace(/\s*"Vortex"\s*/g, ' ').trim() } : inf);
-      } catch {}
+      } catch { }
     }
     return INITIAL_INFLUENCERS;
   });
@@ -322,7 +322,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       try {
         const parsed = JSON.parse(saved);
         return parsed.role || null;
-      } catch {}
+      } catch { }
     }
     return null;
   });
@@ -333,7 +333,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       try {
         const parsed = JSON.parse(saved);
         if (parsed.role === 'user' && parsed.user) return parsed.user;
-      } catch {}
+      } catch { }
     }
     return null;
   });
@@ -350,7 +350,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           }
           return inf;
         }
-      } catch {}
+      } catch { }
     }
     return null;
   });
@@ -361,7 +361,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       try {
         const parsed = JSON.parse(saved);
         if (parsed.role === 'admin' && parsed.admin) return parsed.admin;
-      } catch {}
+      } catch { }
     }
     return null;
   });
@@ -441,7 +441,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const navigate = (path: string) => {
     const target = normalizePath(path);
     setCurrentPath(target);
-    
+
     // Update browser address bar and history
     if (typeof window !== 'undefined') {
       if (window.location.pathname !== target) {
@@ -484,8 +484,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // 1. User Sign In
   const loginUser = (identifier: string, password: string) => {
     const cleanId = identifier.trim().toLowerCase();
-    const foundUser = users.find(u => 
-      u.email.toLowerCase() === cleanId || 
+    const foundUser = users.find(u =>
+      u.email.toLowerCase() === cleanId ||
       u.phone.replace(/\s+/g, '') === cleanId.replace(/\s+/g, '') ||
       cleanId.includes(u.name.toLowerCase().split(' ')[0])
     ) || users[0]; // fallback for demo if field filled
@@ -537,7 +537,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // 3. Influencer Sign In
   const loginInfluencer = (identifier: string, password: string) => {
     const cleanId = identifier.trim().toLowerCase();
-    const foundInf = influencers.find(i => 
+    const foundInf = influencers.find(i =>
       i.handle.toLowerCase() === cleanId ||
       i.name.toLowerCase().includes(cleanId)
     ) || influencers[0]; // fallback to top creator for demo ease
@@ -622,7 +622,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // 5. Hidden Admin Login
   const loginAdmin = (email: string, password: string) => {
     const cleanEmail = email.trim().toLowerCase();
-    
+
     // Check credentials (accepts admin@bookmystar.in or admin test passwords)
     if (!cleanEmail.includes('admin') && !cleanEmail.includes('bookmystar')) {
       return { success: false, message: 'Access Denied: Invalid administrator credentials.' };
@@ -1107,10 +1107,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const replyToGrievance = (ticketId: string, message: string, isInternalNote = false) => {
     setGrievances(prev => prev.map(g => {
       if (g.id === ticketId) {
-        const senderName = currentRole === 'admin' 
-          ? (currentAdmin?.name || 'Support Staff') 
+        const senderName = currentRole === 'admin'
+          ? (currentAdmin?.name || 'Support Staff')
           : (currentRole === 'user' ? (currentUser?.name || 'User') : (currentInfluencer?.name || 'Creator'));
-        
+
         const newResponse = {
           id: `resp-${Date.now()}`,
           sender: senderName,
