@@ -353,7 +353,7 @@ export const UserProfileSettings: React.FC = () => {
           </div>
 
           {/* Quick Metrics Bar */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-8 pt-6 border-t border-slate-100">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mt-8 pt-6 border-t border-slate-100">
             <div className="p-3.5 rounded-2xl bg-slate-50/80 border border-slate-200/70">
               <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wider block">Total Bookings</span>
               <div className="flex items-baseline gap-2 mt-1">
@@ -375,14 +375,6 @@ export const UserProfileSettings: React.FC = () => {
               <div className="flex items-baseline gap-2 mt-1">
                 <span className="text-xl sm:text-2xl font-black text-slate-900">₹{currentUser.totalSpent.toLocaleString('en-IN')}</span>
                 <span className="text-[10px] font-semibold text-slate-500">INR</span>
-              </div>
-            </div>
-
-            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 shadow-xs hover:border-slate-300 transition-all">
-              <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wider block">Account Trust Rating</span>
-              <div className="flex items-baseline gap-2 mt-1">
-                <span className="text-xl sm:text-2xl font-black text-emerald-600">100%</span>
-                <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">High Trust</span>
               </div>
             </div>
           </div>
@@ -741,45 +733,6 @@ export const UserProfileSettings: React.FC = () => {
                 </form>
               </div>
 
-              {/* Two-Factor Authentication */}
-              <div className="p-5 sm:p-6 rounded-2xl bg-slate-50/70 border border-slate-200/80 space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className={`p-2.5 rounded-xl ${twoFactor ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-500'}`}>
-                      <ShieldCheck className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h3 className="text-base font-extrabold text-slate-900">Two-Factor Authentication (2FA)</h3>
-                      <p className="text-xs text-slate-500 mt-0.5">Require an instant SMS / WhatsApp OTP verification when logging in from new devices.</p>
-                    </div>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={handleToggle2FA}
-                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${twoFactor ? 'bg-emerald-600' : 'bg-slate-200'
-                      }`}
-                  >
-                    <span
-                      className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${twoFactor ? 'translate-x-5' : 'translate-x-0'
-                        }`}
-                    />
-                  </button>
-                </div>
-
-                <div className="p-4 rounded-2xl bg-white border border-slate-200/70 text-xs text-slate-600 flex items-start gap-3 shadow-2xs">
-                  <Sparkles className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
-                  <div>
-                    <span className="font-bold text-slate-800">Bank-Grade Session Security: </span>
-                    {twoFactor ? (
-                      <span>Active on your registered mobile number ({phone}). All login attempts require real-time 6-digit confirmation code.</span>
-                    ) : (
-                      <span>Two-factor authentication is currently disabled. We strongly recommend turning it on to safeguard your transactions and bookings.</span>
-                    )}
-                  </div>
-                </div>
-              </div>
-
               {/* Active Device Sessions */}
               <div className="p-5 sm:p-6 rounded-2xl bg-slate-50/70 border border-slate-200/80 space-y-4">
                 <div className="flex items-center justify-between pb-4 border-b border-slate-200/60">
@@ -837,36 +790,19 @@ export const UserProfileSettings: React.FC = () => {
               {/* Data Privacy & Compliance */}
               <div className="p-5 sm:p-6 rounded-2xl bg-slate-50/70 border border-slate-200/80 space-y-4">
                 <h3 className="text-base font-extrabold text-slate-900">Privacy, Compliance & Data Access</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                  <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50/50 flex flex-col justify-between gap-3">
-                    <div>
-                      <div className="font-bold text-slate-900">Download Account Data Copy</div>
-                      <p className="text-[11px] text-slate-500 mt-1">Export a complete JSON & PDF archive of all your past booking records, invoices, and grievance history as required under DPDP Act.</p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => showToast('Data export generated. Check your download folder.')}
-                      className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold self-start transition-colors"
-                    >
-                      <Download className="w-3.5 h-3.5" />
-                      <span>Request Data Export</span>
-                    </button>
+                <div className="p-4 rounded-2xl border border-rose-200 bg-rose-50/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs">
+                  <div>
+                    <div className="font-bold text-rose-900">Deactivate Fan Account</div>
+                    <p className="text-[11px] text-rose-700 mt-1">Temporarily pause or permanently request deletion of your account. Ongoing bookings will be refunded via standard escrow rules.</p>
                   </div>
-
-                  <div className="p-4 rounded-2xl border border-rose-200 bg-rose-50/30 flex flex-col justify-between gap-3">
-                    <div>
-                      <div className="font-bold text-rose-900">Deactivate Fan Account</div>
-                      <p className="text-[11px] text-rose-700 mt-1">Temporarily pause or permanently request deletion of your account. Ongoing bookings will be refunded via standard escrow rules.</p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => showToast('Deactivation request logged. Our compliance officer will reach out.')}
-                      className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300 font-bold self-start transition-colors"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                      <span>Deactivate Account</span>
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => showToast('Deactivation request logged. Our compliance officer will reach out.')}
+                    className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300 font-bold self-start sm:self-auto shrink-0 transition-colors"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Deactivate Account</span>
+                  </button>
                 </div>
               </div>
 
