@@ -122,19 +122,6 @@ export const InfluencerContentProfile: React.FC = () => {
             )}
           </button>
         </div>
-
-        {/* Fan Marketplace Preview Action */}
-        <button
-          type="button"
-          onClick={() => {
-            setSelectedInfluencerId(currentInfluencer.id);
-            setActiveView('influencer-detail');
-          }}
-          className="inline-flex items-center gap-1.5 py-2 px-4 rounded-xl bg-white hover:bg-[#F8FAFC] text-[#172554] text-xs font-bold border border-slate-200/90 transition-colors shadow-xs self-start sm:self-auto cursor-pointer"
-        >
-          <Eye className="w-3.5 h-3.5 text-brand-500" />
-          <span>Preview Public Profile as Fan</span>
-        </button>
       </div>
 
       {/* TAB 1: Core Creator Details (Primary Featured Section) */}
