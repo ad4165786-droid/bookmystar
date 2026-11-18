@@ -631,21 +631,13 @@ export const CommercialLandingPage: React.FC = () => {
           <p className="text-orange-100 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
             Join thousands of passionate fans having unforgettable 1-on-1 video calls. Guaranteed slots, verified stars, and instant booking.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+          <div className="flex items-center justify-center pt-2">
             <button
               type="button"
               onClick={() => openAuthWithRole('user', 'signin')}
-              className="px-8 py-4 rounded-2xl bg-white text-slate-900 font-extrabold text-sm shadow-soft-lg hover:bg-slate-100 transition-all transform active:scale-95"
+              className="px-8 py-4 rounded-2xl bg-white text-slate-900 font-extrabold text-sm shadow-soft-lg hover:bg-slate-100 transition-all transform active:scale-95 cursor-pointer"
             >
-              Sign In as Fan
-            </button>
-            <button
-              type="button"
-              onClick={() => openAuthWithRole('influencer', 'signup')}
-              className="px-8 py-4 rounded-2xl bg-slate-950 text-white font-extrabold text-sm shadow-soft-lg hover:bg-slate-900 transition-all flex items-center gap-2"
-            >
-              <Sparkles className="w-4 h-4 text-brand-400" />
-              <span>Apply as Star Creator</span>
+              Sign In
             </button>
           </div>
         </div>
