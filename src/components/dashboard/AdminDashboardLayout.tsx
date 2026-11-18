@@ -181,15 +181,6 @@ export const AdminDashboardLayout: React.FC = () => {
             >
               <Menu className="w-5 h-5" />
             </button>
-
-            <div>
-              <h2 className="text-sm sm:text-base font-extrabold text-slate-900">
-                Operations & Governance Center
-              </h2>
-              <p className="text-[11px] text-slate-500 hidden sm:block">
-                KYC approvals, live call diagnostics, escrow disbursements, and platform audit records.
-              </p>
-            </div>
           </div>
 
           {/* Right Controls */}
