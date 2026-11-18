@@ -22,7 +22,7 @@ body {
 
 @media print {
   @page {
-    margin: 1cm;
+    margin: 1.5cm;
     size: auto;
   }
 
@@ -31,14 +31,49 @@ body {
     background-color: #ffffff !important;
     color: #0f172a !important;
     height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
+  /* When invoice modal is open, isolate the invoice and completely suppress all background pages */
+  body.invoice-modal-open > *:not(#printable-invoice-container) {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  body.invoice-modal-open #printable-invoice-container {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    inset: auto !important;
+    z-index: auto !important;
+  }
+
+  body.invoice-modal-open #printable-invoice-content {
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+  }
+
+  /* General elements to suppress during print */
   header,
   aside,
   nav,
   button,
   .no-print {
     display: none !important;
+    visibility: hidden !important;
   }
 
   main {
