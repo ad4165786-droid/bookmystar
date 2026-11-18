@@ -114,7 +114,7 @@ export const UserDashboardLayout: React.FC = () => {
 
           {/* Navigation Links */}
           <nav className="px-3 space-y-1">
-            <span className="px-3 text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+            <span className="px-3.5 pt-2 pb-1.5 text-[11px] uppercase font-bold text-slate-500 tracking-wider block">
               Navigation
             </span>
             {navItems.map(item => {
@@ -128,16 +128,16 @@ export const UserDashboardLayout: React.FC = () => {
                     if (item.id === 'explore') setSelectedInfluencerId(null);
                     setMobileMenuOpen(false);
                   }}
-                  className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-bold transition-all ${isActive
-                    ? 'bg-brand-600 text-white shadow-orange-glow'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                  className={`w-full group flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-semibold transition-all ${isActive
+                    ? 'bg-brand-600 text-white shadow-orange-glow font-bold'
+                    : 'text-slate-800 hover:text-slate-950 hover:bg-slate-100/80'
                     }`}
                 >
                   <div className="flex items-center gap-3">
-                    <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                    <Icon className={`w-4 h-4 transition-colors ${isActive ? 'text-white' : 'text-slate-600 group-hover:text-slate-900'}`} />
                     <span>{item.label}</span>
                   </div>
-                  {isActive && <ChevronRight className="w-3.5 h-3.5" />}
+                  {isActive && <ChevronRight className="w-3.5 h-3.5 text-white" />}
                 </button>
               );
             })}
