@@ -113,9 +113,6 @@ export const AdminDashboardLayout: React.FC = () => {
                   <span className="w-2 h-2 rounded-full bg-emerald-500" />
                 </div>
                 <p className="text-[11px] text-amber-700 font-semibold truncate">{currentAdmin?.role || 'Super Admin'}</p>
-                <div className="mt-0.5 text-[10px] text-slate-500 font-mono">
-                  Level {currentAdmin?.accessLevel || 4} • Full Permissions
-                </div>
               </div>
             </div>
           </div>
