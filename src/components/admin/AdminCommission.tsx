@@ -3,30 +3,23 @@ import { useApp } from '../../context/AppContext';
 import { 
   Percent, 
   DollarSign, 
-  TrendingUp, 
   Sliders, 
-  Video, 
-  PhoneCall, 
+  Save, 
+  CheckCircle2, 
+  AlertCircle, 
+  TrendingUp, 
   ShieldCheck, 
-  Save,
-  CheckCircle2
+  FileText,
+  Video,
+  PhoneCall
 } from 'lucide-react';
 
 export const AdminCommission: React.FC = () => {
-  const { settings, updateSettings, bookings, showToast } = useApp();
+  const { settings, updateSettings, bookings } = useApp();
 
-  const [rate, setRate] = useState(settings.commissionRate);
-  const [minPayout, setMinPayout] = useState(settings.minPayoutAmount);
-  const [requireKyc, setRequireKyc] = useState(settings.requireVerificationForBooking);
-
-  // Compute metrics
-  const successfulBookings = bookings.filter(b => b.paymentStatus === 'success');
-  const grossValue = successfulBookings.reduce((sum, b) => sum + b.amount, 0);
-  const platformEarnings = successfulBookings.reduce((sum, b) => sum + b.commissionAmount, 0);
-  const creatorDisbursals = grossValue - platformEarnings;
-
-  const videoGross = successfulBookings.filter(b => b.callType === 'video').reduce((sum, b) => sum + b.amount, 0);
-  const voiceGross = successfulBookings.filter(b => b.callType === 'voice').reduce((sum, b) => sum + b.amount, 0);
+  const [rate, setRate] = useState<number>(settings.commissionRate);
+  const [minPayout, setMinPayout] = useState<number>(settings.minPayoutAmount);
+  const [requireKyc, setRequireKyc] = useState<boolean>(settings.requireVerificationForBooking);
 
   const handleSaveCommission = (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,13 +30,26 @@ export const AdminCommission: React.FC = () => {
     });
   };
 
+  const successfulBookings = bookings.filter(b => b.paymentStatus === 'success');
+  const grossValue = successfulBookings.reduce((sum, b) => sum + b.amount, 0);
+  const platformEarnings = successfulBookings.reduce((sum, b) => sum + b.commissionAmount, 0);
+  const creatorDisbursals = grossValue - platformEarnings;
+
+  const videoGross = successfulBookings
+    .filter(b => b.callType === 'video')
+    .reduce((sum, b) => sum + b.amount, 0);
+
+  const voiceGross = successfulBookings
+    .filter(b => b.callType === 'voice')
+    .reduce((sum, b) => sum + b.amount, 0);
+
   return (
     <div className="space-y-8 pb-16 max-w-5xl">
       
       {/* Title */}
-      <div className="pb-2 border-b border-slate-800">
-        <h1 className="text-2xl font-black text-white">Platform Commission & Financial Rules</h1>
-        <p className="text-xs text-slate-400 mt-0.5">
+      <div className="space-y-0.5">
+        <h1 className="text-2xl font-black text-slate-900">Platform Commission & Financial Rules</h1>
+        <p className="text-xs text-slate-500 mt-0.5">
           Configure platform cut percentage, payout minimums, and inspect platform profit ledger
         </p>
       </div>
@@ -51,40 +57,40 @@ export const AdminCommission: React.FC = () => {
       {/* Financial Matrix Summary */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
         
-        <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
-          <span className="text-xs text-slate-400 font-semibold block">Gross Booking Volume (GBV)</span>
-          <div className="text-3xl font-black text-white">
+        <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-sm hover:shadow-md ring-1 ring-slate-900/5 space-y-2 transition-shadow">
+          <span className="text-xs text-slate-500 font-semibold block">Gross Booking Volume (GBV)</span>
+          <div className="text-3xl font-black text-slate-900">
             ₹{grossValue.toLocaleString('en-IN')}
           </div>
-          <div className="text-[11px] text-slate-400">Total customer card & UPI spend</div>
+          <div className="text-[11px] text-slate-500">Total customer card & UPI spend</div>
         </div>
 
-        <div className="p-6 rounded-2xl bg-gradient-to-br from-emerald-950/40 via-slate-900 to-slate-900 border border-emerald-500/30 space-y-2">
-          <span className="text-xs text-emerald-400 font-semibold block">Platform Commission Cut ({settings.commissionRate}%)</span>
-          <div className="text-3xl font-black text-emerald-400">
+        <div className="p-6 rounded-2xl bg-white border border-emerald-200/90 shadow-sm hover:shadow-md ring-1 ring-emerald-500/10 space-y-2 transition-shadow">
+          <span className="text-xs text-emerald-700 font-semibold block">Platform Commission Cut ({settings.commissionRate}%)</span>
+          <div className="text-3xl font-black text-emerald-600">
             ₹{Math.round(platformEarnings).toLocaleString('en-IN')}
           </div>
-          <div className="text-[11px] text-slate-400">Net platform operational revenue</div>
+          <div className="text-[11px] text-emerald-700/80 font-medium">Net platform operational revenue</div>
         </div>
 
-        <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
-          <span className="text-xs text-purple-400 font-semibold block">Influencer Net Remittance</span>
-          <div className="text-3xl font-black text-purple-300">
+        <div className="p-6 rounded-2xl bg-white border border-purple-200/90 shadow-sm hover:shadow-md ring-1 ring-purple-500/10 space-y-2 transition-shadow">
+          <span className="text-xs text-purple-700 font-semibold block">Influencer Net Remittance</span>
+          <div className="text-3xl font-black text-purple-600">
             ₹{Math.round(creatorDisbursals).toLocaleString('en-IN')}
           </div>
-          <div className="text-[11px] text-slate-400">Disbursed to verified stars</div>
+          <div className="text-[11px] text-purple-700/80 font-medium">Disbursed to verified stars</div>
         </div>
 
       </div>
 
-      {/* Dynamic Commission Rate Config Form */}
-      <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-6">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+      {/* Dynamic Commission Rate Config Form Box */}
+      <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-sm hover:shadow-md ring-1 ring-slate-900/5 space-y-6 transition-shadow">
+        <div className="flex items-center justify-between pb-1">
           <div className="flex items-center gap-2">
-            <Sliders className="w-5 h-5 text-amber-400" />
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider">Dynamic Commission & Escrow Governance</h3>
+            <Sliders className="w-5 h-5 text-amber-500" />
+            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Dynamic Commission & Escrow Governance</h3>
           </div>
-          <span className="text-xs text-amber-400 font-semibold">Strict Server-side Validation</span>
+          <span className="text-xs text-amber-700 font-semibold">Strict Server-side Validation</span>
         </div>
 
         <form onSubmit={handleSaveCommission} className="space-y-6 text-xs">
@@ -92,8 +98,8 @@ export const AdminCommission: React.FC = () => {
           {/* Commission Slider */}
           <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <label className="text-slate-300 font-bold">Standard Platform Commission Rate</label>
-              <span className="text-base font-extrabold text-amber-400 font-mono">{rate}%</span>
+              <label className="text-slate-800 font-bold">Standard Platform Commission Rate</label>
+              <span className="text-base font-extrabold text-amber-600 font-mono">{rate}%</span>
             </div>
             <input
               type="range"
@@ -113,17 +119,17 @@ export const AdminCommission: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
             <div>
-              <label className="block text-slate-300 font-semibold mb-1">Minimum Influencer Withdrawal (₹ INR)</label>
+              <label className="block text-slate-700 font-semibold mb-1">Minimum Influencer Withdrawal (₹ INR)</label>
               <input
                 type="number"
                 value={minPayout}
                 onChange={e => setMinPayout(Number(e.target.value))}
-                className="w-full px-3 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white font-bold"
+                className="w-full px-3 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-900 font-bold focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
               />
             </div>
 
             <div className="flex flex-col justify-end">
-              <label className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-800/80 border border-slate-700 cursor-pointer">
+              <label className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200/80 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={requireKyc}
@@ -131,8 +137,8 @@ export const AdminCommission: React.FC = () => {
                   className="w-4 h-4 accent-amber-500 rounded"
                 />
                 <div>
-                  <div className="font-bold text-white text-xs">Enforce Mandatory KYC for Bookings</div>
-                  <div className="text-[10px] text-slate-400">Fans cannot book unverified creators</div>
+                  <div className="font-bold text-slate-900 text-xs">Enforce Mandatory KYC for Bookings</div>
+                  <div className="text-[10px] text-slate-500">Fans cannot book unverified creators</div>
                 </div>
               </label>
             </div>
@@ -140,7 +146,7 @@ export const AdminCommission: React.FC = () => {
 
           <button
             type="submit"
-            className="flex items-center gap-2 py-2.5 px-6 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs shadow-md transition-all"
+            className="flex items-center gap-2 py-2.5 px-6 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow-sm transition-all"
           >
             <Save className="w-4 h-4" />
             <span>Apply Global Platform Rules</span>
@@ -148,42 +154,42 @@ export const AdminCommission: React.FC = () => {
         </form>
       </div>
 
-      {/* Voice vs Video Revenue Breakdown */}
-      <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
-        <h3 className="text-sm font-bold text-white uppercase tracking-wider pb-2 border-b border-slate-800">
+      {/* Voice vs Video Revenue Breakdown Box */}
+      <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-sm hover:shadow-md ring-1 ring-slate-900/5 space-y-4 transition-shadow">
+        <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider pb-1">
           Voice vs Video Channel Contribution
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-          <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between">
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center">
                 <Video className="w-5 h-5" />
               </div>
               <div>
-                <div className="font-bold text-white">1-on-1 Video Calls</div>
-                <div className="text-[10px] text-slate-400">{successfulBookings.filter(b => b.callType === 'video').length} Sessions</div>
+                <div className="font-bold text-slate-900">1-on-1 Video Calls</div>
+                <div className="text-[10px] text-slate-500">{successfulBookings.filter(b => b.callType === 'video').length} Sessions</div>
               </div>
             </div>
             <div className="text-right">
-              <div className="font-extrabold text-white text-base">₹{videoGross.toLocaleString('en-IN')}</div>
-              <div className="text-[10px] text-emerald-400">Commission: ₹{Math.round(videoGross * (settings.commissionRate / 100))}</div>
+              <div className="font-extrabold text-slate-900 text-base">₹{videoGross.toLocaleString('en-IN')}</div>
+              <div className="text-[10px] text-emerald-600 font-medium">Commission: ₹{Math.round(videoGross * (settings.commissionRate / 100))}</div>
             </div>
           </div>
 
-          <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between">
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
                 <PhoneCall className="w-5 h-5" />
               </div>
               <div>
-                <div className="font-bold text-white">1-on-1 Voice Calls</div>
-                <div className="text-[10px] text-slate-400">{successfulBookings.filter(b => b.callType === 'voice').length} Sessions</div>
+                <div className="font-bold text-slate-900">1-on-1 Voice Calls</div>
+                <div className="text-[10px] text-slate-500">{successfulBookings.filter(b => b.callType === 'voice').length} Sessions</div>
               </div>
             </div>
             <div className="text-right">
-              <div className="font-extrabold text-white text-base">₹{voiceGross.toLocaleString('en-IN')}</div>
-              <div className="text-[10px] text-emerald-400">Commission: ₹{Math.round(voiceGross * (settings.commissionRate / 100))}</div>
+              <div className="font-extrabold text-slate-900 text-base">₹{voiceGross.toLocaleString('en-IN')}</div>
+              <div className="text-[10px] text-emerald-600 font-medium">Commission: ₹{Math.round(voiceGross * (settings.commissionRate / 100))}</div>
             </div>
           </div>
         </div>
@@ -192,4 +198,3 @@ export const AdminCommission: React.FC = () => {
     </div>
   );
 };
-
