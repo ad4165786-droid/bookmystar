@@ -147,8 +147,11 @@ export const AdminUsers: React.FC = () => {
 
       {/* User Dossier Drawer / Modal */}
       {selectedUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fadeIn">
-          <div className="w-full max-w-2xl rounded-2xl bg-white border border-slate-200/90 p-6 space-y-5 shadow-2xl max-h-[90vh] overflow-y-auto">
+        <div
+          onClick={e => { if (e.target === e.currentTarget) setSelectedUser(null); }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn"
+        >
+          <div className="w-full max-w-2xl rounded-2xl bg-white border border-slate-200/90 p-6 space-y-5 shadow-2xl ring-1 ring-slate-900/10 max-h-[90vh] overflow-y-auto">
 
             <div className="flex items-center justify-between pb-1">
               <div className="flex items-center gap-3">

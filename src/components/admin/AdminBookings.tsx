@@ -199,8 +199,11 @@ export const AdminBookings: React.FC = () => {
 
       {/* Refund Modal */}
       {showRefundModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fadeIn">
-          <div className="w-full max-w-md rounded-2xl bg-white border border-slate-200/90 p-6 space-y-4 shadow-2xl">
+        <div
+          onClick={e => { if (e.target === e.currentTarget) setShowRefundModal(null); }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn"
+        >
+          <div className="w-full max-w-md rounded-2xl bg-white border border-slate-200/90 p-6 space-y-4 shadow-2xl ring-1 ring-slate-900/10">
             <h3 className="text-base font-bold text-slate-900">Authorize Escrow Refund</h3>
             <p className="text-xs text-slate-600">
               Confirm full refund of <strong className="text-slate-900">₹{showRefundModal.amount}</strong> to {showRefundModal.userName} for booking <span className="font-mono text-amber-700 font-semibold">{showRefundModal.bookingRef}</span>.

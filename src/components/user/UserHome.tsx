@@ -489,7 +489,7 @@ export const UserHome: React.FC = () => {
       {/* Quick Booking Modal matching Image 2 UI/UX exactly */}
       {bookingInfluencer && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fadeIn"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn"
           onClick={() => setBookingInfluencer(null)}
         >
           <div

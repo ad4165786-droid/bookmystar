@@ -243,8 +243,11 @@ export const AdminAuditRoles: React.FC = () => {
 
       {/* Add Staff Modal */}
       {showAddStaffModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fadeIn">
-          <div className="w-full max-w-md rounded-2xl bg-white border border-slate-200/90 p-6 space-y-4 shadow-2xl">
+        <div
+          onClick={e => { if (e.target === e.currentTarget) setShowAddStaffModal(false); }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn"
+        >
+          <div className="w-full max-w-md rounded-2xl bg-white border border-slate-200/90 p-6 space-y-4 shadow-2xl ring-1 ring-slate-900/10">
             <h3 className="text-base font-bold text-slate-900">Provision Administrative Staff Member</h3>
 
             <form onSubmit={handleAddStaff} className="space-y-3.5 text-xs">
