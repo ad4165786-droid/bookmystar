@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { 
-  Users, 
-  Video, 
-  ShieldCheck, 
-  Clock, 
-  Calendar, 
-  CheckCircle2, 
-  DollarSign, 
-  Wallet, 
-  AlertCircle, 
-  TrendingUp, 
+import {
+  Users,
+  Video,
+  ShieldCheck,
+  Clock,
+  Calendar,
+  CheckCircle2,
+  DollarSign,
+  Wallet,
+  AlertCircle,
+  TrendingUp,
   ArrowRight,
   LifeBuoy,
   FileText,
@@ -19,15 +19,15 @@ import {
 } from 'lucide-react';
 
 export const AdminOverview: React.FC = () => {
-  const { 
-    users, 
-    influencers, 
-    bookings, 
-    payouts, 
-    grievances, 
-    settings, 
+  const {
+    users,
+    influencers,
+    bookings,
+    payouts,
+    grievances,
+    settings,
     setActiveView,
-    navigate 
+    navigate
   } = useApp();
 
   const [dateRange, setDateRange] = useState<'today' | '7d' | '30d' | 'all'>('30d');
@@ -40,7 +40,7 @@ export const AdminOverview: React.FC = () => {
   const totalBookings = bookings.length;
   const upcomingCalls = bookings.filter(b => b.bookingStatus === 'upcoming').length;
   const completedCalls = bookings.filter(b => b.bookingStatus === 'completed').length;
-  
+
   const platformRevenue = bookings
     .filter(b => b.paymentStatus === 'success')
     .reduce((sum, b) => sum + b.commissionAmount, 0);
@@ -54,47 +54,40 @@ export const AdminOverview: React.FC = () => {
 
   return (
     <div className="space-y-8 pb-16">
-      
+
       {/* Top Banner & Quick Links */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900">Platform Operations & Executive Dashboard</h1>
-          <p className="text-xs text-slate-500 mt-0.5">
-            BookMyStar Command Center • Multi-Role Governance, Escrow Payments, and Safety
-          </p>
         </div>
 
         {/* Date Filter Pills */}
         <div className="flex items-center gap-1.5 bg-white p-1 rounded-xl border border-slate-200/90 shadow-sm ring-1 ring-slate-900/5 text-xs">
           <button
             onClick={() => setDateRange('today')}
-            className={`px-3 py-1 rounded-lg font-medium transition-all ${
-              dateRange === 'today' ? 'bg-amber-500 text-white font-bold shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-            }`}
+            className={`px-3 py-1 rounded-lg font-medium transition-all ${dateRange === 'today' ? 'bg-amber-500 text-white font-bold shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              }`}
           >
             Today
           </button>
           <button
             onClick={() => setDateRange('7d')}
-            className={`px-3 py-1 rounded-lg font-medium transition-all ${
-              dateRange === '7d' ? 'bg-amber-500 text-white font-bold shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-            }`}
+            className={`px-3 py-1 rounded-lg font-medium transition-all ${dateRange === '7d' ? 'bg-amber-500 text-white font-bold shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              }`}
           >
             7 Days
           </button>
           <button
             onClick={() => setDateRange('30d')}
-            className={`px-3 py-1 rounded-lg font-medium transition-all ${
-              dateRange === '30d' ? 'bg-amber-500 text-white font-bold shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-            }`}
+            className={`px-3 py-1 rounded-lg font-medium transition-all ${dateRange === '30d' ? 'bg-amber-500 text-white font-bold shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              }`}
           >
             30 Days
           </button>
           <button
             onClick={() => setDateRange('all')}
-            className={`px-3 py-1 rounded-lg font-medium transition-all ${
-              dateRange === 'all' ? 'bg-amber-500 text-white font-bold shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-            }`}
+            className={`px-3 py-1 rounded-lg font-medium transition-all ${dateRange === 'all' ? 'bg-amber-500 text-white font-bold shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              }`}
           >
             All Time
           </button>
@@ -103,7 +96,7 @@ export const AdminOverview: React.FC = () => {
 
       {/* Quick Attention Action Bar */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        
+
         {/* Verification Queue Pill */}
         <div
           onClick={() => {
@@ -176,7 +169,7 @@ export const AdminOverview: React.FC = () => {
       <div>
         <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">10 Core Operational Metrics</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
-          
+
           <div className="p-4 rounded-xl bg-white border border-slate-200/90 shadow-sm hover:shadow-md ring-1 ring-slate-900/5 space-y-1 transition-all">
             <span className="text-[11px] text-slate-500 block font-medium">1. Registered Users</span>
             <div className="text-2xl font-black text-slate-900">{totalRegisteredUsers}</div>
@@ -242,7 +235,7 @@ export const AdminOverview: React.FC = () => {
 
       {/* Revenue Chart & Live Transactions Row */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        
+
         {/* Interactive Volume Breakdown Chart (7 cols) */}
         <div className="lg:col-span-7 p-6 rounded-2xl bg-white border border-slate-200/90 shadow-sm hover:shadow-md ring-1 ring-slate-900/5 space-y-5 transition-shadow">
           <div className="flex items-center justify-between pb-1">
@@ -325,9 +318,8 @@ export const AdminOverview: React.FC = () => {
 
                 <div className="text-right">
                   <div className="font-extrabold text-slate-900">₹{b.amount}</div>
-                  <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded uppercase ${
-                    b.paymentStatus === 'success' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
-                  }`}>
+                  <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded uppercase ${b.paymentStatus === 'success' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
+                    }`}>
                     {b.paymentStatus}
                   </span>
                 </div>

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { 
-  ShieldAlert, 
-  Star, 
-  Trash2, 
-  EyeOff, 
-  CheckCircle2, 
-  AlertTriangle, 
-  Image, 
-  Video, 
+import {
+  ShieldAlert,
+  Star,
+  Trash2,
+  EyeOff,
+  CheckCircle2,
+  AlertTriangle,
+  Image,
+  Video,
   ExternalLink,
   MessageSquare,
   Ban
@@ -22,7 +22,7 @@ export const AdminModeration: React.FC = () => {
   const flaggedReviews = reviews.filter(r => r.isFlagged);
 
   // Flatten media items from all creators
-  const allMedia = influencers.flatMap(inf => 
+  const allMedia = influencers.flatMap(inf =>
     inf.gallery.map(g => ({
       ...g,
       creatorId: inf.id,
@@ -33,24 +33,20 @@ export const AdminModeration: React.FC = () => {
 
   return (
     <div className="space-y-6 pb-16 max-w-5xl">
-      
+
       {/* Title & Navigation */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900">Trust, Safety & Content Moderation</h1>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Audit fan review disputes, inspect creator portfolio uploads, and maintain platform standards
-          </p>
         </div>
 
         <div className="flex items-center gap-2">
           <button
             onClick={() => setActiveTab('reviews')}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-              activeTab === 'reviews'
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${activeTab === 'reviews'
                 ? 'bg-amber-500 text-white shadow-sm'
                 : 'bg-white text-slate-700 hover:text-slate-900 hover:bg-slate-50 border border-slate-200/90 shadow-sm'
-            }`}
+              }`}
           >
             <Star className="w-3.5 h-3.5" />
             <span>Review Moderation ({reviews.length})</span>
@@ -58,11 +54,10 @@ export const AdminModeration: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('content')}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-              activeTab === 'content'
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${activeTab === 'content'
                 ? 'bg-slate-900 text-white shadow-sm'
                 : 'bg-white text-slate-700 hover:text-slate-900 hover:bg-slate-50 border border-slate-200/90 shadow-sm'
-            }`}
+              }`}
           >
             <Image className="w-3.5 h-3.5" />
             <span>Media Showcase Moderation ({allMedia.length})</span>
@@ -86,13 +81,12 @@ export const AdminModeration: React.FC = () => {
             {reviews.map(rev => (
               <div
                 key={rev.id}
-                className={`p-5 rounded-2xl border text-xs space-y-3 transition-shadow ${
-                  rev.isFlagged
+                className={`p-5 rounded-2xl border text-xs space-y-3 transition-shadow ${rev.isFlagged
                     ? 'bg-white border-rose-300 shadow-sm hover:shadow-md ring-1 ring-rose-500/10'
                     : rev.isHidden
-                    ? 'bg-slate-50/80 border-slate-200 opacity-75'
-                    : 'bg-white border-slate-200/90 shadow-sm hover:shadow-md ring-1 ring-slate-900/5'
-                }`}
+                      ? 'bg-slate-50/80 border-slate-200 opacity-75'
+                      : 'bg-white border-slate-200/90 shadow-sm hover:shadow-md ring-1 ring-slate-900/5'
+                  }`}
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-center gap-2.5">

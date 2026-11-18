@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { UserProfile } from '../../types';
-import { 
-  Users, 
-  Search, 
-  ShieldCheck, 
-  ShieldAlert, 
-  CheckCircle2, 
-  Ban, 
-  RotateCcw, 
-  Mail, 
-  Phone, 
-  Calendar, 
+import {
+  Users,
+  Search,
+  ShieldCheck,
+  ShieldAlert,
+  CheckCircle2,
+  Ban,
+  RotateCcw,
+  Mail,
+  Phone,
+  Calendar,
   CreditCard,
   X
 } from 'lucide-react';
@@ -32,14 +32,11 @@ export const AdminUsers: React.FC = () => {
 
   return (
     <div className="space-y-6 pb-16">
-      
+
       {/* Title & Search */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900">Registered User Management</h1>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Customer directory, account status governance, booking & refund transaction records
-          </p>
         </div>
 
         <div className="relative w-full sm:w-80">
@@ -104,11 +101,10 @@ export const AdminUsers: React.FC = () => {
                     </td>
 
                     <td className="py-3.5 px-4 text-center">
-                      <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase ${
-                        user.status === 'active'
+                      <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase ${user.status === 'active'
                           ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                           : 'bg-rose-50 text-rose-700 border border-rose-200'
-                      }`}>
+                        }`}>
                         {user.status}
                       </span>
                     </td>
@@ -153,7 +149,7 @@ export const AdminUsers: React.FC = () => {
       {selectedUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fadeIn">
           <div className="w-full max-w-2xl rounded-2xl bg-white border border-slate-200/90 p-6 space-y-5 shadow-2xl max-h-[90vh] overflow-y-auto">
-            
+
             <div className="flex items-center justify-between pb-1">
               <div className="flex items-center gap-3">
                 <img src={selectedUser.avatar} alt={selectedUser.name} className="w-12 h-12 rounded-xl object-cover ring-2 ring-amber-500" />
@@ -189,7 +185,7 @@ export const AdminUsers: React.FC = () => {
             {/* Bookings / Transaction History for this User */}
             <div className="space-y-3">
               <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Call Booking & Payment History</h4>
-              
+
               {getUserBookings(selectedUser.id).length === 0 ? (
                 <p className="text-xs text-slate-400 italic">No bookings made by this user.</p>
               ) : (

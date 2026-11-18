@@ -64,9 +64,6 @@ export const AdminReports: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900">Reports & Financial Analytics Center</h1>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Generate and export auditable transaction logs, commission balances, user activity, and compliance records
-          </p>
         </div>
 
         <button

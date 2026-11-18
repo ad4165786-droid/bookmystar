@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { 
-  Percent, 
-  DollarSign, 
-  Sliders, 
-  Save, 
-  CheckCircle2, 
-  AlertCircle, 
-  TrendingUp, 
-  ShieldCheck, 
+import {
+  Percent,
+  DollarSign,
+  Sliders,
+  Save,
+  CheckCircle2,
+  AlertCircle,
+  TrendingUp,
+  ShieldCheck,
   FileText,
   Video,
   PhoneCall
@@ -45,18 +45,15 @@ export const AdminCommission: React.FC = () => {
 
   return (
     <div className="space-y-8 pb-16 max-w-5xl">
-      
+
       {/* Title */}
       <div className="space-y-0.5">
         <h1 className="text-2xl font-black text-slate-900">Platform Commission & Financial Rules</h1>
-        <p className="text-xs text-slate-500 mt-0.5">
-          Configure platform cut percentage, payout minimums, and inspect platform profit ledger
-        </p>
       </div>
 
       {/* Financial Matrix Summary */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-        
+
         <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-sm hover:shadow-md ring-1 ring-slate-900/5 space-y-2 transition-shadow">
           <span className="text-xs text-slate-500 font-semibold block">Gross Booking Volume (GBV)</span>
           <div className="text-3xl font-black text-slate-900">
@@ -94,7 +91,7 @@ export const AdminCommission: React.FC = () => {
         </div>
 
         <form onSubmit={handleSaveCommission} className="space-y-6 text-xs">
-          
+
           {/* Commission Slider */}
           <div className="space-y-2">
             <div className="flex justify-between items-center">

@@ -16,7 +16,6 @@ import {
   Menu,
   X,
   ChevronRight,
-  Server,
   Sparkles
 } from 'lucide-react';
 
@@ -185,11 +184,6 @@ export const AdminDashboardLayout: React.FC = () => {
 
           {/* Right Controls */}
           <div className="flex items-center gap-3">
-
-            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-xs font-mono font-bold text-slate-700">
-              <Server className="w-3.5 h-3.5 text-brand-600" />
-              <span>Root Privileges Active</span>
-            </div>
 
             {/* Notifications Dropdown */}
             <div className="relative">

@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { 
-  ShieldCheck, 
-  Lock, 
-  UserCheck, 
-  Users, 
-  FileText, 
-  AlertTriangle, 
-  CheckCircle2, 
-  Plus, 
-  Key, 
+import {
+  ShieldCheck,
+  Lock,
+  UserCheck,
+  Users,
+  FileText,
+  AlertTriangle,
+  CheckCircle2,
+  Plus,
+  Key,
   Search,
   Eye,
   X
@@ -95,24 +95,20 @@ export const AdminAuditRoles: React.FC = () => {
 
   return (
     <div className="space-y-6 pb-16 max-w-5xl">
-      
+
       {/* Title & Tabs */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900">Security, RBAC & Immutable Audit Logs</h1>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Role-Based Access Control (RBAC), least-privilege security matrix, and tamper-resistant administrative ledger
-          </p>
         </div>
 
         <div className="flex items-center gap-2">
           <button
             onClick={() => setActiveTab('audit')}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-              activeTab === 'audit'
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${activeTab === 'audit'
                 ? 'bg-amber-500 text-white shadow-sm'
                 : 'bg-white text-slate-700 hover:text-slate-900 hover:bg-slate-50 border border-slate-200/90 shadow-sm'
-            }`}
+              }`}
           >
             <FileText className="w-3.5 h-3.5" />
             <span>Audit Trail ({auditLogs.length} Events)</span>
@@ -120,11 +116,10 @@ export const AdminAuditRoles: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('roles')}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-              activeTab === 'roles'
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${activeTab === 'roles'
                 ? 'bg-slate-900 text-white shadow-sm'
                 : 'bg-white text-slate-700 hover:text-slate-900 hover:bg-slate-50 border border-slate-200/90 shadow-sm'
-            }`}
+              }`}
           >
             <UserCheck className="w-3.5 h-3.5" />
             <span>Admin Staff & RBAC ({staffList.length})</span>

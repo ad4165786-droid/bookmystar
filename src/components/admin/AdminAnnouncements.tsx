@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { 
-  Bell, 
-  Send, 
-  Users, 
-  Sparkles, 
-  AlertCircle, 
-  CheckCircle2, 
-  Calendar, 
+import {
+  Bell,
+  Send,
+  Users,
+  Sparkles,
+  AlertCircle,
+  CheckCircle2,
+  Calendar,
   Clock,
   Radio,
   FileText
@@ -40,13 +40,10 @@ export const AdminAnnouncements: React.FC = () => {
 
   return (
     <div className="space-y-8 pb-16 max-w-5xl">
-      
+
       {/* Title */}
       <div className="space-y-0.5">
         <h1 className="text-2xl font-black text-slate-900">Broadcast Platform Announcements</h1>
-        <p className="text-xs text-slate-500 mt-0.5">
-          Send push updates, system maintenance notices, or festival promotions across user and creator channels
-        </p>
       </div>
 
       {/* Quick Operational Templates */}
@@ -101,34 +98,31 @@ export const AdminAnnouncements: React.FC = () => {
         </h3>
 
         <form onSubmit={handleSendAnnouncement} className="space-y-4 text-xs">
-          
+
           <div>
             <label className="block text-slate-700 font-semibold mb-1">Target Audience</label>
             <div className="grid grid-cols-3 gap-2 max-w-md">
               <button
                 type="button"
                 onClick={() => setAudience('all')}
-                className={`py-2 px-3 rounded-xl font-bold border transition-all ${
-                  audience === 'all' ? 'bg-amber-500 text-white border-amber-500 shadow-sm' : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
-                }`}
+                className={`py-2 px-3 rounded-xl font-bold border transition-all ${audience === 'all' ? 'bg-amber-500 text-white border-amber-500 shadow-sm' : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                  }`}
               >
                 Everyone (All)
               </button>
               <button
                 type="button"
                 onClick={() => setAudience('users')}
-                className={`py-2 px-3 rounded-xl font-bold border transition-all ${
-                  audience === 'users' ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm' : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
-                }`}
+                className={`py-2 px-3 rounded-xl font-bold border transition-all ${audience === 'users' ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm' : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                  }`}
               >
                 Fans / Users Only
               </button>
               <button
                 type="button"
                 onClick={() => setAudience('influencers')}
-                className={`py-2 px-3 rounded-xl font-bold border transition-all ${
-                  audience === 'influencers' ? 'bg-purple-600 text-white border-purple-600 shadow-sm' : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
-                }`}
+                className={`py-2 px-3 rounded-xl font-bold border transition-all ${audience === 'influencers' ? 'bg-purple-600 text-white border-purple-600 shadow-sm' : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                  }`}
               >
                 Creators Only
               </button>

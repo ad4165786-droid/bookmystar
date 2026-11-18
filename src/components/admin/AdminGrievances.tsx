@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { GrievanceTicket } from '../../types';
-import { 
-  LifeBuoy, 
-  Search, 
-  MessageSquare, 
-  CheckCircle2, 
-  Clock, 
-  AlertCircle, 
-  RotateCcw, 
-  Lock, 
+import {
+  LifeBuoy,
+  Search,
+  MessageSquare,
+  CheckCircle2,
+  Clock,
+  AlertCircle,
+  RotateCcw,
+  Lock,
   Send,
   User,
   ShieldCheck,
@@ -45,14 +45,11 @@ export const AdminGrievances: React.FC = () => {
 
   return (
     <div className="space-y-6 pb-16">
-      
+
       {/* Title & Filter Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900">Grievance & Dispute Resolution Desk</h1>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Customer dispute adjudication, technical connection investigations, and misconduct reports
-          </p>
         </div>
 
         <div className="flex items-center gap-2">
@@ -85,28 +82,26 @@ export const AdminGrievances: React.FC = () => {
 
       {/* Main Grid: Ticket List + Conversation Canvas */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        
+
         {/* Ticket List (5 cols) */}
         <div className="lg:col-span-5 space-y-3">
           {filteredTickets.map(ticket => (
             <div
               key={ticket.id}
               onClick={() => setSelectedTicketId(ticket.id)}
-              className={`p-4 rounded-xl border text-xs cursor-pointer transition-all ${
-                selectedTicket?.id === ticket.id
+              className={`p-4 rounded-xl border text-xs cursor-pointer transition-all ${selectedTicket?.id === ticket.id
                   ? 'bg-white border-2 border-amber-500 shadow-md ring-1 ring-amber-500/20'
                   : 'bg-white border border-slate-200/90 shadow-sm hover:shadow-md ring-1 ring-slate-900/5 hover:border-slate-300'
-              }`}
+                }`}
             >
               <div className="flex items-center justify-between mb-1.5">
                 <span className="font-mono text-amber-700 font-bold">{ticket.ticketRef}</span>
-                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${
-                  ticket.status === 'resolved'
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${ticket.status === 'resolved'
                     ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                     : ticket.status === 'in_progress'
-                    ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                    : 'bg-slate-100 text-slate-600 border border-slate-200'
-                }`}>
+                      ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                      : 'bg-slate-100 text-slate-600 border border-slate-200'
+                  }`}>
                   {ticket.status.replace('_', ' ')}
                 </span>
               </div>
@@ -130,7 +125,7 @@ export const AdminGrievances: React.FC = () => {
         <div className="lg:col-span-7">
           {selectedTicket ? (
             <div className="rounded-2xl bg-white border border-slate-200/90 shadow-md ring-1 ring-slate-900/5 flex flex-col h-[600px] overflow-hidden">
-              
+
               {/* Header */}
               <div className="p-4 bg-slate-50 border-b border-slate-100 space-y-2">
                 <div className="flex items-center justify-between">
@@ -171,13 +166,12 @@ export const AdminGrievances: React.FC = () => {
                 {selectedTicket.responses.map(resp => (
                   <div
                     key={resp.id}
-                    className={`p-3.5 rounded-xl border leading-relaxed ${
-                      resp.isInternalNote
+                    className={`p-3.5 rounded-xl border leading-relaxed ${resp.isInternalNote
                         ? 'bg-amber-50/80 border-amber-200 text-amber-950'
                         : resp.role === 'admin'
-                        ? 'bg-indigo-50/80 border-indigo-200 text-indigo-950 ml-4'
-                        : 'bg-slate-50 border-slate-200 text-slate-800 mr-4'
-                    }`}
+                          ? 'bg-indigo-50/80 border-indigo-200 text-indigo-950 ml-4'
+                          : 'bg-slate-50 border-slate-200 text-slate-800 mr-4'
+                      }`}
                   >
                     <div className="flex items-center justify-between pb-1 mb-1 text-[10px]">
                       <span className="font-bold flex items-center gap-1.5">

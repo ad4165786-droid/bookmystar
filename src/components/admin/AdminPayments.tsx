@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { 
-  CreditCard, 
-  Wallet, 
-  CheckCircle2, 
-  XCircle, 
-  Clock, 
-  ArrowUpRight, 
-  ExternalLink, 
-  Building2, 
+import {
+  CreditCard,
+  Wallet,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  ArrowUpRight,
+  ExternalLink,
+  Building2,
   Smartphone,
   AlertCircle,
   FileCheck
@@ -39,24 +39,20 @@ export const AdminPayments: React.FC = () => {
 
   return (
     <div className="space-y-6 pb-16">
-      
+
       {/* Title & Tabs */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900">Payments & Creator Payout Disbursals</h1>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Audit gateway payment captures, UPI/Bank withdrawals, and disburse creator earnings
-          </p>
         </div>
 
         <div className="flex items-center gap-2">
           <button
             onClick={() => setActiveTab('payouts')}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-              activeTab === 'payouts'
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${activeTab === 'payouts'
                 ? 'bg-amber-500 text-white shadow-sm'
                 : 'bg-white text-slate-700 hover:text-slate-900 hover:bg-slate-50 border border-slate-200/90 shadow-sm'
-            }`}
+              }`}
           >
             <Wallet className="w-3.5 h-3.5" />
             <span>Payout Queue ({pendingPayouts.length} Pending)</span>
@@ -64,11 +60,10 @@ export const AdminPayments: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('transactions')}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-              activeTab === 'transactions'
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${activeTab === 'transactions'
                 ? 'bg-slate-900 text-white shadow-sm'
                 : 'bg-white text-slate-700 hover:text-slate-900 hover:bg-slate-50 border border-slate-200/90 shadow-sm'
-            }`}
+              }`}
           >
             <CreditCard className="w-3.5 h-3.5" />
             <span>Fan Payments ({bookings.length})</span>
@@ -126,15 +121,14 @@ export const AdminPayments: React.FC = () => {
                       </td>
 
                       <td className="py-3.5 px-4 text-center">
-                        <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full capitalize ${
-                          p.status === 'paid'
+                        <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full capitalize ${p.status === 'paid'
                             ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                             : p.status === 'processing'
-                            ? 'bg-sky-50 text-sky-700 border border-sky-200'
-                            : p.status === 'rejected'
-                            ? 'bg-rose-50 text-rose-700 border border-rose-200'
-                            : 'bg-amber-50 text-amber-700 border border-amber-200'
-                        }`}>
+                              ? 'bg-sky-50 text-sky-700 border border-sky-200'
+                              : p.status === 'rejected'
+                                ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                                : 'bg-amber-50 text-amber-700 border border-amber-200'
+                          }`}>
                           {p.status}
                         </span>
                       </td>
@@ -218,11 +212,10 @@ export const AdminPayments: React.FC = () => {
                     </td>
 
                     <td className="py-3 px-4 text-center">
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${
-                        b.paymentStatus === 'success'
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${b.paymentStatus === 'success'
                           ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                           : 'bg-amber-50 text-amber-700 border border-amber-200'
-                      }`}>
+                        }`}>
                         {b.paymentStatus}
                       </span>
                     </td>

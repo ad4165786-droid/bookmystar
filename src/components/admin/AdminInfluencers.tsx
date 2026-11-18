@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { InfluencerProfile } from '../../types';
-import { 
-  ShieldCheck, 
-  Clock, 
-  XCircle, 
-  CheckCircle2, 
-  Search, 
-  ExternalLink, 
-  FileText, 
+import {
+  ShieldCheck,
+  Clock,
+  XCircle,
+  CheckCircle2,
+  Search,
+  ExternalLink,
+  FileText,
   AlertTriangle,
   Eye,
   X
 } from 'lucide-react';
 
 export const AdminInfluencers: React.FC = () => {
-  const { 
-    influencers, 
-    approveVerification, 
-    rejectVerification, 
+  const {
+    influencers,
+    approveVerification,
+    rejectVerification,
     toggleInfluencerStatus,
-    showToast 
+    showToast
   } = useApp();
 
   const [activeTab, setActiveTab] = useState<'queue' | 'all'>('queue');
@@ -47,24 +47,20 @@ export const AdminInfluencers: React.FC = () => {
 
   return (
     <div className="space-y-6 pb-16">
-      
+
       {/* Title & Navigation */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900">Creator Verification & KYC Approval Queue</h1>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Strict 18+ age verification, government identity inspection, and paid booking licensing
-          </p>
         </div>
 
         <div className="flex items-center gap-2">
           <button
             onClick={() => setActiveTab('queue')}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-              activeTab === 'queue'
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${activeTab === 'queue'
                 ? 'bg-amber-500 text-white shadow-sm'
                 : 'bg-white text-slate-700 hover:text-slate-900 hover:bg-slate-50 border border-slate-200/90 shadow-sm'
-            }`}
+              }`}
           >
             <Clock className="w-3.5 h-3.5" />
             <span>Pending Review ({pendingQueue.length})</span>
@@ -72,11 +68,10 @@ export const AdminInfluencers: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('all')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-              activeTab === 'all'
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${activeTab === 'all'
                 ? 'bg-slate-900 text-white shadow-sm'
                 : 'bg-white text-slate-700 hover:text-slate-900 hover:bg-slate-50 border border-slate-200/90 shadow-sm'
-            }`}
+              }`}
           >
             All Creators ({influencers.length})
           </button>
@@ -127,13 +122,12 @@ export const AdminInfluencers: React.FC = () => {
                   </td>
 
                   <td className="py-3.5 px-4 text-center">
-                    <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase ${
-                      inf.verificationStatus === 'approved'
+                    <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase ${inf.verificationStatus === 'approved'
                         ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                         : inf.verificationStatus === 'pending'
-                        ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                        : 'bg-rose-50 text-rose-700 border border-rose-200'
-                    }`}>
+                          ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                          : 'bg-rose-50 text-rose-700 border border-rose-200'
+                      }`}>
                       {inf.verificationStatus}
                     </span>
                   </td>
@@ -180,7 +174,7 @@ export const AdminInfluencers: React.FC = () => {
       {selectedInfluencer && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fadeIn">
           <div className="w-full max-w-2xl rounded-2xl bg-white border border-slate-200/90 p-6 space-y-5 shadow-2xl max-h-[90vh] overflow-y-auto">
-            
+
             <div className="flex items-center justify-between pb-1">
               <div className="flex items-center gap-3">
                 <img src={selectedInfluencer.avatar} alt={selectedInfluencer.name} className="w-12 h-12 rounded-xl object-cover ring-2 ring-purple-500" />
@@ -273,7 +267,7 @@ export const AdminInfluencers: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fadeIn">
           <div className="w-full max-w-md rounded-2xl bg-white border border-slate-200/90 p-6 space-y-4 shadow-2xl">
             <h3 className="text-base font-bold text-slate-900">Rejection Notice Reason</h3>
-            
+
             <form onSubmit={handleConfirmReject} className="space-y-3 text-xs">
               <div>
                 <label className="block text-slate-700 font-semibold mb-1">State Reason for Rejection</label>

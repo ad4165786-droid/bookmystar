@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { BookingStatus, CallType, Booking } from '../../types';
-import { 
-  Calendar, 
-  Clock, 
-  Video, 
-  PhoneCall, 
-  Search, 
-  Filter, 
-  RotateCcw, 
-  ShieldCheck, 
-  Lock, 
-  AlertTriangle, 
-  CheckCircle2, 
+import {
+  Calendar,
+  Clock,
+  Video,
+  PhoneCall,
+  Search,
+  Filter,
+  RotateCcw,
+  ShieldCheck,
+  Lock,
+  AlertTriangle,
+  CheckCircle2,
   FileText,
   Radio,
   X
@@ -25,7 +25,7 @@ export const AdminBookings: React.FC = () => {
   const [search, setSearch] = useState('');
   const [selectedStatus, setSelectedStatus] = useState<'all' | BookingStatus>('all');
   const [selectedCallType, setSelectedCallType] = useState<'all' | CallType>('all');
-  
+
   const [selectedBookingDetails, setSelectedBookingDetails] = useState<Booking | null>(null);
   const [selectedInvoice, setSelectedInvoice] = useState<Booking | null>(null);
   const [refundReason, setRefundReason] = useState('');
@@ -37,8 +37,8 @@ export const AdminBookings: React.FC = () => {
     if (search.trim()) {
       const q = search.toLowerCase();
       return b.bookingRef.toLowerCase().includes(q) ||
-             b.userName.toLowerCase().includes(q) ||
-             b.influencerName.toLowerCase().includes(q);
+        b.userName.toLowerCase().includes(q) ||
+        b.influencerName.toLowerCase().includes(q);
     }
     return true;
   });
@@ -54,14 +54,11 @@ export const AdminBookings: React.FC = () => {
 
   return (
     <div className="space-y-6 pb-16">
-      
+
       {/* Title & Privacy Guarantee Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900">Call Records & Booking Master Ledger</h1>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Audit metadata, diagnostics, reschedule logs, and dispute refund handling
-          </p>
         </div>
 
         {/* E2E Privacy Banner */}
@@ -161,15 +158,14 @@ export const AdminBookings: React.FC = () => {
                   </td>
 
                   <td className="py-3.5 px-4 text-center">
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${
-                      b.bookingStatus === 'upcoming'
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${b.bookingStatus === 'upcoming'
                         ? 'bg-sky-50 text-sky-700 border border-sky-200'
                         : b.bookingStatus === 'completed'
-                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                        : b.bookingStatus === 'refunded'
-                        ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                        : 'bg-slate-100 text-slate-600 border border-slate-200'
-                    }`}>
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                          : b.bookingStatus === 'refunded'
+                            ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                            : 'bg-slate-100 text-slate-600 border border-slate-200'
+                      }`}>
                       {b.bookingStatus}
                     </span>
                   </td>
