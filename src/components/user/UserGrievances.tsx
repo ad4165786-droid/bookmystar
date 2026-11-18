@@ -33,7 +33,6 @@ export const UserGrievances: React.FC = () => {
   const [priority, setPriority] = useState<GrievanceTicket['priority']>('medium');
   const [subject, setSubject] = useState('');
   const [description, setDescription] = useState('');
-  const [selectedBookingRef, setSelectedBookingRef] = useState('');
   const [replyText, setReplyText] = useState('');
 
   // User's tickets
@@ -54,8 +53,7 @@ export const UserGrievances: React.FC = () => {
       customCategory: category === 'other' ? customCategory.trim() : undefined,
       priority,
       subject: subject.trim(),
-      description: description.trim(),
-      bookingRef: selectedBookingRef || undefined
+      description: description.trim()
     });
 
     setSubject('');
@@ -279,22 +277,6 @@ export const UserGrievances: React.FC = () => {
                     </div>
                   )}
                 </div>
-              </div>
-
-              <div>
-                <label className="block text-slate-700 font-bold mb-1.5">Associated Booking (Optional)</label>
-                <select
-                  value={selectedBookingRef}
-                  onChange={e => setSelectedBookingRef(e.target.value)}
-                  className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-brand-500"
-                >
-                  <option value="">None / General Inquiry</option>
-                  {bookings.filter(b => b.userId === currentUser.id).map(b => (
-                    <option key={b.id} value={b.bookingRef}>
-                      {b.bookingRef} — {b.influencerName} ({b.scheduledDate})
-                    </option>
-                  ))}
-                </select>
               </div>
 
               <div>
